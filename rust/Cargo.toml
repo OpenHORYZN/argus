@@ -8,3 +8,8 @@ crate-type = ["cdylib", "staticlib"]
 
 [dependencies]
 flutter_rust_bridge = "=2.1.0"
+argus_common = { version = "*", path = "../../ros2/src/argus_common"}
+serde = { version = "1.0.204", features = ["derive"] }
+postcard = "1.0.8"
+nalgebra = "0.33.0"
+anyhow = "1.0.86"

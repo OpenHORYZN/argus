@@ -6,7 +6,7 @@
 // Static analysis wrongly picks the IO variant, thus ignore this
 // ignore_for_file: argument_type_not_assignable
 
-import 'api/simple.dart';
+import 'api/mission.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'frb_generated.dart';
@@ -21,7 +21,25 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   });
 
   @protected
+  AnyhowException dco_decode_AnyhowException(dynamic raw);
+
+  @protected
   String dco_decode_String(dynamic raw);
+
+  @protected
+  FlutterWaypoint dco_decode_box_autoadd_flutter_waypoint(dynamic raw);
+
+  @protected
+  double dco_decode_f_64(dynamic raw);
+
+  @protected
+  FlutterMissionNode dco_decode_flutter_mission_node(dynamic raw);
+
+  @protected
+  FlutterWaypoint dco_decode_flutter_waypoint(dynamic raw);
+
+  @protected
+  List<FlutterMissionNode> dco_decode_list_flutter_mission_node(dynamic raw);
 
   @protected
   Uint8List dco_decode_list_prim_u_8_strict(dynamic raw);
@@ -33,7 +51,28 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void dco_decode_unit(dynamic raw);
 
   @protected
+  AnyhowException sse_decode_AnyhowException(SseDeserializer deserializer);
+
+  @protected
   String sse_decode_String(SseDeserializer deserializer);
+
+  @protected
+  FlutterWaypoint sse_decode_box_autoadd_flutter_waypoint(
+      SseDeserializer deserializer);
+
+  @protected
+  double sse_decode_f_64(SseDeserializer deserializer);
+
+  @protected
+  FlutterMissionNode sse_decode_flutter_mission_node(
+      SseDeserializer deserializer);
+
+  @protected
+  FlutterWaypoint sse_decode_flutter_waypoint(SseDeserializer deserializer);
+
+  @protected
+  List<FlutterMissionNode> sse_decode_list_flutter_mission_node(
+      SseDeserializer deserializer);
 
   @protected
   Uint8List sse_decode_list_prim_u_8_strict(SseDeserializer deserializer);
@@ -51,7 +90,30 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   bool sse_decode_bool(SseDeserializer deserializer);
 
   @protected
+  void sse_encode_AnyhowException(
+      AnyhowException self, SseSerializer serializer);
+
+  @protected
   void sse_encode_String(String self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_flutter_waypoint(
+      FlutterWaypoint self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_f_64(double self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_flutter_mission_node(
+      FlutterMissionNode self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_flutter_waypoint(
+      FlutterWaypoint self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_flutter_mission_node(
+      List<FlutterMissionNode> self, SseSerializer serializer);
 
   @protected
   void sse_encode_list_prim_u_8_strict(

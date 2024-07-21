@@ -37,7 +37,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.1.0";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -1918914929;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 2134630391;
 
 // Section: executor
 
@@ -45,37 +45,7 @@ flutter_rust_bridge::frb_generated_default_handler!();
 
 // Section: wire_funcs
 
-fn wire__crate__api__simple__greet_impl(
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "greet",
-            port: None,
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_name = <String>::sse_decode(&mut deserializer);
-            deserializer.end();
-            transform_result_sse::<_, ()>((move || {
-                let output_ok = Result::<_, ()>::Ok(crate::api::simple::greet(api_name))?;
-                Ok(output_ok)
-            })())
-        },
-    )
-}
-fn wire__crate__api__simple__init_app_impl(
+fn wire__crate__api__mission__init_app_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
@@ -101,7 +71,7 @@ fn wire__crate__api__simple__init_app_impl(
             move |context| {
                 transform_result_sse::<_, ()>((move || {
                     let output_ok = Result::<_, ()>::Ok({
-                        crate::api::simple::init_app();
+                        crate::api::mission::init_app();
                     })?;
                     Ok(output_ok)
                 })())
@@ -109,14 +79,165 @@ fn wire__crate__api__simple__init_app_impl(
         },
     )
 }
+fn wire__crate__api__mission__send_mission_plan_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "send_mission_plan",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_plan =
+                <Vec<crate::api::mission::FlutterMissionNode>>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>(
+                    (move || async move {
+                        let output_ok = crate::api::mission::send_mission_plan(api_plan).await?;
+                        Ok(output_ok)
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
 
 // Section: dart2rust
+
+impl SseDecode for flutter_rust_bridge::for_generated::anyhow::Error {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut inner = <String>::sse_decode(deserializer);
+        return flutter_rust_bridge::for_generated::anyhow::anyhow!("{}", inner);
+    }
+}
 
 impl SseDecode for String {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut inner = <Vec<u8>>::sse_decode(deserializer);
         return String::from_utf8(inner).unwrap();
+    }
+}
+
+impl SseDecode for f64 {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        deserializer.cursor.read_f64::<NativeEndian>().unwrap()
+    }
+}
+
+impl SseDecode for crate::api::mission::FlutterMissionNode {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut tag_ = <i32>::sse_decode(deserializer);
+        match tag_ {
+            0 => {
+                return crate::api::mission::FlutterMissionNode::Init;
+            }
+            1 => {
+                let mut var_altitude = <f64>::sse_decode(deserializer);
+                return crate::api::mission::FlutterMissionNode::Takeoff {
+                    altitude: var_altitude,
+                };
+            }
+            2 => {
+                let mut var_field0 =
+                    <crate::api::mission::FlutterWaypoint>::sse_decode(deserializer);
+                return crate::api::mission::FlutterMissionNode::Waypoint(var_field0);
+            }
+            3 => {
+                let mut var_field0 = <f64>::sse_decode(deserializer);
+                return crate::api::mission::FlutterMissionNode::Delay(var_field0);
+            }
+            4 => {
+                return crate::api::mission::FlutterMissionNode::FindSafeSpot;
+            }
+            5 => {
+                return crate::api::mission::FlutterMissionNode::Transition;
+            }
+            6 => {
+                return crate::api::mission::FlutterMissionNode::Land;
+            }
+            7 => {
+                return crate::api::mission::FlutterMissionNode::PrecLand;
+            }
+            8 => {
+                return crate::api::mission::FlutterMissionNode::End;
+            }
+            _ => {
+                unimplemented!("");
+            }
+        }
+    }
+}
+
+impl SseDecode for crate::api::mission::FlutterWaypoint {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut tag_ = <i32>::sse_decode(deserializer);
+        match tag_ {
+            0 => {
+                let mut var_field0 = <f64>::sse_decode(deserializer);
+                let mut var_field1 = <f64>::sse_decode(deserializer);
+                let mut var_field2 = <f64>::sse_decode(deserializer);
+                return crate::api::mission::FlutterWaypoint::LocalOffset(
+                    var_field0, var_field1, var_field2,
+                );
+            }
+            1 => {
+                let mut var_lat = <f64>::sse_decode(deserializer);
+                let mut var_lon = <f64>::sse_decode(deserializer);
+                let mut var_alt = <f64>::sse_decode(deserializer);
+                return crate::api::mission::FlutterWaypoint::GlobalFixedHeight {
+                    lat: var_lat,
+                    lon: var_lon,
+                    alt: var_alt,
+                };
+            }
+            2 => {
+                let mut var_lat = <f64>::sse_decode(deserializer);
+                let mut var_lon = <f64>::sse_decode(deserializer);
+                let mut var_heightDiff = <f64>::sse_decode(deserializer);
+                return crate::api::mission::FlutterWaypoint::GlobalRelativeHeight {
+                    lat: var_lat,
+                    lon: var_lon,
+                    height_diff: var_heightDiff,
+                };
+            }
+            _ => {
+                unimplemented!("");
+            }
+        }
+    }
+}
+
+impl SseDecode for Vec<crate::api::mission::FlutterMissionNode> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut len_ = <i32>::sse_decode(deserializer);
+        let mut ans_ = vec![];
+        for idx_ in 0..len_ {
+            ans_.push(<crate::api::mission::FlutterMissionNode>::sse_decode(
+                deserializer,
+            ));
+        }
+        return ans_;
     }
 }
 
@@ -167,7 +288,8 @@ fn pde_ffi_dispatcher_primary_impl(
 ) {
     // Codec=Pde (Serialization + dispatch), see doc to use other codecs
     match func_id {
-        2 => wire__crate__api__simple__init_app_impl(port, ptr, rust_vec_len, data_len),
+        1 => wire__crate__api__mission__init_app_impl(port, ptr, rust_vec_len, data_len),
+        2 => wire__crate__api__mission__send_mission_plan_impl(port, ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -180,17 +302,197 @@ fn pde_ffi_dispatcher_sync_impl(
 ) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
     // Codec=Pde (Serialization + dispatch), see doc to use other codecs
     match func_id {
-        1 => wire__crate__api__simple__greet_impl(ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
 
 // Section: rust2dart
 
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::mission::FlutterMissionNode {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        match self {
+            crate::api::mission::FlutterMissionNode::Init => [0.into_dart()].into_dart(),
+            crate::api::mission::FlutterMissionNode::Takeoff { altitude } => {
+                [1.into_dart(), altitude.into_into_dart().into_dart()].into_dart()
+            }
+            crate::api::mission::FlutterMissionNode::Waypoint(field0) => {
+                [2.into_dart(), field0.into_into_dart().into_dart()].into_dart()
+            }
+            crate::api::mission::FlutterMissionNode::Delay(field0) => {
+                [3.into_dart(), field0.into_into_dart().into_dart()].into_dart()
+            }
+            crate::api::mission::FlutterMissionNode::FindSafeSpot => [4.into_dart()].into_dart(),
+            crate::api::mission::FlutterMissionNode::Transition => [5.into_dart()].into_dart(),
+            crate::api::mission::FlutterMissionNode::Land => [6.into_dart()].into_dart(),
+            crate::api::mission::FlutterMissionNode::PrecLand => [7.into_dart()].into_dart(),
+            crate::api::mission::FlutterMissionNode::End => [8.into_dart()].into_dart(),
+            _ => {
+                unimplemented!("");
+            }
+        }
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::mission::FlutterMissionNode
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::mission::FlutterMissionNode>
+    for crate::api::mission::FlutterMissionNode
+{
+    fn into_into_dart(self) -> crate::api::mission::FlutterMissionNode {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::mission::FlutterWaypoint {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        match self {
+            crate::api::mission::FlutterWaypoint::LocalOffset(field0, field1, field2) => [
+                0.into_dart(),
+                field0.into_into_dart().into_dart(),
+                field1.into_into_dart().into_dart(),
+                field2.into_into_dart().into_dart(),
+            ]
+            .into_dart(),
+            crate::api::mission::FlutterWaypoint::GlobalFixedHeight { lat, lon, alt } => [
+                1.into_dart(),
+                lat.into_into_dart().into_dart(),
+                lon.into_into_dart().into_dart(),
+                alt.into_into_dart().into_dart(),
+            ]
+            .into_dart(),
+            crate::api::mission::FlutterWaypoint::GlobalRelativeHeight {
+                lat,
+                lon,
+                height_diff,
+            } => [
+                2.into_dart(),
+                lat.into_into_dart().into_dart(),
+                lon.into_into_dart().into_dart(),
+                height_diff.into_into_dart().into_dart(),
+            ]
+            .into_dart(),
+            _ => {
+                unimplemented!("");
+            }
+        }
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::mission::FlutterWaypoint
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::mission::FlutterWaypoint>
+    for crate::api::mission::FlutterWaypoint
+{
+    fn into_into_dart(self) -> crate::api::mission::FlutterWaypoint {
+        self
+    }
+}
+
+impl SseEncode for flutter_rust_bridge::for_generated::anyhow::Error {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(format!("{:?}", self), serializer);
+    }
+}
+
 impl SseEncode for String {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <Vec<u8>>::sse_encode(self.into_bytes(), serializer);
+    }
+}
+
+impl SseEncode for f64 {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        serializer.cursor.write_f64::<NativeEndian>(self).unwrap();
+    }
+}
+
+impl SseEncode for crate::api::mission::FlutterMissionNode {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        match self {
+            crate::api::mission::FlutterMissionNode::Init => {
+                <i32>::sse_encode(0, serializer);
+            }
+            crate::api::mission::FlutterMissionNode::Takeoff { altitude } => {
+                <i32>::sse_encode(1, serializer);
+                <f64>::sse_encode(altitude, serializer);
+            }
+            crate::api::mission::FlutterMissionNode::Waypoint(field0) => {
+                <i32>::sse_encode(2, serializer);
+                <crate::api::mission::FlutterWaypoint>::sse_encode(field0, serializer);
+            }
+            crate::api::mission::FlutterMissionNode::Delay(field0) => {
+                <i32>::sse_encode(3, serializer);
+                <f64>::sse_encode(field0, serializer);
+            }
+            crate::api::mission::FlutterMissionNode::FindSafeSpot => {
+                <i32>::sse_encode(4, serializer);
+            }
+            crate::api::mission::FlutterMissionNode::Transition => {
+                <i32>::sse_encode(5, serializer);
+            }
+            crate::api::mission::FlutterMissionNode::Land => {
+                <i32>::sse_encode(6, serializer);
+            }
+            crate::api::mission::FlutterMissionNode::PrecLand => {
+                <i32>::sse_encode(7, serializer);
+            }
+            crate::api::mission::FlutterMissionNode::End => {
+                <i32>::sse_encode(8, serializer);
+            }
+            _ => {
+                unimplemented!("");
+            }
+        }
+    }
+}
+
+impl SseEncode for crate::api::mission::FlutterWaypoint {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        match self {
+            crate::api::mission::FlutterWaypoint::LocalOffset(field0, field1, field2) => {
+                <i32>::sse_encode(0, serializer);
+                <f64>::sse_encode(field0, serializer);
+                <f64>::sse_encode(field1, serializer);
+                <f64>::sse_encode(field2, serializer);
+            }
+            crate::api::mission::FlutterWaypoint::GlobalFixedHeight { lat, lon, alt } => {
+                <i32>::sse_encode(1, serializer);
+                <f64>::sse_encode(lat, serializer);
+                <f64>::sse_encode(lon, serializer);
+                <f64>::sse_encode(alt, serializer);
+            }
+            crate::api::mission::FlutterWaypoint::GlobalRelativeHeight {
+                lat,
+                lon,
+                height_diff,
+            } => {
+                <i32>::sse_encode(2, serializer);
+                <f64>::sse_encode(lat, serializer);
+                <f64>::sse_encode(lon, serializer);
+                <f64>::sse_encode(height_diff, serializer);
+            }
+            _ => {
+                unimplemented!("");
+            }
+        }
+    }
+}
+
+impl SseEncode for Vec<crate::api::mission::FlutterMissionNode> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.len() as _, serializer);
+        for item in self {
+            <crate::api::mission::FlutterMissionNode>::sse_encode(item, serializer);
+        }
     }
 }
 

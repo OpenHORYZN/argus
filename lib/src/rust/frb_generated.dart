@@ -3,7 +3,7 @@
 
 // ignore_for_file: unused_import, unused_element, unnecessary_import, duplicate_ignore, invalid_use_of_internal_member, annotate_overrides, non_constant_identifier_names, curly_braces_in_flow_control_structures, prefer_const_literals_to_create_immutables, unused_field
 
-import 'api/simple.dart';
+import 'api/mission.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'frb_generated.dart';
@@ -47,7 +47,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
 
   @override
   Future<void> executeRustInitializers() async {
-    await api.crateApiSimpleInitApp();
+    await api.crateApiMissionInitApp();
   }
 
   @override
@@ -58,7 +58,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.1.0';
 
   @override
-  int get rustContentHash => -1918914929;
+  int get rustContentHash => 2134630391;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -69,9 +69,10 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
 }
 
 abstract class RustLibApi extends BaseApi {
-  String crateApiSimpleGreet({required String name});
+  Future<void> crateApiMissionInitApp();
 
-  Future<void> crateApiSimpleInitApp();
+  Future<void> crateApiMissionSendMissionPlan(
+      {required List<FlutterMissionNode> plan});
 }
 
 class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
@@ -83,55 +84,142 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   });
 
   @override
-  String crateApiSimpleGreet({required String name}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_String(name, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 1)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_String,
-        decodeErrorData: null,
-      ),
-      constMeta: kCrateApiSimpleGreetConstMeta,
-      argValues: [name],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta get kCrateApiSimpleGreetConstMeta => const TaskConstMeta(
-        debugName: "greet",
-        argNames: ["name"],
-      );
-
-  @override
-  Future<void> crateApiSimpleInitApp() {
+  Future<void> crateApiMissionInitApp() {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 2, port: port_);
+            funcId: 1, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
         decodeErrorData: null,
       ),
-      constMeta: kCrateApiSimpleInitAppConstMeta,
+      constMeta: kCrateApiMissionInitAppConstMeta,
       argValues: [],
       apiImpl: this,
     ));
   }
 
-  TaskConstMeta get kCrateApiSimpleInitAppConstMeta => const TaskConstMeta(
+  TaskConstMeta get kCrateApiMissionInitAppConstMeta => const TaskConstMeta(
         debugName: "init_app",
         argNames: [],
       );
+
+  @override
+  Future<void> crateApiMissionSendMissionPlan(
+      {required List<FlutterMissionNode> plan}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_list_flutter_mission_node(plan, serializer);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 2, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_unit,
+        decodeErrorData: sse_decode_AnyhowException,
+      ),
+      constMeta: kCrateApiMissionSendMissionPlanConstMeta,
+      argValues: [plan],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta get kCrateApiMissionSendMissionPlanConstMeta =>
+      const TaskConstMeta(
+        debugName: "send_mission_plan",
+        argNames: ["plan"],
+      );
+
+  @protected
+  AnyhowException dco_decode_AnyhowException(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return AnyhowException(raw as String);
+  }
 
   @protected
   String dco_decode_String(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw as String;
+  }
+
+  @protected
+  FlutterWaypoint dco_decode_box_autoadd_flutter_waypoint(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_flutter_waypoint(raw);
+  }
+
+  @protected
+  double dco_decode_f_64(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw as double;
+  }
+
+  @protected
+  FlutterMissionNode dco_decode_flutter_mission_node(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    switch (raw[0]) {
+      case 0:
+        return FlutterMissionNode_Init();
+      case 1:
+        return FlutterMissionNode_Takeoff(
+          altitude: dco_decode_f_64(raw[1]),
+        );
+      case 2:
+        return FlutterMissionNode_Waypoint(
+          dco_decode_box_autoadd_flutter_waypoint(raw[1]),
+        );
+      case 3:
+        return FlutterMissionNode_Delay(
+          dco_decode_f_64(raw[1]),
+        );
+      case 4:
+        return FlutterMissionNode_FindSafeSpot();
+      case 5:
+        return FlutterMissionNode_Transition();
+      case 6:
+        return FlutterMissionNode_Land();
+      case 7:
+        return FlutterMissionNode_PrecLand();
+      case 8:
+        return FlutterMissionNode_End();
+      default:
+        throw Exception("unreachable");
+    }
+  }
+
+  @protected
+  FlutterWaypoint dco_decode_flutter_waypoint(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    switch (raw[0]) {
+      case 0:
+        return FlutterWaypoint_LocalOffset(
+          dco_decode_f_64(raw[1]),
+          dco_decode_f_64(raw[2]),
+          dco_decode_f_64(raw[3]),
+        );
+      case 1:
+        return FlutterWaypoint_GlobalFixedHeight(
+          lat: dco_decode_f_64(raw[1]),
+          lon: dco_decode_f_64(raw[2]),
+          alt: dco_decode_f_64(raw[3]),
+        );
+      case 2:
+        return FlutterWaypoint_GlobalRelativeHeight(
+          lat: dco_decode_f_64(raw[1]),
+          lon: dco_decode_f_64(raw[2]),
+          heightDiff: dco_decode_f_64(raw[3]),
+        );
+      default:
+        throw Exception("unreachable");
+    }
+  }
+
+  @protected
+  List<FlutterMissionNode> dco_decode_list_flutter_mission_node(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_flutter_mission_node).toList();
   }
 
   @protected
@@ -153,10 +241,104 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  AnyhowException sse_decode_AnyhowException(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var inner = sse_decode_String(deserializer);
+    return AnyhowException(inner);
+  }
+
+  @protected
   String sse_decode_String(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var inner = sse_decode_list_prim_u_8_strict(deserializer);
     return utf8.decoder.convert(inner);
+  }
+
+  @protected
+  FlutterWaypoint sse_decode_box_autoadd_flutter_waypoint(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_flutter_waypoint(deserializer));
+  }
+
+  @protected
+  double sse_decode_f_64(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return deserializer.buffer.getFloat64();
+  }
+
+  @protected
+  FlutterMissionNode sse_decode_flutter_mission_node(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var tag_ = sse_decode_i_32(deserializer);
+    switch (tag_) {
+      case 0:
+        return FlutterMissionNode_Init();
+      case 1:
+        var var_altitude = sse_decode_f_64(deserializer);
+        return FlutterMissionNode_Takeoff(altitude: var_altitude);
+      case 2:
+        var var_field0 = sse_decode_box_autoadd_flutter_waypoint(deserializer);
+        return FlutterMissionNode_Waypoint(var_field0);
+      case 3:
+        var var_field0 = sse_decode_f_64(deserializer);
+        return FlutterMissionNode_Delay(var_field0);
+      case 4:
+        return FlutterMissionNode_FindSafeSpot();
+      case 5:
+        return FlutterMissionNode_Transition();
+      case 6:
+        return FlutterMissionNode_Land();
+      case 7:
+        return FlutterMissionNode_PrecLand();
+      case 8:
+        return FlutterMissionNode_End();
+      default:
+        throw UnimplementedError('');
+    }
+  }
+
+  @protected
+  FlutterWaypoint sse_decode_flutter_waypoint(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var tag_ = sse_decode_i_32(deserializer);
+    switch (tag_) {
+      case 0:
+        var var_field0 = sse_decode_f_64(deserializer);
+        var var_field1 = sse_decode_f_64(deserializer);
+        var var_field2 = sse_decode_f_64(deserializer);
+        return FlutterWaypoint_LocalOffset(var_field0, var_field1, var_field2);
+      case 1:
+        var var_lat = sse_decode_f_64(deserializer);
+        var var_lon = sse_decode_f_64(deserializer);
+        var var_alt = sse_decode_f_64(deserializer);
+        return FlutterWaypoint_GlobalFixedHeight(
+            lat: var_lat, lon: var_lon, alt: var_alt);
+      case 2:
+        var var_lat = sse_decode_f_64(deserializer);
+        var var_lon = sse_decode_f_64(deserializer);
+        var var_heightDiff = sse_decode_f_64(deserializer);
+        return FlutterWaypoint_GlobalRelativeHeight(
+            lat: var_lat, lon: var_lon, heightDiff: var_heightDiff);
+      default:
+        throw UnimplementedError('');
+    }
+  }
+
+  @protected
+  List<FlutterMissionNode> sse_decode_list_flutter_mission_node(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <FlutterMissionNode>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_flutter_mission_node(deserializer));
+    }
+    return ans_;
   }
 
   @protected
@@ -190,9 +372,107 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_AnyhowException(
+      AnyhowException self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.message, serializer);
+  }
+
+  @protected
   void sse_encode_String(String self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_list_prim_u_8_strict(utf8.encoder.convert(self), serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_flutter_waypoint(
+      FlutterWaypoint self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_flutter_waypoint(self, serializer);
+  }
+
+  @protected
+  void sse_encode_f_64(double self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    serializer.buffer.putFloat64(self);
+  }
+
+  @protected
+  void sse_encode_flutter_mission_node(
+      FlutterMissionNode self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    switch (self) {
+      case FlutterMissionNode_Init():
+        sse_encode_i_32(0, serializer);
+      case FlutterMissionNode_Takeoff(altitude: final altitude):
+        sse_encode_i_32(1, serializer);
+        sse_encode_f_64(altitude, serializer);
+      case FlutterMissionNode_Waypoint(field0: final field0):
+        sse_encode_i_32(2, serializer);
+        sse_encode_box_autoadd_flutter_waypoint(field0, serializer);
+      case FlutterMissionNode_Delay(field0: final field0):
+        sse_encode_i_32(3, serializer);
+        sse_encode_f_64(field0, serializer);
+      case FlutterMissionNode_FindSafeSpot():
+        sse_encode_i_32(4, serializer);
+      case FlutterMissionNode_Transition():
+        sse_encode_i_32(5, serializer);
+      case FlutterMissionNode_Land():
+        sse_encode_i_32(6, serializer);
+      case FlutterMissionNode_PrecLand():
+        sse_encode_i_32(7, serializer);
+      case FlutterMissionNode_End():
+        sse_encode_i_32(8, serializer);
+      default:
+        throw UnimplementedError('');
+    }
+  }
+
+  @protected
+  void sse_encode_flutter_waypoint(
+      FlutterWaypoint self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    switch (self) {
+      case FlutterWaypoint_LocalOffset(
+          field0: final field0,
+          field1: final field1,
+          field2: final field2
+        ):
+        sse_encode_i_32(0, serializer);
+        sse_encode_f_64(field0, serializer);
+        sse_encode_f_64(field1, serializer);
+        sse_encode_f_64(field2, serializer);
+      case FlutterWaypoint_GlobalFixedHeight(
+          lat: final lat,
+          lon: final lon,
+          alt: final alt
+        ):
+        sse_encode_i_32(1, serializer);
+        sse_encode_f_64(lat, serializer);
+        sse_encode_f_64(lon, serializer);
+        sse_encode_f_64(alt, serializer);
+      case FlutterWaypoint_GlobalRelativeHeight(
+          lat: final lat,
+          lon: final lon,
+          heightDiff: final heightDiff
+        ):
+        sse_encode_i_32(2, serializer);
+        sse_encode_f_64(lat, serializer);
+        sse_encode_f_64(lon, serializer);
+        sse_encode_f_64(heightDiff, serializer);
+      default:
+        throw UnimplementedError('');
+    }
+  }
+
+  @protected
+  void sse_encode_list_flutter_mission_node(
+      List<FlutterMissionNode> self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_flutter_mission_node(item, serializer);
+    }
   }
 
   @protected

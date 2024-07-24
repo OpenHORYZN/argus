@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:argus/gradient_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -7,20 +10,21 @@ import 'package:window_manager/window_manager.dart';
 
 Future<void> main() async {
   await RustLib.init();
-  runApp(const MyApp());
+  runApp(const Argus());
   windowManager.waitUntilReadyToShow().then((_) async {
     await windowManager.setAsFrameless();
   });
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class Argus extends StatelessWidget {
+  const Argus({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: const MissionPlannerPage(),
-      darkTheme: ThemeData.dark(),
+      darkTheme: ThemeData.localize(ThemeData.dark(useMaterial3: true),
+          Theme.of(context).textTheme.apply(fontSizeFactor: 0.8)),
       themeMode: ThemeMode.dark,
     );
   }
@@ -38,10 +42,34 @@ class _MissionPlannerPageState extends State<MissionPlannerPage> {
     const FlutterMissionNode.init(),
     const FlutterMissionNode.takeoff(altitude: 10.0),
     const FlutterMissionNode.waypoint(FlutterWaypoint.globalRelativeHeight(
-        lat: 47.397971, lon: 8.546164, heightDiff: -5.0)),
+        lat: 47.397971, lon: 8.546164, heightDiff: 5.0)),
     const FlutterMissionNode.land(),
     const FlutterMissionNode.end()
   ];
+
+  CoreConnection? _connection;
+  Stream<PositionTriple>? _posStream;
+  Stream<BigInt>? _stepStream;
+  Stream<bool>? _onlineStream;
+  final _mapController = MapController();
+
+  void _connect() {
+    if (_connection == null) {
+      CoreConnection.init().then((conn) async {
+        _connection = conn;
+        _posStream = (await conn.getPos()).asBroadcastStream();
+        _onlineStream = (await conn.getOnline()).asBroadcastStream();
+        _stepStream = (await conn.getStep()).asBroadcastStream();
+        setState(() {});
+
+        _posStream!.first.then((p) {
+          setState(() {
+            _mapController.move(LatLng(p.x, p.y), 10.0);
+          });
+        }, onError: (_) => ());
+      });
+    }
+  }
 
   void _addNode(FlutterMissionNode node) {
     setState(() {
@@ -51,78 +79,150 @@ class _MissionPlannerPageState extends State<MissionPlannerPage> {
 
   void _removeNode(int index) {
     setState(() {
-      if (_missionNodes.length > 3) {
-        _missionNodes.removeAt(index);
-      }
+      _missionNodes.removeAt(index);
     });
+  }
+
+  bool _isBedrock(int index) {
+    return _missionNodes[index] is FlutterMissionNode_Init ||
+        _missionNodes[index] is FlutterMissionNode_End;
   }
 
   @override
   Widget build(BuildContext context) {
+    _connect();
     return Scaffold(
-      appBar:
-          AppBar(title: const Center(child: Text('Argus Flight Management'))),
+      appBar: AppBar(
+        leading: StreamBuilder<bool>(
+            stream: _onlineStream,
+            builder: (context, snapshot) {
+              return GradientContainer(
+                connected: snapshot.data ?? false,
+              );
+            }),
+        leadingWidth: 120,
+        centerTitle: true,
+        notificationPredicate: (notification) => false,
+        title: const Text('Argus Flight Management'),
+      ),
       body: Column(
         children: [
           Expanded(
+            flex: 3,
             child: FlutterMap(
-              options: MapOptions(),
+              mapController: _mapController,
+              options: const MapOptions(
+                backgroundColor: Colors.black,
+              ),
               children: [
                 TileLayer(
                   urlTemplate:
-                      "https://mt.google.com/vt/lyrs=y&x={x}&y={y}&z={z}",
+                      "https://mt.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",
                 ),
-                MarkerLayer(
-                  markers: _missionNodes
-                      .whereType<FlutterMissionNode_Waypoint>()
-                      .map((node) {
-                        final waypoint = node.field0;
-                        LatLng? latLng;
-                        waypoint.when(
-                          localOffset: (x, y, z) {
-                            // Assuming you have a way to translate local offset to LatLng
-                          },
-                          globalFixedHeight: (lat, lon, alt) {
-                            latLng = LatLng(lat, lon);
-                          },
-                          globalRelativeHeight: (lat, lon, heightDiff) {
-                            latLng = LatLng(lat, lon);
-                          },
-                        );
-                        if (latLng != null) {
-                          return Marker(
-                            width: 80.0,
-                            height: 80.0,
-                            point: latLng!,
-                            child: const Icon(
-                              Icons.place,
-                              color: Colors.red,
-                              size: 40.0,
-                            ),
-                          );
-                        }
-                        return null;
-                      })
-                      .whereType<Marker>()
-                      .toList(),
-                ),
+                StreamBuilder<PositionTriple>(
+                    stream: _posStream,
+                    builder: (context, snapshot) {
+                      return MarkerLayer(
+                        markers: _missionNodes
+                                .whereType<FlutterMissionNode_Waypoint>()
+                                .map((node) {
+                                  final waypoint = node.field0;
+                                  LatLng? latLng;
+                                  waypoint.when(
+                                    localOffset: (x, y, z) {
+                                      // Assuming you have a way to translate local offset to LatLng
+                                    },
+                                    globalFixedHeight: (lat, lon, alt) {
+                                      latLng = LatLng(lat, lon);
+                                    },
+                                    globalRelativeHeight:
+                                        (lat, lon, heightDiff) {
+                                      latLng = LatLng(lat, lon);
+                                    },
+                                  );
+                                  if (latLng != null) {
+                                    return Marker(
+                                      width: 80.0,
+                                      height: 80.0,
+                                      point: latLng!,
+                                      child: const Icon(
+                                        Icons.location_pin,
+                                        color: Color.fromARGB(255, 255, 0, 0),
+                                        size: 50.0,
+                                      ),
+                                    );
+                                  }
+                                  return null;
+                                })
+                                .whereType<Marker>()
+                                .toList() +
+                            [
+                              if (snapshot.hasData)
+                                Marker(
+                                    point: LatLng(
+                                        snapshot.data!.x, snapshot.data!.y),
+                                    child: const Icon(
+                                      Icons.airplanemode_active,
+                                      size: 50.0,
+                                    ))
+                            ],
+                      );
+                    }),
               ],
             ),
           ),
           Expanded(
-            child: ListView.builder(
+            flex: 2,
+            child: ReorderableListView.builder(
               itemCount: _missionNodes.length,
+              buildDefaultDragHandles: false,
+              onReorder: (oldIndex, newIndex) {
+                setState(() {
+                  if (_isBedrock(oldIndex)) {
+                    return;
+                  }
+
+                  if (newIndex > oldIndex) {
+                    newIndex -= 1;
+                  }
+
+                  if (_isBedrock(newIndex)) {
+                    return;
+                  }
+
+                  final it = _missionNodes.removeAt(oldIndex);
+                  _missionNodes.insert(newIndex, it);
+                });
+              },
               itemBuilder: (context, index) {
                 final node = _missionNodes[index];
-                return ListTile(
-                  leading: _getIconForNode(node),
-                  title: Text(_getTextForNode(node)),
-                  trailing: index != 0 && index != _missionNodes.length - 1
-                      ? IconButton(
-                          icon: const Icon(Icons.delete),
-                          onPressed: () => _removeNode(index),
-                        )
-                      : null,
+                bool isMe(AsyncSnapshot<BigInt> snap, index) {
+                  return (snap.data?.toInt() == index);
+                }
+
+                return ReorderableDragStartListener(
+                  index: index,
+                  key: ValueKey(node),
+                  enabled: !_isBedrock(index),
+                  child: StreamBuilder<BigInt>(
+                      stream: _stepStream,
+                      builder: (context, snapshot) {
+                        return ListTile(
+                          leading: _getIconForNode(node),
+                          title: Text(_getTextForNode(node)),
+                          textColor:
+                              isMe(snapshot, index) ? Colors.orange : null,
+                          titleTextStyle: isMe(snapshot, index)
+                              ? const TextStyle(fontWeight: FontWeight.bold)
+                              : const TextStyle(),
+                          trailing: !_isBedrock(index)
+                              ? IconButton(
+                                  icon: const Icon(Icons.delete),
+                                  onPressed: () => _removeNode(index),
+                                )
+                              : null,
+                        );
+                      }),
                 );
               },
             ),
@@ -133,14 +233,16 @@ class _MissionPlannerPageState extends State<MissionPlannerPage> {
               label: const Text('Send Mission'),
               icon: const Icon(Icons.check),
               onPressed: () async {
-                await sendMissionPlan(plan: _missionNodes);
+                if (_connection != null) {
+                  await _connection!.sendMissionPlan(plan: _missionNodes);
+                }
               },
             ),
           ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _showAddNodeDialog(context),
+        onPressed: () => (),
         child: const Icon(Icons.add),
       ),
     );
@@ -170,237 +272,5 @@ class _MissionPlannerPageState extends State<MissionPlannerPage> {
         findSafeSpot: (_) => 'Find Safe Spot',
         transition: (_) => 'Transition',
         precLand: (_) => 'Precision Land');
-  }
-
-  void _showAddNodeDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Add Mission Node'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                leading: const Icon(Icons.flight_takeoff),
-                title: const Text('Takeoff'),
-                onTap: () {
-                  Navigator.pop(context);
-                  _showTakeoffDialog(context);
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.place),
-                title: const Text('Local Offset Waypoint'),
-                onTap: () {
-                  Navigator.pop(context);
-                  _showLocalOffsetWaypointDialog(context);
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.place),
-                title: const Text('Global Relative Height Waypoint'),
-                onTap: () {
-                  Navigator.pop(context);
-                  _showGlobalRelativeHeightWaypointDialog(context);
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.timer),
-                title: const Text('Delay'),
-                onTap: () {
-                  Navigator.pop(context);
-                  _showDelayDialog(context);
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.flight_land),
-                title: const Text('Land'),
-                onTap: () {
-                  Navigator.pop(context);
-                  _addNode(const FlutterMissionNode.land());
-                },
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  void _showTakeoffDialog(BuildContext context) {
-    final TextEditingController altitudeController = TextEditingController();
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Takeoff Settings'),
-          content: TextField(
-            controller: altitudeController,
-            decoration: const InputDecoration(labelText: 'Altitude'),
-            keyboardType: TextInputType.number,
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                final altitude =
-                    double.tryParse(altitudeController.text) ?? 10.0;
-                _addNode(FlutterMissionNode.takeoff(altitude: altitude));
-                Navigator.pop(context);
-              },
-              child: const Text('Add'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _showLocalOffsetWaypointDialog(BuildContext context) {
-    final TextEditingController xController = TextEditingController();
-    final TextEditingController yController = TextEditingController();
-    final TextEditingController zController = TextEditingController();
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Local Offset Waypoint Settings'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: xController,
-                decoration: const InputDecoration(labelText: 'X Offset'),
-                keyboardType: TextInputType.number,
-              ),
-              TextField(
-                controller: yController,
-                decoration: const InputDecoration(labelText: 'Y Offset'),
-                keyboardType: TextInputType.number,
-              ),
-              TextField(
-                controller: zController,
-                decoration: const InputDecoration(labelText: 'Z Offset'),
-                keyboardType: TextInputType.number,
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                final x = double.tryParse(xController.text) ?? 0.0;
-                final y = double.tryParse(yController.text) ?? 0.0;
-                final z = double.tryParse(zController.text) ?? 0.0;
-                _addNode(FlutterMissionNode.waypoint(
-                    FlutterWaypoint.localOffset(x, y, z)));
-                Navigator.pop(context);
-              },
-              child: const Text('Add'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _showGlobalRelativeHeightWaypointDialog(BuildContext context) {
-    final TextEditingController latController = TextEditingController();
-    final TextEditingController lonController = TextEditingController();
-    final TextEditingController heightDiffController = TextEditingController();
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Global Relative Height Waypoint Settings'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: latController,
-                decoration: const InputDecoration(labelText: 'Latitude'),
-                keyboardType: TextInputType.number,
-              ),
-              TextField(
-                controller: lonController,
-                decoration: const InputDecoration(labelText: 'Longitude'),
-                keyboardType: TextInputType.number,
-              ),
-              TextField(
-                controller: heightDiffController,
-                decoration:
-                    const InputDecoration(labelText: 'Height Difference'),
-                keyboardType: TextInputType.number,
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                final lat = double.tryParse(latController.text) ?? 0.0;
-                final lon = double.tryParse(lonController.text) ?? 0.0;
-                final heightDiff =
-                    double.tryParse(heightDiffController.text) ?? 0.0;
-                _addNode(FlutterMissionNode.waypoint(
-                    FlutterWaypoint.globalRelativeHeight(
-                        lat: lat, lon: lon, heightDiff: heightDiff)));
-                Navigator.pop(context);
-              },
-              child: const Text('Add'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _showDelayDialog(BuildContext context) {
-    final TextEditingController secondsController = TextEditingController();
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Delay Settings'),
-          content: TextField(
-            controller: secondsController,
-            decoration: const InputDecoration(labelText: 'Seconds'),
-            keyboardType: TextInputType.number,
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                final seconds = int.tryParse(secondsController.text) ?? 0;
-                _addNode(FlutterMissionNode.delay(seconds.toDouble()));
-                Navigator.pop(context);
-              },
-              child: const Text('Add'),
-            ),
-          ],
-        );
-      },
-    );
   }
 }

@@ -8,10 +8,22 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'package:freezed_annotation/freezed_annotation.dart' hide protected;
 part 'mission.freezed.dart';
 
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `from`, `from`
+// These functions are ignored because they are not marked as `pub`: `watch_stream`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `fmt`, `from`, `from`
 
-Future<void> sendMissionPlan({required List<FlutterMissionNode> plan}) =>
-    RustLib.instance.api.crateApiMissionSendMissionPlan(plan: plan);
+// Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<CoreConnection>>
+abstract class CoreConnection implements RustOpaqueInterface {
+  Future<Stream<bool>> getOnline();
+
+  Future<Stream<PositionTriple>> getPos();
+
+  Future<Stream<BigInt>> getStep();
+
+  static Future<CoreConnection> init() =>
+      RustLib.instance.api.crateApiMissionCoreConnectionInit();
+
+  Future<void> sendMissionPlan({required List<FlutterMissionNode> plan});
+}
 
 @freezed
 sealed class FlutterMissionNode with _$FlutterMissionNode {
@@ -54,4 +66,28 @@ sealed class FlutterWaypoint with _$FlutterWaypoint {
     required double lon,
     required double heightDiff,
   }) = FlutterWaypoint_GlobalRelativeHeight;
+}
+
+class PositionTriple {
+  final double x;
+  final double y;
+  final double z;
+
+  const PositionTriple({
+    required this.x,
+    required this.y,
+    required this.z,
+  });
+
+  @override
+  int get hashCode => x.hashCode ^ y.hashCode ^ z.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is PositionTriple &&
+          runtimeType == other.runtimeType &&
+          x == other.x &&
+          y == other.y &&
+          z == other.z;
 }

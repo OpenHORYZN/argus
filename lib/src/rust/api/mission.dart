@@ -8,8 +8,7 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'package:freezed_annotation/freezed_annotation.dart' hide protected;
 part 'mission.freezed.dart';
 
-// These functions are ignored because they are not marked as `pub`: `watch_stream`
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `fmt`, `from`, `from`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `fmt`, `from`, `from`, `from`
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<CoreConnection>>
 abstract class CoreConnection implements RustOpaqueInterface {
@@ -17,7 +16,7 @@ abstract class CoreConnection implements RustOpaqueInterface {
 
   Future<Stream<PositionTriple>> getPos();
 
-  Future<Stream<BigInt>> getStep();
+  Future<Stream<int>> getStep();
 
   static Future<CoreConnection> init() =>
       RustLib.instance.api.crateApiMissionCoreConnectionInit();

@@ -4,6 +4,7 @@
 // ignore_for_file: unused_import, unused_element, unnecessary_import, duplicate_ignore, invalid_use_of_internal_member, annotate_overrides, non_constant_identifier_names, curly_braces_in_flow_control_structures, prefer_const_literals_to_create_immutables, unused_field
 
 import 'api/mission.dart';
+import 'api/util.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:ffi' as ffi;
@@ -49,14 +50,17 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   RustStreamSink<bool> dco_decode_StreamSink_bool_Sse(dynamic raw);
 
   @protected
+  RustStreamSink<int> dco_decode_StreamSink_i_32_Sse(dynamic raw);
+
+  @protected
   RustStreamSink<PositionTriple> dco_decode_StreamSink_position_triple_Sse(
       dynamic raw);
 
   @protected
-  RustStreamSink<BigInt> dco_decode_StreamSink_usize_Sse(dynamic raw);
+  String dco_decode_String(dynamic raw);
 
   @protected
-  String dco_decode_String(dynamic raw);
+  PrintError dco_decode_TraitDef_PrintError(dynamic raw);
 
   @protected
   bool dco_decode_bool(dynamic raw);
@@ -72,6 +76,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   FlutterWaypoint dco_decode_flutter_waypoint(dynamic raw);
+
+  @protected
+  int dco_decode_i_32(dynamic raw);
 
   @protected
   List<FlutterMissionNode> dco_decode_list_flutter_mission_node(dynamic raw);
@@ -119,11 +126,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
-  RustStreamSink<PositionTriple> sse_decode_StreamSink_position_triple_Sse(
+  RustStreamSink<int> sse_decode_StreamSink_i_32_Sse(
       SseDeserializer deserializer);
 
   @protected
-  RustStreamSink<BigInt> sse_decode_StreamSink_usize_Sse(
+  RustStreamSink<PositionTriple> sse_decode_StreamSink_position_triple_Sse(
       SseDeserializer deserializer);
 
   @protected
@@ -147,6 +154,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   FlutterWaypoint sse_decode_flutter_waypoint(SseDeserializer deserializer);
 
   @protected
+  int sse_decode_i_32(SseDeserializer deserializer);
+
+  @protected
   List<FlutterMissionNode> sse_decode_list_flutter_mission_node(
       SseDeserializer deserializer);
 
@@ -164,9 +174,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   BigInt sse_decode_usize(SseDeserializer deserializer);
-
-  @protected
-  int sse_decode_i_32(SseDeserializer deserializer);
 
   @protected
   void sse_encode_AnyhowException(
@@ -197,12 +204,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       RustStreamSink<bool> self, SseSerializer serializer);
 
   @protected
-  void sse_encode_StreamSink_position_triple_Sse(
-      RustStreamSink<PositionTriple> self, SseSerializer serializer);
+  void sse_encode_StreamSink_i_32_Sse(
+      RustStreamSink<int> self, SseSerializer serializer);
 
   @protected
-  void sse_encode_StreamSink_usize_Sse(
-      RustStreamSink<BigInt> self, SseSerializer serializer);
+  void sse_encode_StreamSink_position_triple_Sse(
+      RustStreamSink<PositionTriple> self, SseSerializer serializer);
 
   @protected
   void sse_encode_String(String self, SseSerializer serializer);
@@ -226,6 +233,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       FlutterWaypoint self, SseSerializer serializer);
 
   @protected
+  void sse_encode_i_32(int self, SseSerializer serializer);
+
+  @protected
   void sse_encode_list_flutter_mission_node(
       List<FlutterMissionNode> self, SseSerializer serializer);
 
@@ -245,9 +255,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_usize(BigInt self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_i_32(int self, SseSerializer serializer);
 }
 
 // Section: wire_class

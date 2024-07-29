@@ -1982,12 +1982,14 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "argus_common",
+ "flume",
  "flutter_rust_bridge",
  "futures-util",
  "nalgebra",
  "postcard",
  "serde",
  "tokio",
+ "tracing-subscriber",
  "zenoh",
 ]
 

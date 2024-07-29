@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class GradientContainer extends StatefulWidget {
-  final bool connected;
-  const GradientContainer({super.key, required this.connected});
+  final VehicleState state;
+  const GradientContainer({super.key, required this.state});
 
   @override
   GradientContainerState createState() => GradientContainerState();
@@ -29,11 +29,26 @@ class GradientContainerState extends State<GradientContainer>
 
   @override
   Widget build(BuildContext context) {
-    final color = widget.connected
-        ? const Color.fromARGB(255, 5, 175, 14)
-        : const Color.fromARGB(255, 255, 18, 2);
+    Color color;
 
-    final text = widget.connected ? "Online" : "Offline";
+    if (widget.state == VehicleState.offline) {
+      color = const Color.fromARGB(255, 255, 18, 2);
+    } else if (widget.state == VehicleState.flying) {
+      color = const Color.fromARGB(255, 0, 110, 255);
+    } else {
+      color = const Color.fromARGB(255, 5, 175, 14);
+    }
+
+    String text;
+    if (widget.state == VehicleState.offline) {
+      text = "Offline";
+    } else if (widget.state == VehicleState.flying) {
+      text = "Flying";
+    } else if (widget.state == VehicleState.online) {
+      text = "Online";
+    } else {
+      text = "Ready";
+    }
 
     return AnimatedBuilder(
       animation: _controller,
@@ -64,3 +79,5 @@ class GradientContainerState extends State<GradientContainer>
     );
   }
 }
+
+enum VehicleState { online, ready, flying, offline }

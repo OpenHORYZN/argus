@@ -1,27 +1,31 @@
 use anyhow::anyhow;
-use argus_common::{GlobalPosition, MissionNode, Waypoint};
 use futures_util::SinkExt;
 use nalgebra::Vector3;
 use postcard::to_allocvec;
 use std::{sync::Arc, time::Duration};
 use tokio::{select, sync::watch, time::sleep};
-
+use tracing_subscriber::filter::LevelFilter;
 use zenoh::{prelude::r#async::*, publication::Publisher};
 
-use crate::frb_generated::{SseEncode, StreamSink};
+use argus_common::{GlobalPosition, MissionNode, Waypoint};
 
-use super::util::{publisher, subscriber};
+use crate::{api::util::ingest, frb_generated::StreamSink};
+
+use super::util::{publisher, subscriber, watch_stream, PrintError};
 
 #[flutter_rust_bridge::frb(init)]
 pub fn init_app() {
     flutter_rust_bridge::setup_default_user_utils();
+    tracing_subscriber::fmt()
+        .with_max_level(LevelFilter::INFO)
+        .init();
 }
 
 pub struct CoreConnection {
     mission: Publisher<'static>,
     pos_stream: watch::Receiver<PositionTriple>,
     online_stream: watch::Receiver<bool>,
-    step_stream: watch::Receiver<usize>,
+    step_stream: watch::Receiver<i32>,
 }
 
 impl CoreConnection {
@@ -41,62 +45,22 @@ impl CoreConnection {
         });
 
         let (step_snd, step_rcv) = watch::channel(0);
-
         let (online_snd, online_rcv) = watch::channel(false);
 
         tokio::spawn(async move {
             loop {
                 select! {
                     pos = pos_sub.recv_async() => {
-                        match pos {
-                            Ok(sample) => {
-                                let buf = sample.value.payload.contiguous();
-                                let Ok(msg) = postcard::from_bytes::<GlobalPosition>(&buf) else {
-                                    continue;
-                                };
-
-                                let _ = online_snd.send(true);
-
-                                let Ok(_) = pos_snd.send(PositionTriple {
-                                    x: msg.lat,
-                                    y: msg.lon,
-                                    z: msg.alt as f64,
-                                }) else {
-                                    println!("nobody listening");
-                                    break;
-                                };
-                            }
-                            Err(e) => {
-                                println!("error {e}");
-                                continue;
-                            }
-                        }
+                        ingest::<GlobalPosition, PositionTriple>(pos, &pos_snd, &online_snd).print_error();
                     }
                     step = step_sub.recv_async() => {
-                        match step {
-                            Ok(sample) => {
-                                let buf = sample.value.payload.contiguous();
-                                let Ok(msg) = postcard::from_bytes::<usize>(&buf) else {
-                                    continue;
-                                };
-
-                                let _ = online_snd.send(true);
-
-                                let Ok(_) = step_snd.send(msg) else {
-                                    println!("nobody listening");
-                                    break;
-                                };
-                            }
-                            Err(e) => {
-                                println!("error {e}");
-                                continue;
-                            }
-                        }
+                        ingest::<i32, i32>(step, &step_snd, &online_snd).print_error();
                     }
                     _ = sleep(Duration::from_secs(1)) => {
                         let _ = online_snd.send(false);
                     },
                 }
+                sleep(Duration::from_millis(10)).await;
             }
         });
 
@@ -120,42 +84,20 @@ impl CoreConnection {
 
     #[flutter_rust_bridge::frb(stream_dart_await)]
     pub async fn get_pos(&self, sink: StreamSink<PositionTriple>) -> anyhow::Result<()> {
-        Self::watch_stream(self.pos_stream.clone(), sink).await;
+        watch_stream(self.pos_stream.clone(), sink).await;
         Ok(())
     }
 
     #[flutter_rust_bridge::frb(stream_dart_await)]
-    pub async fn get_step(&self, sink: StreamSink<usize>) -> anyhow::Result<()> {
-        Self::watch_stream(self.step_stream.clone(), sink).await;
+    pub async fn get_step(&self, sink: StreamSink<i32>) -> anyhow::Result<()> {
+        watch_stream(self.step_stream.clone(), sink).await;
         Ok(())
     }
 
     #[flutter_rust_bridge::frb(stream_dart_await)]
     pub async fn get_online(&self, sink: StreamSink<bool>) -> anyhow::Result<()> {
-        Self::watch_stream(self.online_stream.clone(), sink).await;
+        watch_stream(self.online_stream.clone(), sink).await;
         Ok(())
-    }
-
-    async fn watch_stream<T>(mut stream: watch::Receiver<T>, sink: StreamSink<T>)
-    where
-        T: SseEncode + Clone + Send + Sync + 'static,
-    {
-        tokio::spawn(async move {
-            loop {
-                match stream.changed().await {
-                    Ok(_) => {
-                        let Ok(_) = sink.add(stream.borrow().to_owned()) else {
-                            println!("t stream closed");
-                            break;
-                        };
-                    }
-                    Err(_) => {
-                        let _ = sink.add_error(());
-                        break;
-                    }
-                }
-            }
-        });
     }
 }
 
@@ -164,6 +106,16 @@ pub struct PositionTriple {
     pub x: f64,
     pub y: f64,
     pub z: f64,
+}
+
+impl From<GlobalPosition> for PositionTriple {
+    fn from(value: GlobalPosition) -> Self {
+        Self {
+            x: value.lat,
+            y: value.lon,
+            z: value.alt as f64,
+        }
+    }
 }
 
 pub enum FlutterMissionNode {

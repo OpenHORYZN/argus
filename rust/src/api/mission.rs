@@ -17,7 +17,7 @@ use super::util::{publisher, subscriber, watch_stream, PrintError};
 pub fn init_app() {
     flutter_rust_bridge::setup_default_user_utils();
     tracing_subscriber::fmt()
-        .with_max_level(LevelFilter::INFO)
+        .with_max_level(LevelFilter::DEBUG)
         .init();
 }
 

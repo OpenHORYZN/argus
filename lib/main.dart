@@ -9,7 +9,10 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:argus/src/rust/api/mission.dart';
 import 'package:argus/src/rust/frb_generated.dart';
+import 'package:logger/logger.dart';
 import 'package:window_manager/window_manager.dart';
+
+const machine = "sim";
 
 Future<void> main() async {
   await RustLib.init();
@@ -41,7 +44,9 @@ class MissionPlannerPage extends StatefulWidget {
 }
 
 class _MissionPlannerPageState extends State<MissionPlannerPage> {
-  final List<FlutterMissionNode> _missionNodes = [
+  final logger = Logger(printer: SimplePrinter());
+
+  List<FlutterMissionNode> _missionNodes = [
     const FlutterMissionNode.init(),
     const FlutterMissionNode.takeoff(altitude: 10.0),
     const FlutterMissionNode.land(),
@@ -52,20 +57,24 @@ class _MissionPlannerPageState extends State<MissionPlannerPage> {
   Stream<PositionTriple>? _posStream;
   Stream<int>? _stepStream;
   Stream<bool>? _onlineStream;
+  Stream<FlutterControlResponse>? _controlStream;
+  bool _online = false;
   final _mapController = MapController();
   final _plotController = PlotController();
   dynamic Function(LatLng)? getMapLocation;
 
   void _connect() {
     if (_connection == null) {
-      CoreConnection.init().then((conn) async {
+      CoreConnection.init(machine: "sim").then((conn) async {
         _connection = conn;
         _posStream = (await conn.getPos()).asBroadcastStream();
         _onlineStream = (await conn.getOnline()).asBroadcastStream();
         _stepStream = (await conn.getStep()).asBroadcastStream();
+        _controlStream = (await conn.getControl()).asBroadcastStream();
         setState(() {});
 
         _posStream!.first.then((p) {
+          logger.i("Re-Centering Map");
           setState(() {
             _mapController.move(LatLng(p.x, p.y), _mapController.camera.zoom);
           });
@@ -73,6 +82,24 @@ class _MissionPlannerPageState extends State<MissionPlannerPage> {
 
         _posStream!.forEach((p) {
           _plotController.push(AltPoint(DateTime.now(), p.z));
+        });
+
+        _onlineStream!.forEach((o) async {
+          if (o && !_online) {
+            logger.i("Fetching Mission Plan");
+            conn.sendControl(req: FlutterControlRequest.fetchMissionPlan);
+          }
+
+          _online = o;
+        });
+
+        _controlStream!.forEach((p) {
+          p.map(sendMissionPlan: (smp) {
+            setState(() {
+              logger.i("Mission Plan Received");
+              _missionNodes = smp.field0.toList();
+            });
+          });
         });
       });
     }
@@ -119,7 +146,8 @@ class _MissionPlannerPageState extends State<MissionPlannerPage> {
                       if (onlineSnapshot.hasData && onlineSnapshot.data!) {
                         if (stepSnapshot.hasData && stepSnapshot.data! > 0) {
                           vehicleState = VehicleState.flying;
-                        } else if (stepSnapshot.data! == 0) {
+                        } else if (stepSnapshot.hasData &&
+                            stepSnapshot.data! == 0) {
                           vehicleState = VehicleState.ready;
                         } else {
                           vehicleState = VehicleState.online;
@@ -133,6 +161,17 @@ class _MissionPlannerPageState extends State<MissionPlannerPage> {
                     });
               }),
           leadingWidth: 120,
+          actions: const [
+            Padding(
+              padding: EdgeInsets.all(12.0),
+              child: Center(
+                child: Text(
+                  "Node: $machine",
+                  style: TextStyle(color: Colors.white, fontSize: 14),
+                ),
+              ),
+            ),
+          ],
           centerTitle: true,
           notificationPredicate: (notification) => false,
           title: const Text('Argus Flight Management'),
@@ -235,6 +274,9 @@ class _MissionPlannerPageState extends State<MissionPlannerPage> {
                                     isUnlocked(stepSnapshot))
                                 ? () async {
                                     if (_connection != null) {
+                                      _connection!.sendControl(
+                                          req: FlutterControlRequest
+                                              .fetchMissionPlan);
                                       await _connection!
                                           .sendMissionPlan(plan: _missionNodes);
                                     }

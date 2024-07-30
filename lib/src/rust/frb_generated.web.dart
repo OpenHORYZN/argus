@@ -52,6 +52,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   RustStreamSink<bool> dco_decode_StreamSink_bool_Sse(dynamic raw);
 
   @protected
+  RustStreamSink<FlutterControlResponse>
+      dco_decode_StreamSink_flutter_control_response_Sse(dynamic raw);
+
+  @protected
   RustStreamSink<int> dco_decode_StreamSink_i_32_Sse(dynamic raw);
 
   @protected
@@ -72,6 +76,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   double dco_decode_f_64(dynamic raw);
+
+  @protected
+  FlutterControlRequest dco_decode_flutter_control_request(dynamic raw);
+
+  @protected
+  FlutterControlResponse dco_decode_flutter_control_response(dynamic raw);
 
   @protected
   FlutterMissionNode dco_decode_flutter_mission_node(dynamic raw);
@@ -128,6 +138,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
+  RustStreamSink<FlutterControlResponse>
+      sse_decode_StreamSink_flutter_control_response_Sse(
+          SseDeserializer deserializer);
+
+  @protected
   RustStreamSink<int> sse_decode_StreamSink_i_32_Sse(
       SseDeserializer deserializer);
 
@@ -147,6 +162,14 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   double sse_decode_f_64(SseDeserializer deserializer);
+
+  @protected
+  FlutterControlRequest sse_decode_flutter_control_request(
+      SseDeserializer deserializer);
+
+  @protected
+  FlutterControlResponse sse_decode_flutter_control_response(
+      SseDeserializer deserializer);
 
   @protected
   FlutterMissionNode sse_decode_flutter_mission_node(
@@ -206,6 +229,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       RustStreamSink<bool> self, SseSerializer serializer);
 
   @protected
+  void sse_encode_StreamSink_flutter_control_response_Sse(
+      RustStreamSink<FlutterControlResponse> self, SseSerializer serializer);
+
+  @protected
   void sse_encode_StreamSink_i_32_Sse(
       RustStreamSink<int> self, SseSerializer serializer);
 
@@ -225,6 +252,14 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_f_64(double self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_flutter_control_request(
+      FlutterControlRequest self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_flutter_control_response(
+      FlutterControlResponse self, SseSerializer serializer);
 
   @protected
   void sse_encode_flutter_mission_node(

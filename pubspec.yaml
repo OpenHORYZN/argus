@@ -46,6 +46,7 @@ dependencies:
   syncfusion_flutter_charts: ^26.2.4
   lottie: ^3.1.2
   flutter_speed_dial: ^7.0.0
+  logger: ^2.4.0
 
 dev_dependencies:
   flutter_test:

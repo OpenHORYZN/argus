@@ -7,7 +7,7 @@ use tokio::{select, sync::watch, time::sleep};
 use tracing_subscriber::filter::LevelFilter;
 use zenoh::{prelude::r#async::*, publication::Publisher};
 
-use argus_common::{GlobalPosition, MissionNode, Waypoint};
+use argus_common::{ControlRequest, ControlResponse, GlobalPosition, MissionNode, Waypoint};
 
 use crate::{api::util::ingest, frb_generated::StreamSink};
 
@@ -23,20 +23,25 @@ pub fn init_app() {
 
 pub struct CoreConnection {
     mission: Publisher<'static>,
+    control: Publisher<'static>,
+    control_stream: watch::Receiver<FlutterControlResponse>,
     pos_stream: watch::Receiver<PositionTriple>,
     online_stream: watch::Receiver<bool>,
     step_stream: watch::Receiver<i32>,
 }
 
 impl CoreConnection {
-    pub async fn init() -> anyhow::Result<Self> {
+    pub async fn init(machine: String) -> anyhow::Result<Self> {
+        let t = |o: &str| format!("{machine}/{o}");
         let zconfig = zenoh::config::default();
 
         let session = Arc::new(zenoh::open(zconfig).res().await.map_err(|e| anyhow!(e))?);
 
-        let pos_sub = subscriber(session.clone(), "position").await?;
-        let step_sub = subscriber(session.clone(), "mission/step").await?;
-        let mission_upd_pub = publisher(session, "mission/update").await?;
+        let pos_sub = subscriber(session.clone(), &t("position")).await?;
+        let step_sub = subscriber(session.clone(), &t("mission/step")).await?;
+        let control_sub = subscriber(session.clone(), &t("control/out")).await?;
+        let mission_upd_pub = publisher(session.clone(), &t("mission/update")).await?;
+        let control_pub = publisher(session, &t("control/in")).await?;
 
         let (pos_snd, pos_rcv) = watch::channel(PositionTriple {
             x: 50.0,
@@ -46,6 +51,8 @@ impl CoreConnection {
 
         let (step_snd, step_rcv) = watch::channel(0);
         let (online_snd, online_rcv) = watch::channel(false);
+        let (control_snd, control_rcv) =
+            watch::channel(FlutterControlResponse::SendMissionPlan(vec![]));
 
         tokio::spawn(async move {
             loop {
@@ -55,6 +62,9 @@ impl CoreConnection {
                     }
                     step = step_sub.recv_async() => {
                         ingest::<i32, i32>(step, &step_snd, &online_snd).print_error();
+                    }
+                    control = control_sub.recv_async() => {
+                        ingest::<ControlResponse, FlutterControlResponse>(control, &control_snd, &online_snd).print_error();
                     }
                     _ = sleep(Duration::from_secs(1)) => {
                         let _ = online_snd.send(false);
@@ -66,9 +76,11 @@ impl CoreConnection {
 
         Ok(Self {
             mission: mission_upd_pub,
+            control: control_pub,
             pos_stream: pos_rcv,
             online_stream: online_rcv,
             step_stream: step_rcv,
+            control_stream: control_rcv,
         })
     }
 
@@ -78,6 +90,15 @@ impl CoreConnection {
         let plan = to_allocvec(&plan)?;
 
         self.mission.send(&*plan).await.map_err(|e| anyhow!(e))?;
+
+        Ok(())
+    }
+
+    pub async fn send_control(&mut self, req: FlutterControlRequest) -> anyhow::Result<()> {
+        let control: ControlRequest = req.into();
+        let control = to_allocvec(&control)?;
+
+        self.control.send(&*control).await.map_err(|e| anyhow!(e))?;
 
         Ok(())
     }
@@ -95,9 +116,46 @@ impl CoreConnection {
     }
 
     #[flutter_rust_bridge::frb(stream_dart_await)]
+    pub async fn get_control(
+        &self,
+        sink: StreamSink<FlutterControlResponse>,
+    ) -> anyhow::Result<()> {
+        watch_stream(self.control_stream.clone(), sink).await;
+        Ok(())
+    }
+
+    #[flutter_rust_bridge::frb(stream_dart_await)]
     pub async fn get_online(&self, sink: StreamSink<bool>) -> anyhow::Result<()> {
         watch_stream(self.online_stream.clone(), sink).await;
         Ok(())
+    }
+}
+
+#[derive(Debug, Clone)]
+pub enum FlutterControlRequest {
+    FetchMissionPlan,
+}
+
+impl From<FlutterControlRequest> for ControlRequest {
+    fn from(value: FlutterControlRequest) -> Self {
+        match value {
+            FlutterControlRequest::FetchMissionPlan => ControlRequest::FetchMissionPlan,
+        }
+    }
+}
+
+#[derive(Debug, Clone)]
+pub enum FlutterControlResponse {
+    SendMissionPlan(Vec<FlutterMissionNode>),
+}
+
+impl From<ControlResponse> for FlutterControlResponse {
+    fn from(value: ControlResponse) -> Self {
+        match value {
+            ControlResponse::SendMissionPlan(plan) => {
+                FlutterControlResponse::SendMissionPlan(plan.into_iter().map(Into::into).collect())
+            }
+        }
     }
 }
 
@@ -118,6 +176,7 @@ impl From<GlobalPosition> for PositionTriple {
     }
 }
 
+#[derive(Debug, Clone)]
 pub enum FlutterMissionNode {
     Init,
     Takeoff { altitude: f64 },
@@ -146,6 +205,23 @@ impl From<FlutterMissionNode> for MissionNode {
     }
 }
 
+impl From<MissionNode> for FlutterMissionNode {
+    fn from(value: MissionNode) -> Self {
+        match value {
+            MissionNode::Init => FlutterMissionNode::Init,
+            MissionNode::Takeoff { altitude } => FlutterMissionNode::Takeoff { altitude },
+            MissionNode::Waypoint(wp) => FlutterMissionNode::Waypoint(wp.into()),
+            MissionNode::Delay(d) => FlutterMissionNode::Delay(d.as_secs_f64()),
+            MissionNode::FindSafeSpot => FlutterMissionNode::FindSafeSpot,
+            MissionNode::Transition => FlutterMissionNode::Transition,
+            MissionNode::Land => FlutterMissionNode::Land,
+            MissionNode::PrecLand => FlutterMissionNode::PrecLand,
+            MissionNode::End => FlutterMissionNode::End,
+        }
+    }
+}
+
+#[derive(Debug, Clone)]
 pub enum FlutterWaypoint {
     LocalOffset(f64, f64, f64),
     GlobalFixedHeight {
@@ -172,6 +248,26 @@ impl From<FlutterWaypoint> for Waypoint {
                 lon,
                 height_diff,
             } => Waypoint::GlobalRelativeHeight {
+                lat,
+                lon,
+                height_diff,
+            },
+        }
+    }
+}
+
+impl From<Waypoint> for FlutterWaypoint {
+    fn from(value: Waypoint) -> Self {
+        match value {
+            Waypoint::LocalOffset(v) => FlutterWaypoint::LocalOffset(v.x, v.y, v.z),
+            Waypoint::GlobalFixedHeight { lat, lon, alt } => {
+                FlutterWaypoint::GlobalFixedHeight { lat, lon, alt }
+            }
+            Waypoint::GlobalRelativeHeight {
+                lat,
+                lon,
+                height_diff,
+            } => FlutterWaypoint::GlobalRelativeHeight {
                 lat,
                 lon,
                 height_diff,

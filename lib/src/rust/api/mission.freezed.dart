@@ -15,6 +15,239 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
+mixin _$FlutterControlResponse {
+  List<FlutterMissionNode> get field0 => throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(List<FlutterMissionNode> field0) sendMissionPlan,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(List<FlutterMissionNode> field0)? sendMissionPlan,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(List<FlutterMissionNode> field0)? sendMissionPlan,
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(FlutterControlResponse_SendMissionPlan value)
+        sendMissionPlan,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(FlutterControlResponse_SendMissionPlan value)?
+        sendMissionPlan,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(FlutterControlResponse_SendMissionPlan value)?
+        sendMissionPlan,
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
+
+  @JsonKey(ignore: true)
+  $FlutterControlResponseCopyWith<FlutterControlResponse> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $FlutterControlResponseCopyWith<$Res> {
+  factory $FlutterControlResponseCopyWith(FlutterControlResponse value,
+          $Res Function(FlutterControlResponse) then) =
+      _$FlutterControlResponseCopyWithImpl<$Res, FlutterControlResponse>;
+  @useResult
+  $Res call({List<FlutterMissionNode> field0});
+}
+
+/// @nodoc
+class _$FlutterControlResponseCopyWithImpl<$Res,
+        $Val extends FlutterControlResponse>
+    implements $FlutterControlResponseCopyWith<$Res> {
+  _$FlutterControlResponseCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? field0 = null,
+  }) {
+    return _then(_value.copyWith(
+      field0: null == field0
+          ? _value.field0
+          : field0 // ignore: cast_nullable_to_non_nullable
+              as List<FlutterMissionNode>,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$FlutterControlResponse_SendMissionPlanImplCopyWith<$Res>
+    implements $FlutterControlResponseCopyWith<$Res> {
+  factory _$$FlutterControlResponse_SendMissionPlanImplCopyWith(
+          _$FlutterControlResponse_SendMissionPlanImpl value,
+          $Res Function(_$FlutterControlResponse_SendMissionPlanImpl) then) =
+      __$$FlutterControlResponse_SendMissionPlanImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({List<FlutterMissionNode> field0});
+}
+
+/// @nodoc
+class __$$FlutterControlResponse_SendMissionPlanImplCopyWithImpl<$Res>
+    extends _$FlutterControlResponseCopyWithImpl<$Res,
+        _$FlutterControlResponse_SendMissionPlanImpl>
+    implements _$$FlutterControlResponse_SendMissionPlanImplCopyWith<$Res> {
+  __$$FlutterControlResponse_SendMissionPlanImplCopyWithImpl(
+      _$FlutterControlResponse_SendMissionPlanImpl _value,
+      $Res Function(_$FlutterControlResponse_SendMissionPlanImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? field0 = null,
+  }) {
+    return _then(_$FlutterControlResponse_SendMissionPlanImpl(
+      null == field0
+          ? _value._field0
+          : field0 // ignore: cast_nullable_to_non_nullable
+              as List<FlutterMissionNode>,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$FlutterControlResponse_SendMissionPlanImpl
+    extends FlutterControlResponse_SendMissionPlan {
+  const _$FlutterControlResponse_SendMissionPlanImpl(
+      final List<FlutterMissionNode> field0)
+      : _field0 = field0,
+        super._();
+
+  final List<FlutterMissionNode> _field0;
+  @override
+  List<FlutterMissionNode> get field0 {
+    if (_field0 is EqualUnmodifiableListView) return _field0;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_field0);
+  }
+
+  @override
+  String toString() {
+    return 'FlutterControlResponse.sendMissionPlan(field0: $field0)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$FlutterControlResponse_SendMissionPlanImpl &&
+            const DeepCollectionEquality().equals(other._field0, _field0));
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(_field0));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$FlutterControlResponse_SendMissionPlanImplCopyWith<
+          _$FlutterControlResponse_SendMissionPlanImpl>
+      get copyWith =>
+          __$$FlutterControlResponse_SendMissionPlanImplCopyWithImpl<
+              _$FlutterControlResponse_SendMissionPlanImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(List<FlutterMissionNode> field0) sendMissionPlan,
+  }) {
+    return sendMissionPlan(field0);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(List<FlutterMissionNode> field0)? sendMissionPlan,
+  }) {
+    return sendMissionPlan?.call(field0);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(List<FlutterMissionNode> field0)? sendMissionPlan,
+    required TResult orElse(),
+  }) {
+    if (sendMissionPlan != null) {
+      return sendMissionPlan(field0);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(FlutterControlResponse_SendMissionPlan value)
+        sendMissionPlan,
+  }) {
+    return sendMissionPlan(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(FlutterControlResponse_SendMissionPlan value)?
+        sendMissionPlan,
+  }) {
+    return sendMissionPlan?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(FlutterControlResponse_SendMissionPlan value)?
+        sendMissionPlan,
+    required TResult orElse(),
+  }) {
+    if (sendMissionPlan != null) {
+      return sendMissionPlan(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class FlutterControlResponse_SendMissionPlan
+    extends FlutterControlResponse {
+  const factory FlutterControlResponse_SendMissionPlan(
+          final List<FlutterMissionNode> field0) =
+      _$FlutterControlResponse_SendMissionPlanImpl;
+  const FlutterControlResponse_SendMissionPlan._() : super._();
+
+  @override
+  List<FlutterMissionNode> get field0;
+  @override
+  @JsonKey(ignore: true)
+  _$$FlutterControlResponse_SendMissionPlanImplCopyWith<
+          _$FlutterControlResponse_SendMissionPlanImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
 mixin _$FlutterMissionNode {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({

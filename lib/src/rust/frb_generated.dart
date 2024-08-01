@@ -4,7 +4,6 @@
 // ignore_for_file: unused_import, unused_element, unnecessary_import, duplicate_ignore, invalid_use_of_internal_member, annotate_overrides, non_constant_identifier_names, curly_braces_in_flow_control_structures, prefer_const_literals_to_create_immutables, unused_field
 
 import 'api/mission.dart';
-import 'api/util.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'frb_generated.dart';
@@ -59,7 +58,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.1.0';
 
   @override
-  int get rustContentHash => -1735469769;
+  int get rustContentHash => -342988505;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -82,6 +81,9 @@ abstract class RustLibApi extends BaseApi {
   Future<Stream<int>> crateApiMissionCoreConnectionGetStep(
       {required CoreConnection that});
 
+  Future<Stream<double>> crateApiMissionCoreConnectionGetYaw(
+      {required CoreConnection that});
+
   Future<CoreConnection> crateApiMissionCoreConnectionInit(
       {required String machine});
 
@@ -91,7 +93,11 @@ abstract class RustLibApi extends BaseApi {
   Future<void> crateApiMissionCoreConnectionSendMissionPlan(
       {required CoreConnection that, required List<FlutterMissionNode> plan});
 
+  Future<FlutterControlResponse> crateApiMissionFlutterControlResponseDefault();
+
   Future<void> crateApiMissionInitApp();
+
+  Future<PositionTriple> crateApiMissionPositionTripleDefault();
 
   RustArcIncrementStrongCountFnType
       get rust_arc_increment_strong_count_CoreConnection;
@@ -233,6 +239,36 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
+  Future<Stream<double>> crateApiMissionCoreConnectionGetYaw(
+      {required CoreConnection that}) async {
+    final sink = RustStreamSink<double>();
+    await handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerCoreConnection(
+            that, serializer);
+        sse_encode_StreamSink_f_64_Sse(sink, serializer);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 5, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_unit,
+        decodeErrorData: sse_decode_AnyhowException,
+      ),
+      constMeta: kCrateApiMissionCoreConnectionGetYawConstMeta,
+      argValues: [that, sink],
+      apiImpl: this,
+    ));
+    return sink.stream;
+  }
+
+  TaskConstMeta get kCrateApiMissionCoreConnectionGetYawConstMeta =>
+      const TaskConstMeta(
+        debugName: "CoreConnection_get_yaw",
+        argNames: ["that", "sink"],
+      );
+
+  @override
   Future<CoreConnection> crateApiMissionCoreConnectionInit(
       {required String machine}) {
     return handler.executeNormal(NormalTask(
@@ -240,7 +276,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(machine, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 5, port: port_);
+            funcId: 6, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData:
@@ -269,7 +305,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that, serializer);
         sse_encode_flutter_control_request(req, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 6, port: port_);
+            funcId: 7, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -297,7 +333,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that, serializer);
         sse_encode_list_flutter_mission_node(plan, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 7, port: port_);
+            funcId: 8, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -316,12 +352,37 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
+  Future<FlutterControlResponse>
+      crateApiMissionFlutterControlResponseDefault() {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 9, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_flutter_control_response,
+        decodeErrorData: null,
+      ),
+      constMeta: kCrateApiMissionFlutterControlResponseDefaultConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta get kCrateApiMissionFlutterControlResponseDefaultConstMeta =>
+      const TaskConstMeta(
+        debugName: "flutter_control_response_default",
+        argNames: [],
+      );
+
+  @override
   Future<void> crateApiMissionInitApp() {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 8, port: port_);
+            funcId: 10, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -335,6 +396,30 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   TaskConstMeta get kCrateApiMissionInitAppConstMeta => const TaskConstMeta(
         debugName: "init_app",
+        argNames: [],
+      );
+
+  @override
+  Future<PositionTriple> crateApiMissionPositionTripleDefault() {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 11, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_position_triple,
+        decodeErrorData: null,
+      ),
+      constMeta: kCrateApiMissionPositionTripleDefaultConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta get kCrateApiMissionPositionTripleDefaultConstMeta =>
+      const TaskConstMeta(
+        debugName: "position_triple_default",
         argNames: [],
       );
 
@@ -391,6 +476,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  RustStreamSink<double> dco_decode_StreamSink_f_64_Sse(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    throw UnimplementedError();
+  }
+
+  @protected
   RustStreamSink<FlutterControlResponse>
       dco_decode_StreamSink_flutter_control_response_Sse(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
@@ -414,12 +505,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   String dco_decode_String(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw as String;
-  }
-
-  @protected
-  PrintError dco_decode_TraitDef_PrintError(dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    throw UnimplementedError();
   }
 
   @protected
@@ -613,6 +698,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   @protected
   RustStreamSink<bool> sse_decode_StreamSink_bool_Sse(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    throw UnimplementedError('Unreachable ()');
+  }
+
+  @protected
+  RustStreamSink<double> sse_decode_StreamSink_f_64_Sse(
       SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     throw UnimplementedError('Unreachable ()');
@@ -863,6 +955,19 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_StreamSink_f_64_Sse(
+      RustStreamSink<double> self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(
+        self.setupAndSerialize(
+            codec: SseCodec(
+          decodeSuccessData: sse_decode_f_64,
+          decodeErrorData: sse_decode_AnyhowException,
+        )),
+        serializer);
+  }
+
+  @protected
   void sse_encode_StreamSink_flutter_control_response_Sse(
       RustStreamSink<FlutterControlResponse> self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -1101,6 +1206,11 @@ class CoreConnectionImpl extends RustOpaque implements CoreConnection {
 
   Future<Stream<int>> getStep() =>
       RustLib.instance.api.crateApiMissionCoreConnectionGetStep(
+        that: this,
+      );
+
+  Future<Stream<double>> getYaw() =>
+      RustLib.instance.api.crateApiMissionCoreConnectionGetYaw(
         that: this,
       );
 

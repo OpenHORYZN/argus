@@ -55,6 +55,7 @@ class _MissionPlannerPageState extends State<MissionPlannerPage> {
 
   CoreConnection? _connection;
   Stream<PositionTriple>? _posStream;
+  Stream<double>? _yawStream;
   Stream<int>? _stepStream;
   Stream<bool>? _onlineStream;
   Stream<FlutterControlResponse>? _controlStream;
@@ -71,6 +72,7 @@ class _MissionPlannerPageState extends State<MissionPlannerPage> {
         _onlineStream = (await conn.getOnline()).asBroadcastStream();
         _stepStream = (await conn.getStep()).asBroadcastStream();
         _controlStream = (await conn.getControl()).asBroadcastStream();
+        _yawStream = (await conn.getYaw()).asBroadcastStream();
         setState(() {});
 
         _posStream!.first.then((p) {
@@ -183,6 +185,7 @@ class _MissionPlannerPageState extends State<MissionPlannerPage> {
               child: MainMapWidget(
                 controller: _mapController,
                 posStream: _posStream,
+                yawStream: _yawStream,
                 missionNodes: _missionNodes,
                 getLocation: getMapLocation,
               ),

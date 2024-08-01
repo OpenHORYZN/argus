@@ -7,7 +7,6 @@
 // ignore_for_file: argument_type_not_assignable
 
 import 'api/mission.dart';
-import 'api/util.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'frb_generated.dart';
@@ -52,6 +51,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   RustStreamSink<bool> dco_decode_StreamSink_bool_Sse(dynamic raw);
 
   @protected
+  RustStreamSink<double> dco_decode_StreamSink_f_64_Sse(dynamic raw);
+
+  @protected
   RustStreamSink<FlutterControlResponse>
       dco_decode_StreamSink_flutter_control_response_Sse(dynamic raw);
 
@@ -64,9 +66,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   String dco_decode_String(dynamic raw);
-
-  @protected
-  PrintError dco_decode_TraitDef_PrintError(dynamic raw);
 
   @protected
   bool dco_decode_bool(dynamic raw);
@@ -135,6 +134,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   RustStreamSink<bool> sse_decode_StreamSink_bool_Sse(
+      SseDeserializer deserializer);
+
+  @protected
+  RustStreamSink<double> sse_decode_StreamSink_f_64_Sse(
       SseDeserializer deserializer);
 
   @protected
@@ -227,6 +230,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_StreamSink_bool_Sse(
       RustStreamSink<bool> self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_StreamSink_f_64_Sse(
+      RustStreamSink<double> self, SseSerializer serializer);
 
   @protected
   void sse_encode_StreamSink_flutter_control_response_Sse(

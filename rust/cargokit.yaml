@@ -1,0 +1,5 @@
+cargo:
+  debug: # Configuration of cargo execution during debug builds
+    toolchain: beta # default
+  release: # Configuration of cargo execution for release builds
+    toolchain: beta # rustup will be invoked with nightly toolchain

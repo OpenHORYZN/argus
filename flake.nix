@@ -17,12 +17,6 @@
           overlays = [ rust-overlay.overlays.default ];
         };
 
-        adsdk = 
-            (pkgs.androidenv.composeAndroidPackages {
-              platformVersions = [ "34" ];
-    includeNDK = true;
-  }).androidsdk;
-
         packages = with pkgs; [
           curl
           protobuf
@@ -43,7 +37,7 @@
           libsoup
           sass
           librsvg
-          (rust-bin.nightly.latest.default.override {
+          (rust-bin.beta.latest.default.override {
             extensions = [ "rust-src" "rust-analyzer" "rustc" ];
           })
         ];
@@ -52,7 +46,6 @@
           buildInputs = packages;
 
           shellHook = ''
-            export ANDROID_SDK_ROOT="${adsdk}/libexec/android-sdk"
             export PATH="$PATH":"$HOME/.cargo/bin"
 
             export LD_LIBRARY_PATH="$(pwd)/build/linux/x64/debug/bundle/lib:$(pwd)/build/linux/x64/release/bundle/lib:$(pwd)/build/linux/x64/profile/bundle/lib:$LD_LIBRARY_PATH"

@@ -1,23 +1,65 @@
-use anyhow::{anyhow, bail};
+use anyhow::anyhow;
 use serde::Deserialize;
-use std::{fmt::Display, sync::Arc};
+use std::{fmt::Debug, sync::Arc};
 use tokio::sync::watch;
+use zenoh::subscriber::Subscriber;
 
-use zenoh::{prelude::r#async::*, publication::Publisher, subscriber::FlumeSubscriber, Session};
+use zenoh::{prelude::r#async::*, publication::Publisher, Session};
 
 use crate::frb_generated::{SseEncode, StreamSink};
 
+use crate::visualize;
+
 #[flutter_rust_bridge::frb(ignore)]
-pub async fn subscriber(
+pub struct SubscriptionManager {
     session: Arc<Session>,
-    topic: &str,
-) -> anyhow::Result<FlumeSubscriber<'static>> {
-    Ok(session
-        .declare_subscriber(topic)
-        .best_effort()
-        .res()
-        .await
-        .map_err(|e| anyhow!(e))?)
+    keepalive: watch::Sender<()>,
+    subs: Vec<Subscriber<'static, ()>>,
+}
+
+impl SubscriptionManager {
+    pub fn new(session: Arc<Session>, keepalive: &watch::Sender<()>) -> Self {
+        Self {
+            session,
+            keepalive: keepalive.clone(),
+            subs: vec![],
+        }
+    }
+    pub async fn subscriber<T, U>(&mut self, topic: String) -> anyhow::Result<watch::Receiver<U>>
+    where
+        for<'a> T: Deserialize<'a>,
+        U: From<T> + Debug + Clone + Default + Send + Sync + 'static,
+    {
+        let (target_snd, target_rcv) = watch::channel(U::default());
+        let keepalive = self.keepalive.clone();
+        let sub = self
+            .session
+            .declare_subscriber(topic)
+            .best_effort()
+            .callback(move |sample| {
+                if let Some(ts) = sample.timestamp {
+                    visualize::set_time(ts.get_time().as_secs_f64());
+                }
+                let buf = sample.value.payload.contiguous().to_vec();
+                let Ok(msg) = postcard::from_bytes::<T>(&buf) else {
+                    println!("failed to decode");
+                    return;
+                };
+
+                let _ = keepalive.send_replace(());
+                let conv: U = msg.into();
+
+                let Ok(_) = target_snd.send(conv.clone()) else {
+                    println!("nobody listening");
+                    return;
+                };
+            })
+            .res()
+            .await
+            .map_err(|e| anyhow!(e))?;
+        self.subs.push(sub);
+        Ok(target_rcv)
+    }
 }
 
 #[flutter_rust_bridge::frb(ignore)]
@@ -30,35 +72,7 @@ pub async fn publisher(session: Arc<Session>, topic: &str) -> anyhow::Result<Pub
         .map_err(|e| anyhow!(e))?)
 }
 
-pub fn ingest<T, U>(
-    value: Result<Sample, flume::RecvError>,
-    target: &watch::Sender<U>,
-    online: &watch::Sender<bool>,
-) -> anyhow::Result<()>
-where
-    for<'a> T: Deserialize<'a>,
-    U: From<T>,
-{
-    match value {
-        Ok(sample) => {
-            let buf = sample.value.payload.contiguous().to_vec();
-            let Ok(msg) = postcard::from_bytes::<T>(&buf) else {
-                bail!("failed to decode");
-            };
-
-            let _ = online.send(true);
-
-            let Ok(_) = target.send(msg.into()) else {
-                bail!("nobody listening");
-            };
-        }
-        Err(e) => {
-            bail!("error {e}");
-        }
-    }
-    Ok(())
-}
-
+#[flutter_rust_bridge::frb(ignore)]
 pub async fn watch_stream<T>(mut stream: watch::Receiver<T>, sink: StreamSink<T>)
 where
     T: SseEncode + Clone + Send + Sync + 'static,
@@ -79,20 +93,4 @@ where
             }
         }
     });
-}
-
-pub trait PrintError {
-    fn print_error(self);
-}
-
-impl<T, E: Display> PrintError for Result<T, E> {
-    fn print_error(self) {
-        match self {
-            Ok(_) => (),
-            Err(e) => {
-                println!("error: {e}");
-                ()
-            }
-        }
-    }
 }

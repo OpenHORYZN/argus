@@ -8,7 +8,7 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'package:freezed_annotation/freezed_annotation.dart' hide protected;
 part 'mission.freezed.dart';
 
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `clone`, `clone`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`, `from`, `from`, `from`, `from`, `from`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `clone`, `clone`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<CoreConnection>>
 abstract class CoreConnection implements RustOpaqueInterface {
@@ -19,6 +19,8 @@ abstract class CoreConnection implements RustOpaqueInterface {
   Future<Stream<PositionTriple>> getPos();
 
   Future<Stream<int>> getStep();
+
+  Future<Stream<double>> getYaw();
 
   static Future<CoreConnection> init({required String machine}) =>
       RustLib.instance.api.crateApiMissionCoreConnectionInit(machine: machine);
@@ -40,6 +42,9 @@ sealed class FlutterControlResponse with _$FlutterControlResponse {
   const factory FlutterControlResponse.sendMissionPlan(
     List<FlutterMissionNode> field0,
   ) = FlutterControlResponse_SendMissionPlan;
+
+  static Future<FlutterControlResponse> default_() =>
+      RustLib.instance.api.crateApiMissionFlutterControlResponseDefault();
 }
 
 @freezed
@@ -95,6 +100,9 @@ class PositionTriple {
     required this.y,
     required this.z,
   });
+
+  static Future<PositionTriple> default_() =>
+      RustLib.instance.api.crateApiMissionPositionTripleDefault();
 
   @override
   int get hashCode => x.hashCode ^ y.hashCode ^ z.hashCode;

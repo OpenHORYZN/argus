@@ -1,21 +1,23 @@
 use anyhow::anyhow;
 use flutter_rust_bridge::frb;
-use futures_util::SinkExt;
 use nalgebra::Vector3;
-use postcard::to_allocvec;
 use rerun::Color;
 use std::{sync::Arc, time::Duration};
 use tokio::{select, sync::watch, time::sleep};
 use tracing_subscriber::filter::LevelFilter;
-use zenoh::{prelude::r#async::*, publication::Publisher};
+use zenoh::prelude::r#async::*;
 
 use argus_common::{
+    interface::{
+        IControlRequest, IControlResponse, IGlobalPosition, ILocalPosition, IMissionStep,
+        IMissionUpdate, IYaw,
+    },
     ControlRequest, ControlResponse, GlobalPosition, LocalPosition, MissionNode, Waypoint,
 };
 
 use crate::{frb_generated::StreamSink, visualize};
 
-use super::util::{publisher, watch_stream, SubscriptionManager};
+use super::util::{publisher, watch_stream, Pub, SubscriptionManager};
 
 #[frb(init)]
 pub fn init_app() {
@@ -27,8 +29,8 @@ pub fn init_app() {
 }
 
 pub struct CoreConnection {
-    mission: Publisher<'static>,
-    control: Publisher<'static>,
+    mission: Pub<IMissionUpdate>,
+    control: Pub<IControlRequest>,
     _manager: SubscriptionManager,
     control_stream: watch::Receiver<FlutterControlResponse>,
     global_pos_stream: watch::Receiver<PositionTriple>,
@@ -40,29 +42,24 @@ pub struct CoreConnection {
 
 impl CoreConnection {
     pub async fn init(machine: String) -> anyhow::Result<Self> {
-        let t = |o: &str| format!("{machine}/{o}");
         let zconfig = zenoh::config::default();
 
         let session = Arc::new(zenoh::open(zconfig).res().await.map_err(|e| anyhow!(e))?);
 
         let (kalive_snd, mut keepalive_rcv) = watch::channel(());
 
-        let mut sm = SubscriptionManager::new(session.clone(), &kalive_snd);
+        let mut sm = SubscriptionManager::new(session.clone(), &kalive_snd, machine.clone());
 
-        let global_pos_rcv = sm
-            .subscriber::<GlobalPosition, PositionTriple>(t("global_position"))
-            .await?;
-        let local_pos_rcv = sm
-            .subscriber::<LocalPosition, PositionTriple>(t("local_position"))
-            .await?;
-        let yaw_rcv = sm.subscriber::<f32, f64>(t("yaw")).await?;
-        let step_rcv = sm.subscriber::<i32, i32>(t("mission/step")).await?;
+        let global_pos_rcv = sm.subscriber::<IGlobalPosition, PositionTriple>().await?;
+        let local_pos_rcv = sm.subscriber::<ILocalPosition, PositionTriple>().await?;
+        let yaw_rcv = sm.subscriber::<IYaw, f64>().await?;
+        let step_rcv = sm.subscriber::<IMissionStep, i32>().await?;
         let control_rcv = sm
-            .subscriber::<ControlResponse, FlutterControlResponse>(t("control/out"))
+            .subscriber::<IControlResponse, FlutterControlResponse>()
             .await?;
 
-        let mission_upd_pub = publisher(session.clone(), &t("mission/update")).await?;
-        let control_pub = publisher(session, &t("control/in")).await?;
+        let mission_upd_pub = publisher::<IMissionUpdate>(session.clone(), &machine).await?;
+        let control_pub = publisher::<IControlRequest>(session, &machine).await?;
 
         let (online_snd, online_rcv) = watch::channel(false);
 
@@ -104,21 +101,12 @@ impl CoreConnection {
 
     pub async fn send_mission_plan(&mut self, plan: Vec<FlutterMissionNode>) -> anyhow::Result<()> {
         let plan: Vec<MissionNode> = plan.into_iter().map(Into::into).collect();
-
-        let plan = to_allocvec(&plan)?;
-
-        self.mission.send(&*plan).await.map_err(|e| anyhow!(e))?;
-
-        Ok(())
+        self.mission.send(plan).await
     }
 
     pub async fn send_control(&mut self, req: FlutterControlRequest) -> anyhow::Result<()> {
         let control: ControlRequest = req.into();
-        let control = to_allocvec(&control)?;
-
-        self.control.send(&*control).await.map_err(|e| anyhow!(e))?;
-
-        Ok(())
+        self.control.send(control).await
     }
 
     #[frb(stream_dart_await)]

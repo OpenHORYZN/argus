@@ -13,7 +13,6 @@ use crate::frb_generated::{SseEncode, StreamSink};
 
 use crate::visualize;
 
-#[flutter_rust_bridge::frb(ignore)]
 pub struct SubscriptionManager {
     session: Arc<Session>,
     machine: String,
@@ -67,7 +66,6 @@ impl SubscriptionManager {
     }
 }
 
-#[flutter_rust_bridge::frb(ignore)]
 pub struct Pub<I> {
     publisher: Publisher<'static>,
     _phantom: PhantomData<I>,
@@ -82,7 +80,6 @@ impl<I: Interface> Pub<I> {
     }
 }
 
-#[flutter_rust_bridge::frb(ignore)]
 pub async fn publisher<I: Interface>(
     session: Arc<Session>,
     machine: &str,
@@ -99,7 +96,6 @@ pub async fn publisher<I: Interface>(
     })
 }
 
-#[flutter_rust_bridge::frb(ignore)]
 pub async fn watch_stream<T>(mut stream: watch::Receiver<T>, sink: StreamSink<T>)
 where
     T: SseEncode + Clone + Send + Sync + 'static,
@@ -120,4 +116,14 @@ where
             }
         }
     });
+}
+
+pub trait MapErr<T> {
+    fn emap(self) -> anyhow::Result<T>;
+}
+
+impl<T, E: Debug> MapErr<T> for Result<T, E> {
+    fn emap(self) -> anyhow::Result<T> {
+        self.map_err(|e| anyhow::anyhow!("{e:?}"))
+    }
 }

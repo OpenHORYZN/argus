@@ -6,10 +6,14 @@
 import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These functions are ignored because they have generic arguments: `ingest`, `watch_stream`
-// These functions are ignored (category: IgnoreBecauseExplicitAttribute): `publisher`, `subscriber`
-// These functions are ignored (category: IgnoreBecauseNotAllowedOwner): `print_error`
+// These functions are ignored because they have generic arguments: `publisher`, `subscriber`, `watch_stream`
+// These types are ignored because they are not used by any `pub` functions: `Pub`, `SubscriptionManager`
+// These functions are ignored (category: IgnoreBecauseNotAllowedOwner): `emap`
+// These functions are ignored (category: IgnoreBecauseOwnerTyShouldIgnore): `new`, `send`
 
-abstract class PrintError {
-  Future<void> printError();
+// Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<T>>
+abstract class T implements RustOpaqueInterface {}
+
+abstract class MapErr {
+  Future<T> emap();
 }

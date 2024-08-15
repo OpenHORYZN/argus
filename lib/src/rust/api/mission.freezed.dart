@@ -15,21 +15,349 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
-mixin _$FlutterControlResponse {
-  List<FlutterMissionNode> get field0 => throw _privateConstructorUsedError;
+mixin _$FlutterControlRequest {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(List<FlutterMissionNode> field0) sendMissionPlan,
+    required TResult Function() fetchMissionPlan,
+    required TResult Function(bool field0) pauseResume,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(List<FlutterMissionNode> field0)? sendMissionPlan,
+    TResult? Function()? fetchMissionPlan,
+    TResult? Function(bool field0)? pauseResume,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(List<FlutterMissionNode> field0)? sendMissionPlan,
+    TResult Function()? fetchMissionPlan,
+    TResult Function(bool field0)? pauseResume,
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(FlutterControlRequest_FetchMissionPlan value)
+        fetchMissionPlan,
+    required TResult Function(FlutterControlRequest_PauseResume value)
+        pauseResume,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(FlutterControlRequest_FetchMissionPlan value)?
+        fetchMissionPlan,
+    TResult? Function(FlutterControlRequest_PauseResume value)? pauseResume,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(FlutterControlRequest_FetchMissionPlan value)?
+        fetchMissionPlan,
+    TResult Function(FlutterControlRequest_PauseResume value)? pauseResume,
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $FlutterControlRequestCopyWith<$Res> {
+  factory $FlutterControlRequestCopyWith(FlutterControlRequest value,
+          $Res Function(FlutterControlRequest) then) =
+      _$FlutterControlRequestCopyWithImpl<$Res, FlutterControlRequest>;
+}
+
+/// @nodoc
+class _$FlutterControlRequestCopyWithImpl<$Res,
+        $Val extends FlutterControlRequest>
+    implements $FlutterControlRequestCopyWith<$Res> {
+  _$FlutterControlRequestCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+}
+
+/// @nodoc
+abstract class _$$FlutterControlRequest_FetchMissionPlanImplCopyWith<$Res> {
+  factory _$$FlutterControlRequest_FetchMissionPlanImplCopyWith(
+          _$FlutterControlRequest_FetchMissionPlanImpl value,
+          $Res Function(_$FlutterControlRequest_FetchMissionPlanImpl) then) =
+      __$$FlutterControlRequest_FetchMissionPlanImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$FlutterControlRequest_FetchMissionPlanImplCopyWithImpl<$Res>
+    extends _$FlutterControlRequestCopyWithImpl<$Res,
+        _$FlutterControlRequest_FetchMissionPlanImpl>
+    implements _$$FlutterControlRequest_FetchMissionPlanImplCopyWith<$Res> {
+  __$$FlutterControlRequest_FetchMissionPlanImplCopyWithImpl(
+      _$FlutterControlRequest_FetchMissionPlanImpl _value,
+      $Res Function(_$FlutterControlRequest_FetchMissionPlanImpl) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$FlutterControlRequest_FetchMissionPlanImpl
+    extends FlutterControlRequest_FetchMissionPlan {
+  const _$FlutterControlRequest_FetchMissionPlanImpl() : super._();
+
+  @override
+  String toString() {
+    return 'FlutterControlRequest.fetchMissionPlan()';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$FlutterControlRequest_FetchMissionPlanImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() fetchMissionPlan,
+    required TResult Function(bool field0) pauseResume,
+  }) {
+    return fetchMissionPlan();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? fetchMissionPlan,
+    TResult? Function(bool field0)? pauseResume,
+  }) {
+    return fetchMissionPlan?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? fetchMissionPlan,
+    TResult Function(bool field0)? pauseResume,
+    required TResult orElse(),
+  }) {
+    if (fetchMissionPlan != null) {
+      return fetchMissionPlan();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(FlutterControlRequest_FetchMissionPlan value)
+        fetchMissionPlan,
+    required TResult Function(FlutterControlRequest_PauseResume value)
+        pauseResume,
+  }) {
+    return fetchMissionPlan(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(FlutterControlRequest_FetchMissionPlan value)?
+        fetchMissionPlan,
+    TResult? Function(FlutterControlRequest_PauseResume value)? pauseResume,
+  }) {
+    return fetchMissionPlan?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(FlutterControlRequest_FetchMissionPlan value)?
+        fetchMissionPlan,
+    TResult Function(FlutterControlRequest_PauseResume value)? pauseResume,
+    required TResult orElse(),
+  }) {
+    if (fetchMissionPlan != null) {
+      return fetchMissionPlan(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class FlutterControlRequest_FetchMissionPlan
+    extends FlutterControlRequest {
+  const factory FlutterControlRequest_FetchMissionPlan() =
+      _$FlutterControlRequest_FetchMissionPlanImpl;
+  const FlutterControlRequest_FetchMissionPlan._() : super._();
+}
+
+/// @nodoc
+abstract class _$$FlutterControlRequest_PauseResumeImplCopyWith<$Res> {
+  factory _$$FlutterControlRequest_PauseResumeImplCopyWith(
+          _$FlutterControlRequest_PauseResumeImpl value,
+          $Res Function(_$FlutterControlRequest_PauseResumeImpl) then) =
+      __$$FlutterControlRequest_PauseResumeImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({bool field0});
+}
+
+/// @nodoc
+class __$$FlutterControlRequest_PauseResumeImplCopyWithImpl<$Res>
+    extends _$FlutterControlRequestCopyWithImpl<$Res,
+        _$FlutterControlRequest_PauseResumeImpl>
+    implements _$$FlutterControlRequest_PauseResumeImplCopyWith<$Res> {
+  __$$FlutterControlRequest_PauseResumeImplCopyWithImpl(
+      _$FlutterControlRequest_PauseResumeImpl _value,
+      $Res Function(_$FlutterControlRequest_PauseResumeImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? field0 = null,
+  }) {
+    return _then(_$FlutterControlRequest_PauseResumeImpl(
+      null == field0
+          ? _value.field0
+          : field0 // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$FlutterControlRequest_PauseResumeImpl
+    extends FlutterControlRequest_PauseResume {
+  const _$FlutterControlRequest_PauseResumeImpl(this.field0) : super._();
+
+  @override
+  final bool field0;
+
+  @override
+  String toString() {
+    return 'FlutterControlRequest.pauseResume(field0: $field0)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$FlutterControlRequest_PauseResumeImpl &&
+            (identical(other.field0, field0) || other.field0 == field0));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, field0);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$FlutterControlRequest_PauseResumeImplCopyWith<
+          _$FlutterControlRequest_PauseResumeImpl>
+      get copyWith => __$$FlutterControlRequest_PauseResumeImplCopyWithImpl<
+          _$FlutterControlRequest_PauseResumeImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() fetchMissionPlan,
+    required TResult Function(bool field0) pauseResume,
+  }) {
+    return pauseResume(field0);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? fetchMissionPlan,
+    TResult? Function(bool field0)? pauseResume,
+  }) {
+    return pauseResume?.call(field0);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? fetchMissionPlan,
+    TResult Function(bool field0)? pauseResume,
+    required TResult orElse(),
+  }) {
+    if (pauseResume != null) {
+      return pauseResume(field0);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(FlutterControlRequest_FetchMissionPlan value)
+        fetchMissionPlan,
+    required TResult Function(FlutterControlRequest_PauseResume value)
+        pauseResume,
+  }) {
+    return pauseResume(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(FlutterControlRequest_FetchMissionPlan value)?
+        fetchMissionPlan,
+    TResult? Function(FlutterControlRequest_PauseResume value)? pauseResume,
+  }) {
+    return pauseResume?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(FlutterControlRequest_FetchMissionPlan value)?
+        fetchMissionPlan,
+    TResult Function(FlutterControlRequest_PauseResume value)? pauseResume,
+    required TResult orElse(),
+  }) {
+    if (pauseResume != null) {
+      return pauseResume(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class FlutterControlRequest_PauseResume extends FlutterControlRequest {
+  const factory FlutterControlRequest_PauseResume(final bool field0) =
+      _$FlutterControlRequest_PauseResumeImpl;
+  const FlutterControlRequest_PauseResume._() : super._();
+
+  bool get field0;
+  @JsonKey(ignore: true)
+  _$$FlutterControlRequest_PauseResumeImplCopyWith<
+          _$FlutterControlRequest_PauseResumeImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+mixin _$FlutterControlResponse {
+  Object get field0 => throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(FlutterMissionPlan field0) sendMissionPlan,
+    required TResult Function(bool field0) pauseResume,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(FlutterMissionPlan field0)? sendMissionPlan,
+    TResult? Function(bool field0)? pauseResume,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(FlutterMissionPlan field0)? sendMissionPlan,
+    TResult Function(bool field0)? pauseResume,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -37,24 +365,24 @@ mixin _$FlutterControlResponse {
   TResult map<TResult extends Object?>({
     required TResult Function(FlutterControlResponse_SendMissionPlan value)
         sendMissionPlan,
+    required TResult Function(FlutterControlResponse_PauseResume value)
+        pauseResume,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(FlutterControlResponse_SendMissionPlan value)?
         sendMissionPlan,
+    TResult? Function(FlutterControlResponse_PauseResume value)? pauseResume,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(FlutterControlResponse_SendMissionPlan value)?
         sendMissionPlan,
+    TResult Function(FlutterControlResponse_PauseResume value)? pauseResume,
     required TResult orElse(),
   }) =>
-      throw _privateConstructorUsedError;
-
-  @JsonKey(ignore: true)
-  $FlutterControlResponseCopyWith<FlutterControlResponse> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -63,8 +391,6 @@ abstract class $FlutterControlResponseCopyWith<$Res> {
   factory $FlutterControlResponseCopyWith(FlutterControlResponse value,
           $Res Function(FlutterControlResponse) then) =
       _$FlutterControlResponseCopyWithImpl<$Res, FlutterControlResponse>;
-  @useResult
-  $Res call({List<FlutterMissionNode> field0});
 }
 
 /// @nodoc
@@ -77,31 +403,16 @@ class _$FlutterControlResponseCopyWithImpl<$Res,
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? field0 = null,
-  }) {
-    return _then(_value.copyWith(
-      field0: null == field0
-          ? _value.field0
-          : field0 // ignore: cast_nullable_to_non_nullable
-              as List<FlutterMissionNode>,
-    ) as $Val);
-  }
 }
 
 /// @nodoc
-abstract class _$$FlutterControlResponse_SendMissionPlanImplCopyWith<$Res>
-    implements $FlutterControlResponseCopyWith<$Res> {
+abstract class _$$FlutterControlResponse_SendMissionPlanImplCopyWith<$Res> {
   factory _$$FlutterControlResponse_SendMissionPlanImplCopyWith(
           _$FlutterControlResponse_SendMissionPlanImpl value,
           $Res Function(_$FlutterControlResponse_SendMissionPlanImpl) then) =
       __$$FlutterControlResponse_SendMissionPlanImplCopyWithImpl<$Res>;
-  @override
   @useResult
-  $Res call({List<FlutterMissionNode> field0});
+  $Res call({FlutterMissionPlan field0});
 }
 
 /// @nodoc
@@ -121,9 +432,9 @@ class __$$FlutterControlResponse_SendMissionPlanImplCopyWithImpl<$Res>
   }) {
     return _then(_$FlutterControlResponse_SendMissionPlanImpl(
       null == field0
-          ? _value._field0
+          ? _value.field0
           : field0 // ignore: cast_nullable_to_non_nullable
-              as List<FlutterMissionNode>,
+              as FlutterMissionPlan,
     ));
   }
 }
@@ -132,18 +443,10 @@ class __$$FlutterControlResponse_SendMissionPlanImplCopyWithImpl<$Res>
 
 class _$FlutterControlResponse_SendMissionPlanImpl
     extends FlutterControlResponse_SendMissionPlan {
-  const _$FlutterControlResponse_SendMissionPlanImpl(
-      final List<FlutterMissionNode> field0)
-      : _field0 = field0,
-        super._();
+  const _$FlutterControlResponse_SendMissionPlanImpl(this.field0) : super._();
 
-  final List<FlutterMissionNode> _field0;
   @override
-  List<FlutterMissionNode> get field0 {
-    if (_field0 is EqualUnmodifiableListView) return _field0;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_field0);
-  }
+  final FlutterMissionPlan field0;
 
   @override
   String toString() {
@@ -155,12 +458,11 @@ class _$FlutterControlResponse_SendMissionPlanImpl
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$FlutterControlResponse_SendMissionPlanImpl &&
-            const DeepCollectionEquality().equals(other._field0, _field0));
+            (identical(other.field0, field0) || other.field0 == field0));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(_field0));
+  int get hashCode => Object.hash(runtimeType, field0);
 
   @JsonKey(ignore: true)
   @override
@@ -174,7 +476,8 @@ class _$FlutterControlResponse_SendMissionPlanImpl
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(List<FlutterMissionNode> field0) sendMissionPlan,
+    required TResult Function(FlutterMissionPlan field0) sendMissionPlan,
+    required TResult Function(bool field0) pauseResume,
   }) {
     return sendMissionPlan(field0);
   }
@@ -182,7 +485,8 @@ class _$FlutterControlResponse_SendMissionPlanImpl
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(List<FlutterMissionNode> field0)? sendMissionPlan,
+    TResult? Function(FlutterMissionPlan field0)? sendMissionPlan,
+    TResult? Function(bool field0)? pauseResume,
   }) {
     return sendMissionPlan?.call(field0);
   }
@@ -190,7 +494,8 @@ class _$FlutterControlResponse_SendMissionPlanImpl
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(List<FlutterMissionNode> field0)? sendMissionPlan,
+    TResult Function(FlutterMissionPlan field0)? sendMissionPlan,
+    TResult Function(bool field0)? pauseResume,
     required TResult orElse(),
   }) {
     if (sendMissionPlan != null) {
@@ -204,6 +509,8 @@ class _$FlutterControlResponse_SendMissionPlanImpl
   TResult map<TResult extends Object?>({
     required TResult Function(FlutterControlResponse_SendMissionPlan value)
         sendMissionPlan,
+    required TResult Function(FlutterControlResponse_PauseResume value)
+        pauseResume,
   }) {
     return sendMissionPlan(this);
   }
@@ -213,6 +520,7 @@ class _$FlutterControlResponse_SendMissionPlanImpl
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(FlutterControlResponse_SendMissionPlan value)?
         sendMissionPlan,
+    TResult? Function(FlutterControlResponse_PauseResume value)? pauseResume,
   }) {
     return sendMissionPlan?.call(this);
   }
@@ -222,6 +530,7 @@ class _$FlutterControlResponse_SendMissionPlanImpl
   TResult maybeMap<TResult extends Object?>({
     TResult Function(FlutterControlResponse_SendMissionPlan value)?
         sendMissionPlan,
+    TResult Function(FlutterControlResponse_PauseResume value)? pauseResume,
     required TResult orElse(),
   }) {
     if (sendMissionPlan != null) {
@@ -234,13 +543,12 @@ class _$FlutterControlResponse_SendMissionPlanImpl
 abstract class FlutterControlResponse_SendMissionPlan
     extends FlutterControlResponse {
   const factory FlutterControlResponse_SendMissionPlan(
-          final List<FlutterMissionNode> field0) =
+          final FlutterMissionPlan field0) =
       _$FlutterControlResponse_SendMissionPlanImpl;
   const FlutterControlResponse_SendMissionPlan._() : super._();
 
   @override
-  List<FlutterMissionNode> get field0;
-  @override
+  FlutterMissionPlan get field0;
   @JsonKey(ignore: true)
   _$$FlutterControlResponse_SendMissionPlanImplCopyWith<
           _$FlutterControlResponse_SendMissionPlanImpl>
@@ -248,7 +556,155 @@ abstract class FlutterControlResponse_SendMissionPlan
 }
 
 /// @nodoc
-mixin _$FlutterMissionNode {
+abstract class _$$FlutterControlResponse_PauseResumeImplCopyWith<$Res> {
+  factory _$$FlutterControlResponse_PauseResumeImplCopyWith(
+          _$FlutterControlResponse_PauseResumeImpl value,
+          $Res Function(_$FlutterControlResponse_PauseResumeImpl) then) =
+      __$$FlutterControlResponse_PauseResumeImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({bool field0});
+}
+
+/// @nodoc
+class __$$FlutterControlResponse_PauseResumeImplCopyWithImpl<$Res>
+    extends _$FlutterControlResponseCopyWithImpl<$Res,
+        _$FlutterControlResponse_PauseResumeImpl>
+    implements _$$FlutterControlResponse_PauseResumeImplCopyWith<$Res> {
+  __$$FlutterControlResponse_PauseResumeImplCopyWithImpl(
+      _$FlutterControlResponse_PauseResumeImpl _value,
+      $Res Function(_$FlutterControlResponse_PauseResumeImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? field0 = null,
+  }) {
+    return _then(_$FlutterControlResponse_PauseResumeImpl(
+      null == field0
+          ? _value.field0
+          : field0 // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$FlutterControlResponse_PauseResumeImpl
+    extends FlutterControlResponse_PauseResume {
+  const _$FlutterControlResponse_PauseResumeImpl(this.field0) : super._();
+
+  @override
+  final bool field0;
+
+  @override
+  String toString() {
+    return 'FlutterControlResponse.pauseResume(field0: $field0)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$FlutterControlResponse_PauseResumeImpl &&
+            (identical(other.field0, field0) || other.field0 == field0));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, field0);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$FlutterControlResponse_PauseResumeImplCopyWith<
+          _$FlutterControlResponse_PauseResumeImpl>
+      get copyWith => __$$FlutterControlResponse_PauseResumeImplCopyWithImpl<
+          _$FlutterControlResponse_PauseResumeImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(FlutterMissionPlan field0) sendMissionPlan,
+    required TResult Function(bool field0) pauseResume,
+  }) {
+    return pauseResume(field0);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(FlutterMissionPlan field0)? sendMissionPlan,
+    TResult? Function(bool field0)? pauseResume,
+  }) {
+    return pauseResume?.call(field0);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(FlutterMissionPlan field0)? sendMissionPlan,
+    TResult Function(bool field0)? pauseResume,
+    required TResult orElse(),
+  }) {
+    if (pauseResume != null) {
+      return pauseResume(field0);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(FlutterControlResponse_SendMissionPlan value)
+        sendMissionPlan,
+    required TResult Function(FlutterControlResponse_PauseResume value)
+        pauseResume,
+  }) {
+    return pauseResume(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(FlutterControlResponse_SendMissionPlan value)?
+        sendMissionPlan,
+    TResult? Function(FlutterControlResponse_PauseResume value)? pauseResume,
+  }) {
+    return pauseResume?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(FlutterControlResponse_SendMissionPlan value)?
+        sendMissionPlan,
+    TResult Function(FlutterControlResponse_PauseResume value)? pauseResume,
+    required TResult orElse(),
+  }) {
+    if (pauseResume != null) {
+      return pauseResume(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class FlutterControlResponse_PauseResume
+    extends FlutterControlResponse {
+  const factory FlutterControlResponse_PauseResume(final bool field0) =
+      _$FlutterControlResponse_PauseResumeImpl;
+  const FlutterControlResponse_PauseResume._() : super._();
+
+  @override
+  bool get field0;
+  @JsonKey(ignore: true)
+  _$$FlutterControlResponse_PauseResumeImplCopyWith<
+          _$FlutterControlResponse_PauseResumeImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+mixin _$FlutterMissionItem {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() init,
@@ -291,58 +747,58 @@ mixin _$FlutterMissionNode {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(FlutterMissionNode_Init value) init,
-    required TResult Function(FlutterMissionNode_Takeoff value) takeoff,
-    required TResult Function(FlutterMissionNode_Waypoint value) waypoint,
-    required TResult Function(FlutterMissionNode_Delay value) delay,
-    required TResult Function(FlutterMissionNode_FindSafeSpot value)
+    required TResult Function(FlutterMissionItem_Init value) init,
+    required TResult Function(FlutterMissionItem_Takeoff value) takeoff,
+    required TResult Function(FlutterMissionItem_Waypoint value) waypoint,
+    required TResult Function(FlutterMissionItem_Delay value) delay,
+    required TResult Function(FlutterMissionItem_FindSafeSpot value)
         findSafeSpot,
-    required TResult Function(FlutterMissionNode_Transition value) transition,
-    required TResult Function(FlutterMissionNode_Land value) land,
-    required TResult Function(FlutterMissionNode_PrecLand value) precLand,
-    required TResult Function(FlutterMissionNode_End value) end,
+    required TResult Function(FlutterMissionItem_Transition value) transition,
+    required TResult Function(FlutterMissionItem_Land value) land,
+    required TResult Function(FlutterMissionItem_PrecLand value) precLand,
+    required TResult Function(FlutterMissionItem_End value) end,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(FlutterMissionNode_Init value)? init,
-    TResult? Function(FlutterMissionNode_Takeoff value)? takeoff,
-    TResult? Function(FlutterMissionNode_Waypoint value)? waypoint,
-    TResult? Function(FlutterMissionNode_Delay value)? delay,
-    TResult? Function(FlutterMissionNode_FindSafeSpot value)? findSafeSpot,
-    TResult? Function(FlutterMissionNode_Transition value)? transition,
-    TResult? Function(FlutterMissionNode_Land value)? land,
-    TResult? Function(FlutterMissionNode_PrecLand value)? precLand,
-    TResult? Function(FlutterMissionNode_End value)? end,
+    TResult? Function(FlutterMissionItem_Init value)? init,
+    TResult? Function(FlutterMissionItem_Takeoff value)? takeoff,
+    TResult? Function(FlutterMissionItem_Waypoint value)? waypoint,
+    TResult? Function(FlutterMissionItem_Delay value)? delay,
+    TResult? Function(FlutterMissionItem_FindSafeSpot value)? findSafeSpot,
+    TResult? Function(FlutterMissionItem_Transition value)? transition,
+    TResult? Function(FlutterMissionItem_Land value)? land,
+    TResult? Function(FlutterMissionItem_PrecLand value)? precLand,
+    TResult? Function(FlutterMissionItem_End value)? end,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(FlutterMissionNode_Init value)? init,
-    TResult Function(FlutterMissionNode_Takeoff value)? takeoff,
-    TResult Function(FlutterMissionNode_Waypoint value)? waypoint,
-    TResult Function(FlutterMissionNode_Delay value)? delay,
-    TResult Function(FlutterMissionNode_FindSafeSpot value)? findSafeSpot,
-    TResult Function(FlutterMissionNode_Transition value)? transition,
-    TResult Function(FlutterMissionNode_Land value)? land,
-    TResult Function(FlutterMissionNode_PrecLand value)? precLand,
-    TResult Function(FlutterMissionNode_End value)? end,
+    TResult Function(FlutterMissionItem_Init value)? init,
+    TResult Function(FlutterMissionItem_Takeoff value)? takeoff,
+    TResult Function(FlutterMissionItem_Waypoint value)? waypoint,
+    TResult Function(FlutterMissionItem_Delay value)? delay,
+    TResult Function(FlutterMissionItem_FindSafeSpot value)? findSafeSpot,
+    TResult Function(FlutterMissionItem_Transition value)? transition,
+    TResult Function(FlutterMissionItem_Land value)? land,
+    TResult Function(FlutterMissionItem_PrecLand value)? precLand,
+    TResult Function(FlutterMissionItem_End value)? end,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $FlutterMissionNodeCopyWith<$Res> {
-  factory $FlutterMissionNodeCopyWith(
-          FlutterMissionNode value, $Res Function(FlutterMissionNode) then) =
-      _$FlutterMissionNodeCopyWithImpl<$Res, FlutterMissionNode>;
+abstract class $FlutterMissionItemCopyWith<$Res> {
+  factory $FlutterMissionItemCopyWith(
+          FlutterMissionItem value, $Res Function(FlutterMissionItem) then) =
+      _$FlutterMissionItemCopyWithImpl<$Res, FlutterMissionItem>;
 }
 
 /// @nodoc
-class _$FlutterMissionNodeCopyWithImpl<$Res, $Val extends FlutterMissionNode>
-    implements $FlutterMissionNodeCopyWith<$Res> {
-  _$FlutterMissionNodeCopyWithImpl(this._value, this._then);
+class _$FlutterMissionItemCopyWithImpl<$Res, $Val extends FlutterMissionItem>
+    implements $FlutterMissionItemCopyWith<$Res> {
+  _$FlutterMissionItemCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -351,39 +807,39 @@ class _$FlutterMissionNodeCopyWithImpl<$Res, $Val extends FlutterMissionNode>
 }
 
 /// @nodoc
-abstract class _$$FlutterMissionNode_InitImplCopyWith<$Res> {
-  factory _$$FlutterMissionNode_InitImplCopyWith(
-          _$FlutterMissionNode_InitImpl value,
-          $Res Function(_$FlutterMissionNode_InitImpl) then) =
-      __$$FlutterMissionNode_InitImplCopyWithImpl<$Res>;
+abstract class _$$FlutterMissionItem_InitImplCopyWith<$Res> {
+  factory _$$FlutterMissionItem_InitImplCopyWith(
+          _$FlutterMissionItem_InitImpl value,
+          $Res Function(_$FlutterMissionItem_InitImpl) then) =
+      __$$FlutterMissionItem_InitImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$FlutterMissionNode_InitImplCopyWithImpl<$Res>
-    extends _$FlutterMissionNodeCopyWithImpl<$Res,
-        _$FlutterMissionNode_InitImpl>
-    implements _$$FlutterMissionNode_InitImplCopyWith<$Res> {
-  __$$FlutterMissionNode_InitImplCopyWithImpl(
-      _$FlutterMissionNode_InitImpl _value,
-      $Res Function(_$FlutterMissionNode_InitImpl) _then)
+class __$$FlutterMissionItem_InitImplCopyWithImpl<$Res>
+    extends _$FlutterMissionItemCopyWithImpl<$Res,
+        _$FlutterMissionItem_InitImpl>
+    implements _$$FlutterMissionItem_InitImplCopyWith<$Res> {
+  __$$FlutterMissionItem_InitImplCopyWithImpl(
+      _$FlutterMissionItem_InitImpl _value,
+      $Res Function(_$FlutterMissionItem_InitImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$FlutterMissionNode_InitImpl extends FlutterMissionNode_Init {
-  const _$FlutterMissionNode_InitImpl() : super._();
+class _$FlutterMissionItem_InitImpl extends FlutterMissionItem_Init {
+  const _$FlutterMissionItem_InitImpl() : super._();
 
   @override
   String toString() {
-    return 'FlutterMissionNode.init()';
+    return 'FlutterMissionItem.init()';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$FlutterMissionNode_InitImpl);
+            other is _$FlutterMissionItem_InitImpl);
   }
 
   @override
@@ -444,16 +900,16 @@ class _$FlutterMissionNode_InitImpl extends FlutterMissionNode_Init {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(FlutterMissionNode_Init value) init,
-    required TResult Function(FlutterMissionNode_Takeoff value) takeoff,
-    required TResult Function(FlutterMissionNode_Waypoint value) waypoint,
-    required TResult Function(FlutterMissionNode_Delay value) delay,
-    required TResult Function(FlutterMissionNode_FindSafeSpot value)
+    required TResult Function(FlutterMissionItem_Init value) init,
+    required TResult Function(FlutterMissionItem_Takeoff value) takeoff,
+    required TResult Function(FlutterMissionItem_Waypoint value) waypoint,
+    required TResult Function(FlutterMissionItem_Delay value) delay,
+    required TResult Function(FlutterMissionItem_FindSafeSpot value)
         findSafeSpot,
-    required TResult Function(FlutterMissionNode_Transition value) transition,
-    required TResult Function(FlutterMissionNode_Land value) land,
-    required TResult Function(FlutterMissionNode_PrecLand value) precLand,
-    required TResult Function(FlutterMissionNode_End value) end,
+    required TResult Function(FlutterMissionItem_Transition value) transition,
+    required TResult Function(FlutterMissionItem_Land value) land,
+    required TResult Function(FlutterMissionItem_PrecLand value) precLand,
+    required TResult Function(FlutterMissionItem_End value) end,
   }) {
     return init(this);
   }
@@ -461,15 +917,15 @@ class _$FlutterMissionNode_InitImpl extends FlutterMissionNode_Init {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(FlutterMissionNode_Init value)? init,
-    TResult? Function(FlutterMissionNode_Takeoff value)? takeoff,
-    TResult? Function(FlutterMissionNode_Waypoint value)? waypoint,
-    TResult? Function(FlutterMissionNode_Delay value)? delay,
-    TResult? Function(FlutterMissionNode_FindSafeSpot value)? findSafeSpot,
-    TResult? Function(FlutterMissionNode_Transition value)? transition,
-    TResult? Function(FlutterMissionNode_Land value)? land,
-    TResult? Function(FlutterMissionNode_PrecLand value)? precLand,
-    TResult? Function(FlutterMissionNode_End value)? end,
+    TResult? Function(FlutterMissionItem_Init value)? init,
+    TResult? Function(FlutterMissionItem_Takeoff value)? takeoff,
+    TResult? Function(FlutterMissionItem_Waypoint value)? waypoint,
+    TResult? Function(FlutterMissionItem_Delay value)? delay,
+    TResult? Function(FlutterMissionItem_FindSafeSpot value)? findSafeSpot,
+    TResult? Function(FlutterMissionItem_Transition value)? transition,
+    TResult? Function(FlutterMissionItem_Land value)? land,
+    TResult? Function(FlutterMissionItem_PrecLand value)? precLand,
+    TResult? Function(FlutterMissionItem_End value)? end,
   }) {
     return init?.call(this);
   }
@@ -477,15 +933,15 @@ class _$FlutterMissionNode_InitImpl extends FlutterMissionNode_Init {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(FlutterMissionNode_Init value)? init,
-    TResult Function(FlutterMissionNode_Takeoff value)? takeoff,
-    TResult Function(FlutterMissionNode_Waypoint value)? waypoint,
-    TResult Function(FlutterMissionNode_Delay value)? delay,
-    TResult Function(FlutterMissionNode_FindSafeSpot value)? findSafeSpot,
-    TResult Function(FlutterMissionNode_Transition value)? transition,
-    TResult Function(FlutterMissionNode_Land value)? land,
-    TResult Function(FlutterMissionNode_PrecLand value)? precLand,
-    TResult Function(FlutterMissionNode_End value)? end,
+    TResult Function(FlutterMissionItem_Init value)? init,
+    TResult Function(FlutterMissionItem_Takeoff value)? takeoff,
+    TResult Function(FlutterMissionItem_Waypoint value)? waypoint,
+    TResult Function(FlutterMissionItem_Delay value)? delay,
+    TResult Function(FlutterMissionItem_FindSafeSpot value)? findSafeSpot,
+    TResult Function(FlutterMissionItem_Transition value)? transition,
+    TResult Function(FlutterMissionItem_Land value)? land,
+    TResult Function(FlutterMissionItem_PrecLand value)? precLand,
+    TResult Function(FlutterMissionItem_End value)? end,
     required TResult orElse(),
   }) {
     if (init != null) {
@@ -495,29 +951,29 @@ class _$FlutterMissionNode_InitImpl extends FlutterMissionNode_Init {
   }
 }
 
-abstract class FlutterMissionNode_Init extends FlutterMissionNode {
-  const factory FlutterMissionNode_Init() = _$FlutterMissionNode_InitImpl;
-  const FlutterMissionNode_Init._() : super._();
+abstract class FlutterMissionItem_Init extends FlutterMissionItem {
+  const factory FlutterMissionItem_Init() = _$FlutterMissionItem_InitImpl;
+  const FlutterMissionItem_Init._() : super._();
 }
 
 /// @nodoc
-abstract class _$$FlutterMissionNode_TakeoffImplCopyWith<$Res> {
-  factory _$$FlutterMissionNode_TakeoffImplCopyWith(
-          _$FlutterMissionNode_TakeoffImpl value,
-          $Res Function(_$FlutterMissionNode_TakeoffImpl) then) =
-      __$$FlutterMissionNode_TakeoffImplCopyWithImpl<$Res>;
+abstract class _$$FlutterMissionItem_TakeoffImplCopyWith<$Res> {
+  factory _$$FlutterMissionItem_TakeoffImplCopyWith(
+          _$FlutterMissionItem_TakeoffImpl value,
+          $Res Function(_$FlutterMissionItem_TakeoffImpl) then) =
+      __$$FlutterMissionItem_TakeoffImplCopyWithImpl<$Res>;
   @useResult
   $Res call({double altitude});
 }
 
 /// @nodoc
-class __$$FlutterMissionNode_TakeoffImplCopyWithImpl<$Res>
-    extends _$FlutterMissionNodeCopyWithImpl<$Res,
-        _$FlutterMissionNode_TakeoffImpl>
-    implements _$$FlutterMissionNode_TakeoffImplCopyWith<$Res> {
-  __$$FlutterMissionNode_TakeoffImplCopyWithImpl(
-      _$FlutterMissionNode_TakeoffImpl _value,
-      $Res Function(_$FlutterMissionNode_TakeoffImpl) _then)
+class __$$FlutterMissionItem_TakeoffImplCopyWithImpl<$Res>
+    extends _$FlutterMissionItemCopyWithImpl<$Res,
+        _$FlutterMissionItem_TakeoffImpl>
+    implements _$$FlutterMissionItem_TakeoffImplCopyWith<$Res> {
+  __$$FlutterMissionItem_TakeoffImplCopyWithImpl(
+      _$FlutterMissionItem_TakeoffImpl _value,
+      $Res Function(_$FlutterMissionItem_TakeoffImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -525,7 +981,7 @@ class __$$FlutterMissionNode_TakeoffImplCopyWithImpl<$Res>
   $Res call({
     Object? altitude = null,
   }) {
-    return _then(_$FlutterMissionNode_TakeoffImpl(
+    return _then(_$FlutterMissionItem_TakeoffImpl(
       altitude: null == altitude
           ? _value.altitude
           : altitude // ignore: cast_nullable_to_non_nullable
@@ -536,22 +992,22 @@ class __$$FlutterMissionNode_TakeoffImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$FlutterMissionNode_TakeoffImpl extends FlutterMissionNode_Takeoff {
-  const _$FlutterMissionNode_TakeoffImpl({required this.altitude}) : super._();
+class _$FlutterMissionItem_TakeoffImpl extends FlutterMissionItem_Takeoff {
+  const _$FlutterMissionItem_TakeoffImpl({required this.altitude}) : super._();
 
   @override
   final double altitude;
 
   @override
   String toString() {
-    return 'FlutterMissionNode.takeoff(altitude: $altitude)';
+    return 'FlutterMissionItem.takeoff(altitude: $altitude)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$FlutterMissionNode_TakeoffImpl &&
+            other is _$FlutterMissionItem_TakeoffImpl &&
             (identical(other.altitude, altitude) ||
                 other.altitude == altitude));
   }
@@ -562,9 +1018,9 @@ class _$FlutterMissionNode_TakeoffImpl extends FlutterMissionNode_Takeoff {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$FlutterMissionNode_TakeoffImplCopyWith<_$FlutterMissionNode_TakeoffImpl>
-      get copyWith => __$$FlutterMissionNode_TakeoffImplCopyWithImpl<
-          _$FlutterMissionNode_TakeoffImpl>(this, _$identity);
+  _$$FlutterMissionItem_TakeoffImplCopyWith<_$FlutterMissionItem_TakeoffImpl>
+      get copyWith => __$$FlutterMissionItem_TakeoffImplCopyWithImpl<
+          _$FlutterMissionItem_TakeoffImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -621,16 +1077,16 @@ class _$FlutterMissionNode_TakeoffImpl extends FlutterMissionNode_Takeoff {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(FlutterMissionNode_Init value) init,
-    required TResult Function(FlutterMissionNode_Takeoff value) takeoff,
-    required TResult Function(FlutterMissionNode_Waypoint value) waypoint,
-    required TResult Function(FlutterMissionNode_Delay value) delay,
-    required TResult Function(FlutterMissionNode_FindSafeSpot value)
+    required TResult Function(FlutterMissionItem_Init value) init,
+    required TResult Function(FlutterMissionItem_Takeoff value) takeoff,
+    required TResult Function(FlutterMissionItem_Waypoint value) waypoint,
+    required TResult Function(FlutterMissionItem_Delay value) delay,
+    required TResult Function(FlutterMissionItem_FindSafeSpot value)
         findSafeSpot,
-    required TResult Function(FlutterMissionNode_Transition value) transition,
-    required TResult Function(FlutterMissionNode_Land value) land,
-    required TResult Function(FlutterMissionNode_PrecLand value) precLand,
-    required TResult Function(FlutterMissionNode_End value) end,
+    required TResult Function(FlutterMissionItem_Transition value) transition,
+    required TResult Function(FlutterMissionItem_Land value) land,
+    required TResult Function(FlutterMissionItem_PrecLand value) precLand,
+    required TResult Function(FlutterMissionItem_End value) end,
   }) {
     return takeoff(this);
   }
@@ -638,15 +1094,15 @@ class _$FlutterMissionNode_TakeoffImpl extends FlutterMissionNode_Takeoff {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(FlutterMissionNode_Init value)? init,
-    TResult? Function(FlutterMissionNode_Takeoff value)? takeoff,
-    TResult? Function(FlutterMissionNode_Waypoint value)? waypoint,
-    TResult? Function(FlutterMissionNode_Delay value)? delay,
-    TResult? Function(FlutterMissionNode_FindSafeSpot value)? findSafeSpot,
-    TResult? Function(FlutterMissionNode_Transition value)? transition,
-    TResult? Function(FlutterMissionNode_Land value)? land,
-    TResult? Function(FlutterMissionNode_PrecLand value)? precLand,
-    TResult? Function(FlutterMissionNode_End value)? end,
+    TResult? Function(FlutterMissionItem_Init value)? init,
+    TResult? Function(FlutterMissionItem_Takeoff value)? takeoff,
+    TResult? Function(FlutterMissionItem_Waypoint value)? waypoint,
+    TResult? Function(FlutterMissionItem_Delay value)? delay,
+    TResult? Function(FlutterMissionItem_FindSafeSpot value)? findSafeSpot,
+    TResult? Function(FlutterMissionItem_Transition value)? transition,
+    TResult? Function(FlutterMissionItem_Land value)? land,
+    TResult? Function(FlutterMissionItem_PrecLand value)? precLand,
+    TResult? Function(FlutterMissionItem_End value)? end,
   }) {
     return takeoff?.call(this);
   }
@@ -654,15 +1110,15 @@ class _$FlutterMissionNode_TakeoffImpl extends FlutterMissionNode_Takeoff {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(FlutterMissionNode_Init value)? init,
-    TResult Function(FlutterMissionNode_Takeoff value)? takeoff,
-    TResult Function(FlutterMissionNode_Waypoint value)? waypoint,
-    TResult Function(FlutterMissionNode_Delay value)? delay,
-    TResult Function(FlutterMissionNode_FindSafeSpot value)? findSafeSpot,
-    TResult Function(FlutterMissionNode_Transition value)? transition,
-    TResult Function(FlutterMissionNode_Land value)? land,
-    TResult Function(FlutterMissionNode_PrecLand value)? precLand,
-    TResult Function(FlutterMissionNode_End value)? end,
+    TResult Function(FlutterMissionItem_Init value)? init,
+    TResult Function(FlutterMissionItem_Takeoff value)? takeoff,
+    TResult Function(FlutterMissionItem_Waypoint value)? waypoint,
+    TResult Function(FlutterMissionItem_Delay value)? delay,
+    TResult Function(FlutterMissionItem_FindSafeSpot value)? findSafeSpot,
+    TResult Function(FlutterMissionItem_Transition value)? transition,
+    TResult Function(FlutterMissionItem_Land value)? land,
+    TResult Function(FlutterMissionItem_PrecLand value)? precLand,
+    TResult Function(FlutterMissionItem_End value)? end,
     required TResult orElse(),
   }) {
     if (takeoff != null) {
@@ -672,23 +1128,23 @@ class _$FlutterMissionNode_TakeoffImpl extends FlutterMissionNode_Takeoff {
   }
 }
 
-abstract class FlutterMissionNode_Takeoff extends FlutterMissionNode {
-  const factory FlutterMissionNode_Takeoff({required final double altitude}) =
-      _$FlutterMissionNode_TakeoffImpl;
-  const FlutterMissionNode_Takeoff._() : super._();
+abstract class FlutterMissionItem_Takeoff extends FlutterMissionItem {
+  const factory FlutterMissionItem_Takeoff({required final double altitude}) =
+      _$FlutterMissionItem_TakeoffImpl;
+  const FlutterMissionItem_Takeoff._() : super._();
 
   double get altitude;
   @JsonKey(ignore: true)
-  _$$FlutterMissionNode_TakeoffImplCopyWith<_$FlutterMissionNode_TakeoffImpl>
+  _$$FlutterMissionItem_TakeoffImplCopyWith<_$FlutterMissionItem_TakeoffImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$FlutterMissionNode_WaypointImplCopyWith<$Res> {
-  factory _$$FlutterMissionNode_WaypointImplCopyWith(
-          _$FlutterMissionNode_WaypointImpl value,
-          $Res Function(_$FlutterMissionNode_WaypointImpl) then) =
-      __$$FlutterMissionNode_WaypointImplCopyWithImpl<$Res>;
+abstract class _$$FlutterMissionItem_WaypointImplCopyWith<$Res> {
+  factory _$$FlutterMissionItem_WaypointImplCopyWith(
+          _$FlutterMissionItem_WaypointImpl value,
+          $Res Function(_$FlutterMissionItem_WaypointImpl) then) =
+      __$$FlutterMissionItem_WaypointImplCopyWithImpl<$Res>;
   @useResult
   $Res call({FlutterWaypoint field0});
 
@@ -696,13 +1152,13 @@ abstract class _$$FlutterMissionNode_WaypointImplCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$FlutterMissionNode_WaypointImplCopyWithImpl<$Res>
-    extends _$FlutterMissionNodeCopyWithImpl<$Res,
-        _$FlutterMissionNode_WaypointImpl>
-    implements _$$FlutterMissionNode_WaypointImplCopyWith<$Res> {
-  __$$FlutterMissionNode_WaypointImplCopyWithImpl(
-      _$FlutterMissionNode_WaypointImpl _value,
-      $Res Function(_$FlutterMissionNode_WaypointImpl) _then)
+class __$$FlutterMissionItem_WaypointImplCopyWithImpl<$Res>
+    extends _$FlutterMissionItemCopyWithImpl<$Res,
+        _$FlutterMissionItem_WaypointImpl>
+    implements _$$FlutterMissionItem_WaypointImplCopyWith<$Res> {
+  __$$FlutterMissionItem_WaypointImplCopyWithImpl(
+      _$FlutterMissionItem_WaypointImpl _value,
+      $Res Function(_$FlutterMissionItem_WaypointImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -710,7 +1166,7 @@ class __$$FlutterMissionNode_WaypointImplCopyWithImpl<$Res>
   $Res call({
     Object? field0 = null,
   }) {
-    return _then(_$FlutterMissionNode_WaypointImpl(
+    return _then(_$FlutterMissionItem_WaypointImpl(
       null == field0
           ? _value.field0
           : field0 // ignore: cast_nullable_to_non_nullable
@@ -729,22 +1185,22 @@ class __$$FlutterMissionNode_WaypointImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$FlutterMissionNode_WaypointImpl extends FlutterMissionNode_Waypoint {
-  const _$FlutterMissionNode_WaypointImpl(this.field0) : super._();
+class _$FlutterMissionItem_WaypointImpl extends FlutterMissionItem_Waypoint {
+  const _$FlutterMissionItem_WaypointImpl(this.field0) : super._();
 
   @override
   final FlutterWaypoint field0;
 
   @override
   String toString() {
-    return 'FlutterMissionNode.waypoint(field0: $field0)';
+    return 'FlutterMissionItem.waypoint(field0: $field0)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$FlutterMissionNode_WaypointImpl &&
+            other is _$FlutterMissionItem_WaypointImpl &&
             (identical(other.field0, field0) || other.field0 == field0));
   }
 
@@ -754,9 +1210,9 @@ class _$FlutterMissionNode_WaypointImpl extends FlutterMissionNode_Waypoint {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$FlutterMissionNode_WaypointImplCopyWith<_$FlutterMissionNode_WaypointImpl>
-      get copyWith => __$$FlutterMissionNode_WaypointImplCopyWithImpl<
-          _$FlutterMissionNode_WaypointImpl>(this, _$identity);
+  _$$FlutterMissionItem_WaypointImplCopyWith<_$FlutterMissionItem_WaypointImpl>
+      get copyWith => __$$FlutterMissionItem_WaypointImplCopyWithImpl<
+          _$FlutterMissionItem_WaypointImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -813,16 +1269,16 @@ class _$FlutterMissionNode_WaypointImpl extends FlutterMissionNode_Waypoint {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(FlutterMissionNode_Init value) init,
-    required TResult Function(FlutterMissionNode_Takeoff value) takeoff,
-    required TResult Function(FlutterMissionNode_Waypoint value) waypoint,
-    required TResult Function(FlutterMissionNode_Delay value) delay,
-    required TResult Function(FlutterMissionNode_FindSafeSpot value)
+    required TResult Function(FlutterMissionItem_Init value) init,
+    required TResult Function(FlutterMissionItem_Takeoff value) takeoff,
+    required TResult Function(FlutterMissionItem_Waypoint value) waypoint,
+    required TResult Function(FlutterMissionItem_Delay value) delay,
+    required TResult Function(FlutterMissionItem_FindSafeSpot value)
         findSafeSpot,
-    required TResult Function(FlutterMissionNode_Transition value) transition,
-    required TResult Function(FlutterMissionNode_Land value) land,
-    required TResult Function(FlutterMissionNode_PrecLand value) precLand,
-    required TResult Function(FlutterMissionNode_End value) end,
+    required TResult Function(FlutterMissionItem_Transition value) transition,
+    required TResult Function(FlutterMissionItem_Land value) land,
+    required TResult Function(FlutterMissionItem_PrecLand value) precLand,
+    required TResult Function(FlutterMissionItem_End value) end,
   }) {
     return waypoint(this);
   }
@@ -830,15 +1286,15 @@ class _$FlutterMissionNode_WaypointImpl extends FlutterMissionNode_Waypoint {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(FlutterMissionNode_Init value)? init,
-    TResult? Function(FlutterMissionNode_Takeoff value)? takeoff,
-    TResult? Function(FlutterMissionNode_Waypoint value)? waypoint,
-    TResult? Function(FlutterMissionNode_Delay value)? delay,
-    TResult? Function(FlutterMissionNode_FindSafeSpot value)? findSafeSpot,
-    TResult? Function(FlutterMissionNode_Transition value)? transition,
-    TResult? Function(FlutterMissionNode_Land value)? land,
-    TResult? Function(FlutterMissionNode_PrecLand value)? precLand,
-    TResult? Function(FlutterMissionNode_End value)? end,
+    TResult? Function(FlutterMissionItem_Init value)? init,
+    TResult? Function(FlutterMissionItem_Takeoff value)? takeoff,
+    TResult? Function(FlutterMissionItem_Waypoint value)? waypoint,
+    TResult? Function(FlutterMissionItem_Delay value)? delay,
+    TResult? Function(FlutterMissionItem_FindSafeSpot value)? findSafeSpot,
+    TResult? Function(FlutterMissionItem_Transition value)? transition,
+    TResult? Function(FlutterMissionItem_Land value)? land,
+    TResult? Function(FlutterMissionItem_PrecLand value)? precLand,
+    TResult? Function(FlutterMissionItem_End value)? end,
   }) {
     return waypoint?.call(this);
   }
@@ -846,15 +1302,15 @@ class _$FlutterMissionNode_WaypointImpl extends FlutterMissionNode_Waypoint {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(FlutterMissionNode_Init value)? init,
-    TResult Function(FlutterMissionNode_Takeoff value)? takeoff,
-    TResult Function(FlutterMissionNode_Waypoint value)? waypoint,
-    TResult Function(FlutterMissionNode_Delay value)? delay,
-    TResult Function(FlutterMissionNode_FindSafeSpot value)? findSafeSpot,
-    TResult Function(FlutterMissionNode_Transition value)? transition,
-    TResult Function(FlutterMissionNode_Land value)? land,
-    TResult Function(FlutterMissionNode_PrecLand value)? precLand,
-    TResult Function(FlutterMissionNode_End value)? end,
+    TResult Function(FlutterMissionItem_Init value)? init,
+    TResult Function(FlutterMissionItem_Takeoff value)? takeoff,
+    TResult Function(FlutterMissionItem_Waypoint value)? waypoint,
+    TResult Function(FlutterMissionItem_Delay value)? delay,
+    TResult Function(FlutterMissionItem_FindSafeSpot value)? findSafeSpot,
+    TResult Function(FlutterMissionItem_Transition value)? transition,
+    TResult Function(FlutterMissionItem_Land value)? land,
+    TResult Function(FlutterMissionItem_PrecLand value)? precLand,
+    TResult Function(FlutterMissionItem_End value)? end,
     required TResult orElse(),
   }) {
     if (waypoint != null) {
@@ -864,35 +1320,35 @@ class _$FlutterMissionNode_WaypointImpl extends FlutterMissionNode_Waypoint {
   }
 }
 
-abstract class FlutterMissionNode_Waypoint extends FlutterMissionNode {
-  const factory FlutterMissionNode_Waypoint(final FlutterWaypoint field0) =
-      _$FlutterMissionNode_WaypointImpl;
-  const FlutterMissionNode_Waypoint._() : super._();
+abstract class FlutterMissionItem_Waypoint extends FlutterMissionItem {
+  const factory FlutterMissionItem_Waypoint(final FlutterWaypoint field0) =
+      _$FlutterMissionItem_WaypointImpl;
+  const FlutterMissionItem_Waypoint._() : super._();
 
   FlutterWaypoint get field0;
   @JsonKey(ignore: true)
-  _$$FlutterMissionNode_WaypointImplCopyWith<_$FlutterMissionNode_WaypointImpl>
+  _$$FlutterMissionItem_WaypointImplCopyWith<_$FlutterMissionItem_WaypointImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$FlutterMissionNode_DelayImplCopyWith<$Res> {
-  factory _$$FlutterMissionNode_DelayImplCopyWith(
-          _$FlutterMissionNode_DelayImpl value,
-          $Res Function(_$FlutterMissionNode_DelayImpl) then) =
-      __$$FlutterMissionNode_DelayImplCopyWithImpl<$Res>;
+abstract class _$$FlutterMissionItem_DelayImplCopyWith<$Res> {
+  factory _$$FlutterMissionItem_DelayImplCopyWith(
+          _$FlutterMissionItem_DelayImpl value,
+          $Res Function(_$FlutterMissionItem_DelayImpl) then) =
+      __$$FlutterMissionItem_DelayImplCopyWithImpl<$Res>;
   @useResult
   $Res call({double field0});
 }
 
 /// @nodoc
-class __$$FlutterMissionNode_DelayImplCopyWithImpl<$Res>
-    extends _$FlutterMissionNodeCopyWithImpl<$Res,
-        _$FlutterMissionNode_DelayImpl>
-    implements _$$FlutterMissionNode_DelayImplCopyWith<$Res> {
-  __$$FlutterMissionNode_DelayImplCopyWithImpl(
-      _$FlutterMissionNode_DelayImpl _value,
-      $Res Function(_$FlutterMissionNode_DelayImpl) _then)
+class __$$FlutterMissionItem_DelayImplCopyWithImpl<$Res>
+    extends _$FlutterMissionItemCopyWithImpl<$Res,
+        _$FlutterMissionItem_DelayImpl>
+    implements _$$FlutterMissionItem_DelayImplCopyWith<$Res> {
+  __$$FlutterMissionItem_DelayImplCopyWithImpl(
+      _$FlutterMissionItem_DelayImpl _value,
+      $Res Function(_$FlutterMissionItem_DelayImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -900,7 +1356,7 @@ class __$$FlutterMissionNode_DelayImplCopyWithImpl<$Res>
   $Res call({
     Object? field0 = null,
   }) {
-    return _then(_$FlutterMissionNode_DelayImpl(
+    return _then(_$FlutterMissionItem_DelayImpl(
       null == field0
           ? _value.field0
           : field0 // ignore: cast_nullable_to_non_nullable
@@ -911,22 +1367,22 @@ class __$$FlutterMissionNode_DelayImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$FlutterMissionNode_DelayImpl extends FlutterMissionNode_Delay {
-  const _$FlutterMissionNode_DelayImpl(this.field0) : super._();
+class _$FlutterMissionItem_DelayImpl extends FlutterMissionItem_Delay {
+  const _$FlutterMissionItem_DelayImpl(this.field0) : super._();
 
   @override
   final double field0;
 
   @override
   String toString() {
-    return 'FlutterMissionNode.delay(field0: $field0)';
+    return 'FlutterMissionItem.delay(field0: $field0)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$FlutterMissionNode_DelayImpl &&
+            other is _$FlutterMissionItem_DelayImpl &&
             (identical(other.field0, field0) || other.field0 == field0));
   }
 
@@ -936,9 +1392,9 @@ class _$FlutterMissionNode_DelayImpl extends FlutterMissionNode_Delay {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$FlutterMissionNode_DelayImplCopyWith<_$FlutterMissionNode_DelayImpl>
-      get copyWith => __$$FlutterMissionNode_DelayImplCopyWithImpl<
-          _$FlutterMissionNode_DelayImpl>(this, _$identity);
+  _$$FlutterMissionItem_DelayImplCopyWith<_$FlutterMissionItem_DelayImpl>
+      get copyWith => __$$FlutterMissionItem_DelayImplCopyWithImpl<
+          _$FlutterMissionItem_DelayImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -995,16 +1451,16 @@ class _$FlutterMissionNode_DelayImpl extends FlutterMissionNode_Delay {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(FlutterMissionNode_Init value) init,
-    required TResult Function(FlutterMissionNode_Takeoff value) takeoff,
-    required TResult Function(FlutterMissionNode_Waypoint value) waypoint,
-    required TResult Function(FlutterMissionNode_Delay value) delay,
-    required TResult Function(FlutterMissionNode_FindSafeSpot value)
+    required TResult Function(FlutterMissionItem_Init value) init,
+    required TResult Function(FlutterMissionItem_Takeoff value) takeoff,
+    required TResult Function(FlutterMissionItem_Waypoint value) waypoint,
+    required TResult Function(FlutterMissionItem_Delay value) delay,
+    required TResult Function(FlutterMissionItem_FindSafeSpot value)
         findSafeSpot,
-    required TResult Function(FlutterMissionNode_Transition value) transition,
-    required TResult Function(FlutterMissionNode_Land value) land,
-    required TResult Function(FlutterMissionNode_PrecLand value) precLand,
-    required TResult Function(FlutterMissionNode_End value) end,
+    required TResult Function(FlutterMissionItem_Transition value) transition,
+    required TResult Function(FlutterMissionItem_Land value) land,
+    required TResult Function(FlutterMissionItem_PrecLand value) precLand,
+    required TResult Function(FlutterMissionItem_End value) end,
   }) {
     return delay(this);
   }
@@ -1012,15 +1468,15 @@ class _$FlutterMissionNode_DelayImpl extends FlutterMissionNode_Delay {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(FlutterMissionNode_Init value)? init,
-    TResult? Function(FlutterMissionNode_Takeoff value)? takeoff,
-    TResult? Function(FlutterMissionNode_Waypoint value)? waypoint,
-    TResult? Function(FlutterMissionNode_Delay value)? delay,
-    TResult? Function(FlutterMissionNode_FindSafeSpot value)? findSafeSpot,
-    TResult? Function(FlutterMissionNode_Transition value)? transition,
-    TResult? Function(FlutterMissionNode_Land value)? land,
-    TResult? Function(FlutterMissionNode_PrecLand value)? precLand,
-    TResult? Function(FlutterMissionNode_End value)? end,
+    TResult? Function(FlutterMissionItem_Init value)? init,
+    TResult? Function(FlutterMissionItem_Takeoff value)? takeoff,
+    TResult? Function(FlutterMissionItem_Waypoint value)? waypoint,
+    TResult? Function(FlutterMissionItem_Delay value)? delay,
+    TResult? Function(FlutterMissionItem_FindSafeSpot value)? findSafeSpot,
+    TResult? Function(FlutterMissionItem_Transition value)? transition,
+    TResult? Function(FlutterMissionItem_Land value)? land,
+    TResult? Function(FlutterMissionItem_PrecLand value)? precLand,
+    TResult? Function(FlutterMissionItem_End value)? end,
   }) {
     return delay?.call(this);
   }
@@ -1028,15 +1484,15 @@ class _$FlutterMissionNode_DelayImpl extends FlutterMissionNode_Delay {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(FlutterMissionNode_Init value)? init,
-    TResult Function(FlutterMissionNode_Takeoff value)? takeoff,
-    TResult Function(FlutterMissionNode_Waypoint value)? waypoint,
-    TResult Function(FlutterMissionNode_Delay value)? delay,
-    TResult Function(FlutterMissionNode_FindSafeSpot value)? findSafeSpot,
-    TResult Function(FlutterMissionNode_Transition value)? transition,
-    TResult Function(FlutterMissionNode_Land value)? land,
-    TResult Function(FlutterMissionNode_PrecLand value)? precLand,
-    TResult Function(FlutterMissionNode_End value)? end,
+    TResult Function(FlutterMissionItem_Init value)? init,
+    TResult Function(FlutterMissionItem_Takeoff value)? takeoff,
+    TResult Function(FlutterMissionItem_Waypoint value)? waypoint,
+    TResult Function(FlutterMissionItem_Delay value)? delay,
+    TResult Function(FlutterMissionItem_FindSafeSpot value)? findSafeSpot,
+    TResult Function(FlutterMissionItem_Transition value)? transition,
+    TResult Function(FlutterMissionItem_Land value)? land,
+    TResult Function(FlutterMissionItem_PrecLand value)? precLand,
+    TResult Function(FlutterMissionItem_End value)? end,
     required TResult orElse(),
   }) {
     if (delay != null) {
@@ -1046,52 +1502,52 @@ class _$FlutterMissionNode_DelayImpl extends FlutterMissionNode_Delay {
   }
 }
 
-abstract class FlutterMissionNode_Delay extends FlutterMissionNode {
-  const factory FlutterMissionNode_Delay(final double field0) =
-      _$FlutterMissionNode_DelayImpl;
-  const FlutterMissionNode_Delay._() : super._();
+abstract class FlutterMissionItem_Delay extends FlutterMissionItem {
+  const factory FlutterMissionItem_Delay(final double field0) =
+      _$FlutterMissionItem_DelayImpl;
+  const FlutterMissionItem_Delay._() : super._();
 
   double get field0;
   @JsonKey(ignore: true)
-  _$$FlutterMissionNode_DelayImplCopyWith<_$FlutterMissionNode_DelayImpl>
+  _$$FlutterMissionItem_DelayImplCopyWith<_$FlutterMissionItem_DelayImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$FlutterMissionNode_FindSafeSpotImplCopyWith<$Res> {
-  factory _$$FlutterMissionNode_FindSafeSpotImplCopyWith(
-          _$FlutterMissionNode_FindSafeSpotImpl value,
-          $Res Function(_$FlutterMissionNode_FindSafeSpotImpl) then) =
-      __$$FlutterMissionNode_FindSafeSpotImplCopyWithImpl<$Res>;
+abstract class _$$FlutterMissionItem_FindSafeSpotImplCopyWith<$Res> {
+  factory _$$FlutterMissionItem_FindSafeSpotImplCopyWith(
+          _$FlutterMissionItem_FindSafeSpotImpl value,
+          $Res Function(_$FlutterMissionItem_FindSafeSpotImpl) then) =
+      __$$FlutterMissionItem_FindSafeSpotImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$FlutterMissionNode_FindSafeSpotImplCopyWithImpl<$Res>
-    extends _$FlutterMissionNodeCopyWithImpl<$Res,
-        _$FlutterMissionNode_FindSafeSpotImpl>
-    implements _$$FlutterMissionNode_FindSafeSpotImplCopyWith<$Res> {
-  __$$FlutterMissionNode_FindSafeSpotImplCopyWithImpl(
-      _$FlutterMissionNode_FindSafeSpotImpl _value,
-      $Res Function(_$FlutterMissionNode_FindSafeSpotImpl) _then)
+class __$$FlutterMissionItem_FindSafeSpotImplCopyWithImpl<$Res>
+    extends _$FlutterMissionItemCopyWithImpl<$Res,
+        _$FlutterMissionItem_FindSafeSpotImpl>
+    implements _$$FlutterMissionItem_FindSafeSpotImplCopyWith<$Res> {
+  __$$FlutterMissionItem_FindSafeSpotImplCopyWithImpl(
+      _$FlutterMissionItem_FindSafeSpotImpl _value,
+      $Res Function(_$FlutterMissionItem_FindSafeSpotImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$FlutterMissionNode_FindSafeSpotImpl
-    extends FlutterMissionNode_FindSafeSpot {
-  const _$FlutterMissionNode_FindSafeSpotImpl() : super._();
+class _$FlutterMissionItem_FindSafeSpotImpl
+    extends FlutterMissionItem_FindSafeSpot {
+  const _$FlutterMissionItem_FindSafeSpotImpl() : super._();
 
   @override
   String toString() {
-    return 'FlutterMissionNode.findSafeSpot()';
+    return 'FlutterMissionItem.findSafeSpot()';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$FlutterMissionNode_FindSafeSpotImpl);
+            other is _$FlutterMissionItem_FindSafeSpotImpl);
   }
 
   @override
@@ -1152,16 +1608,16 @@ class _$FlutterMissionNode_FindSafeSpotImpl
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(FlutterMissionNode_Init value) init,
-    required TResult Function(FlutterMissionNode_Takeoff value) takeoff,
-    required TResult Function(FlutterMissionNode_Waypoint value) waypoint,
-    required TResult Function(FlutterMissionNode_Delay value) delay,
-    required TResult Function(FlutterMissionNode_FindSafeSpot value)
+    required TResult Function(FlutterMissionItem_Init value) init,
+    required TResult Function(FlutterMissionItem_Takeoff value) takeoff,
+    required TResult Function(FlutterMissionItem_Waypoint value) waypoint,
+    required TResult Function(FlutterMissionItem_Delay value) delay,
+    required TResult Function(FlutterMissionItem_FindSafeSpot value)
         findSafeSpot,
-    required TResult Function(FlutterMissionNode_Transition value) transition,
-    required TResult Function(FlutterMissionNode_Land value) land,
-    required TResult Function(FlutterMissionNode_PrecLand value) precLand,
-    required TResult Function(FlutterMissionNode_End value) end,
+    required TResult Function(FlutterMissionItem_Transition value) transition,
+    required TResult Function(FlutterMissionItem_Land value) land,
+    required TResult Function(FlutterMissionItem_PrecLand value) precLand,
+    required TResult Function(FlutterMissionItem_End value) end,
   }) {
     return findSafeSpot(this);
   }
@@ -1169,15 +1625,15 @@ class _$FlutterMissionNode_FindSafeSpotImpl
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(FlutterMissionNode_Init value)? init,
-    TResult? Function(FlutterMissionNode_Takeoff value)? takeoff,
-    TResult? Function(FlutterMissionNode_Waypoint value)? waypoint,
-    TResult? Function(FlutterMissionNode_Delay value)? delay,
-    TResult? Function(FlutterMissionNode_FindSafeSpot value)? findSafeSpot,
-    TResult? Function(FlutterMissionNode_Transition value)? transition,
-    TResult? Function(FlutterMissionNode_Land value)? land,
-    TResult? Function(FlutterMissionNode_PrecLand value)? precLand,
-    TResult? Function(FlutterMissionNode_End value)? end,
+    TResult? Function(FlutterMissionItem_Init value)? init,
+    TResult? Function(FlutterMissionItem_Takeoff value)? takeoff,
+    TResult? Function(FlutterMissionItem_Waypoint value)? waypoint,
+    TResult? Function(FlutterMissionItem_Delay value)? delay,
+    TResult? Function(FlutterMissionItem_FindSafeSpot value)? findSafeSpot,
+    TResult? Function(FlutterMissionItem_Transition value)? transition,
+    TResult? Function(FlutterMissionItem_Land value)? land,
+    TResult? Function(FlutterMissionItem_PrecLand value)? precLand,
+    TResult? Function(FlutterMissionItem_End value)? end,
   }) {
     return findSafeSpot?.call(this);
   }
@@ -1185,15 +1641,15 @@ class _$FlutterMissionNode_FindSafeSpotImpl
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(FlutterMissionNode_Init value)? init,
-    TResult Function(FlutterMissionNode_Takeoff value)? takeoff,
-    TResult Function(FlutterMissionNode_Waypoint value)? waypoint,
-    TResult Function(FlutterMissionNode_Delay value)? delay,
-    TResult Function(FlutterMissionNode_FindSafeSpot value)? findSafeSpot,
-    TResult Function(FlutterMissionNode_Transition value)? transition,
-    TResult Function(FlutterMissionNode_Land value)? land,
-    TResult Function(FlutterMissionNode_PrecLand value)? precLand,
-    TResult Function(FlutterMissionNode_End value)? end,
+    TResult Function(FlutterMissionItem_Init value)? init,
+    TResult Function(FlutterMissionItem_Takeoff value)? takeoff,
+    TResult Function(FlutterMissionItem_Waypoint value)? waypoint,
+    TResult Function(FlutterMissionItem_Delay value)? delay,
+    TResult Function(FlutterMissionItem_FindSafeSpot value)? findSafeSpot,
+    TResult Function(FlutterMissionItem_Transition value)? transition,
+    TResult Function(FlutterMissionItem_Land value)? land,
+    TResult Function(FlutterMissionItem_PrecLand value)? precLand,
+    TResult Function(FlutterMissionItem_End value)? end,
     required TResult orElse(),
   }) {
     if (findSafeSpot != null) {
@@ -1203,47 +1659,47 @@ class _$FlutterMissionNode_FindSafeSpotImpl
   }
 }
 
-abstract class FlutterMissionNode_FindSafeSpot extends FlutterMissionNode {
-  const factory FlutterMissionNode_FindSafeSpot() =
-      _$FlutterMissionNode_FindSafeSpotImpl;
-  const FlutterMissionNode_FindSafeSpot._() : super._();
+abstract class FlutterMissionItem_FindSafeSpot extends FlutterMissionItem {
+  const factory FlutterMissionItem_FindSafeSpot() =
+      _$FlutterMissionItem_FindSafeSpotImpl;
+  const FlutterMissionItem_FindSafeSpot._() : super._();
 }
 
 /// @nodoc
-abstract class _$$FlutterMissionNode_TransitionImplCopyWith<$Res> {
-  factory _$$FlutterMissionNode_TransitionImplCopyWith(
-          _$FlutterMissionNode_TransitionImpl value,
-          $Res Function(_$FlutterMissionNode_TransitionImpl) then) =
-      __$$FlutterMissionNode_TransitionImplCopyWithImpl<$Res>;
+abstract class _$$FlutterMissionItem_TransitionImplCopyWith<$Res> {
+  factory _$$FlutterMissionItem_TransitionImplCopyWith(
+          _$FlutterMissionItem_TransitionImpl value,
+          $Res Function(_$FlutterMissionItem_TransitionImpl) then) =
+      __$$FlutterMissionItem_TransitionImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$FlutterMissionNode_TransitionImplCopyWithImpl<$Res>
-    extends _$FlutterMissionNodeCopyWithImpl<$Res,
-        _$FlutterMissionNode_TransitionImpl>
-    implements _$$FlutterMissionNode_TransitionImplCopyWith<$Res> {
-  __$$FlutterMissionNode_TransitionImplCopyWithImpl(
-      _$FlutterMissionNode_TransitionImpl _value,
-      $Res Function(_$FlutterMissionNode_TransitionImpl) _then)
+class __$$FlutterMissionItem_TransitionImplCopyWithImpl<$Res>
+    extends _$FlutterMissionItemCopyWithImpl<$Res,
+        _$FlutterMissionItem_TransitionImpl>
+    implements _$$FlutterMissionItem_TransitionImplCopyWith<$Res> {
+  __$$FlutterMissionItem_TransitionImplCopyWithImpl(
+      _$FlutterMissionItem_TransitionImpl _value,
+      $Res Function(_$FlutterMissionItem_TransitionImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$FlutterMissionNode_TransitionImpl
-    extends FlutterMissionNode_Transition {
-  const _$FlutterMissionNode_TransitionImpl() : super._();
+class _$FlutterMissionItem_TransitionImpl
+    extends FlutterMissionItem_Transition {
+  const _$FlutterMissionItem_TransitionImpl() : super._();
 
   @override
   String toString() {
-    return 'FlutterMissionNode.transition()';
+    return 'FlutterMissionItem.transition()';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$FlutterMissionNode_TransitionImpl);
+            other is _$FlutterMissionItem_TransitionImpl);
   }
 
   @override
@@ -1304,16 +1760,16 @@ class _$FlutterMissionNode_TransitionImpl
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(FlutterMissionNode_Init value) init,
-    required TResult Function(FlutterMissionNode_Takeoff value) takeoff,
-    required TResult Function(FlutterMissionNode_Waypoint value) waypoint,
-    required TResult Function(FlutterMissionNode_Delay value) delay,
-    required TResult Function(FlutterMissionNode_FindSafeSpot value)
+    required TResult Function(FlutterMissionItem_Init value) init,
+    required TResult Function(FlutterMissionItem_Takeoff value) takeoff,
+    required TResult Function(FlutterMissionItem_Waypoint value) waypoint,
+    required TResult Function(FlutterMissionItem_Delay value) delay,
+    required TResult Function(FlutterMissionItem_FindSafeSpot value)
         findSafeSpot,
-    required TResult Function(FlutterMissionNode_Transition value) transition,
-    required TResult Function(FlutterMissionNode_Land value) land,
-    required TResult Function(FlutterMissionNode_PrecLand value) precLand,
-    required TResult Function(FlutterMissionNode_End value) end,
+    required TResult Function(FlutterMissionItem_Transition value) transition,
+    required TResult Function(FlutterMissionItem_Land value) land,
+    required TResult Function(FlutterMissionItem_PrecLand value) precLand,
+    required TResult Function(FlutterMissionItem_End value) end,
   }) {
     return transition(this);
   }
@@ -1321,15 +1777,15 @@ class _$FlutterMissionNode_TransitionImpl
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(FlutterMissionNode_Init value)? init,
-    TResult? Function(FlutterMissionNode_Takeoff value)? takeoff,
-    TResult? Function(FlutterMissionNode_Waypoint value)? waypoint,
-    TResult? Function(FlutterMissionNode_Delay value)? delay,
-    TResult? Function(FlutterMissionNode_FindSafeSpot value)? findSafeSpot,
-    TResult? Function(FlutterMissionNode_Transition value)? transition,
-    TResult? Function(FlutterMissionNode_Land value)? land,
-    TResult? Function(FlutterMissionNode_PrecLand value)? precLand,
-    TResult? Function(FlutterMissionNode_End value)? end,
+    TResult? Function(FlutterMissionItem_Init value)? init,
+    TResult? Function(FlutterMissionItem_Takeoff value)? takeoff,
+    TResult? Function(FlutterMissionItem_Waypoint value)? waypoint,
+    TResult? Function(FlutterMissionItem_Delay value)? delay,
+    TResult? Function(FlutterMissionItem_FindSafeSpot value)? findSafeSpot,
+    TResult? Function(FlutterMissionItem_Transition value)? transition,
+    TResult? Function(FlutterMissionItem_Land value)? land,
+    TResult? Function(FlutterMissionItem_PrecLand value)? precLand,
+    TResult? Function(FlutterMissionItem_End value)? end,
   }) {
     return transition?.call(this);
   }
@@ -1337,15 +1793,15 @@ class _$FlutterMissionNode_TransitionImpl
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(FlutterMissionNode_Init value)? init,
-    TResult Function(FlutterMissionNode_Takeoff value)? takeoff,
-    TResult Function(FlutterMissionNode_Waypoint value)? waypoint,
-    TResult Function(FlutterMissionNode_Delay value)? delay,
-    TResult Function(FlutterMissionNode_FindSafeSpot value)? findSafeSpot,
-    TResult Function(FlutterMissionNode_Transition value)? transition,
-    TResult Function(FlutterMissionNode_Land value)? land,
-    TResult Function(FlutterMissionNode_PrecLand value)? precLand,
-    TResult Function(FlutterMissionNode_End value)? end,
+    TResult Function(FlutterMissionItem_Init value)? init,
+    TResult Function(FlutterMissionItem_Takeoff value)? takeoff,
+    TResult Function(FlutterMissionItem_Waypoint value)? waypoint,
+    TResult Function(FlutterMissionItem_Delay value)? delay,
+    TResult Function(FlutterMissionItem_FindSafeSpot value)? findSafeSpot,
+    TResult Function(FlutterMissionItem_Transition value)? transition,
+    TResult Function(FlutterMissionItem_Land value)? land,
+    TResult Function(FlutterMissionItem_PrecLand value)? precLand,
+    TResult Function(FlutterMissionItem_End value)? end,
     required TResult orElse(),
   }) {
     if (transition != null) {
@@ -1355,46 +1811,46 @@ class _$FlutterMissionNode_TransitionImpl
   }
 }
 
-abstract class FlutterMissionNode_Transition extends FlutterMissionNode {
-  const factory FlutterMissionNode_Transition() =
-      _$FlutterMissionNode_TransitionImpl;
-  const FlutterMissionNode_Transition._() : super._();
+abstract class FlutterMissionItem_Transition extends FlutterMissionItem {
+  const factory FlutterMissionItem_Transition() =
+      _$FlutterMissionItem_TransitionImpl;
+  const FlutterMissionItem_Transition._() : super._();
 }
 
 /// @nodoc
-abstract class _$$FlutterMissionNode_LandImplCopyWith<$Res> {
-  factory _$$FlutterMissionNode_LandImplCopyWith(
-          _$FlutterMissionNode_LandImpl value,
-          $Res Function(_$FlutterMissionNode_LandImpl) then) =
-      __$$FlutterMissionNode_LandImplCopyWithImpl<$Res>;
+abstract class _$$FlutterMissionItem_LandImplCopyWith<$Res> {
+  factory _$$FlutterMissionItem_LandImplCopyWith(
+          _$FlutterMissionItem_LandImpl value,
+          $Res Function(_$FlutterMissionItem_LandImpl) then) =
+      __$$FlutterMissionItem_LandImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$FlutterMissionNode_LandImplCopyWithImpl<$Res>
-    extends _$FlutterMissionNodeCopyWithImpl<$Res,
-        _$FlutterMissionNode_LandImpl>
-    implements _$$FlutterMissionNode_LandImplCopyWith<$Res> {
-  __$$FlutterMissionNode_LandImplCopyWithImpl(
-      _$FlutterMissionNode_LandImpl _value,
-      $Res Function(_$FlutterMissionNode_LandImpl) _then)
+class __$$FlutterMissionItem_LandImplCopyWithImpl<$Res>
+    extends _$FlutterMissionItemCopyWithImpl<$Res,
+        _$FlutterMissionItem_LandImpl>
+    implements _$$FlutterMissionItem_LandImplCopyWith<$Res> {
+  __$$FlutterMissionItem_LandImplCopyWithImpl(
+      _$FlutterMissionItem_LandImpl _value,
+      $Res Function(_$FlutterMissionItem_LandImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$FlutterMissionNode_LandImpl extends FlutterMissionNode_Land {
-  const _$FlutterMissionNode_LandImpl() : super._();
+class _$FlutterMissionItem_LandImpl extends FlutterMissionItem_Land {
+  const _$FlutterMissionItem_LandImpl() : super._();
 
   @override
   String toString() {
-    return 'FlutterMissionNode.land()';
+    return 'FlutterMissionItem.land()';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$FlutterMissionNode_LandImpl);
+            other is _$FlutterMissionItem_LandImpl);
   }
 
   @override
@@ -1455,16 +1911,16 @@ class _$FlutterMissionNode_LandImpl extends FlutterMissionNode_Land {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(FlutterMissionNode_Init value) init,
-    required TResult Function(FlutterMissionNode_Takeoff value) takeoff,
-    required TResult Function(FlutterMissionNode_Waypoint value) waypoint,
-    required TResult Function(FlutterMissionNode_Delay value) delay,
-    required TResult Function(FlutterMissionNode_FindSafeSpot value)
+    required TResult Function(FlutterMissionItem_Init value) init,
+    required TResult Function(FlutterMissionItem_Takeoff value) takeoff,
+    required TResult Function(FlutterMissionItem_Waypoint value) waypoint,
+    required TResult Function(FlutterMissionItem_Delay value) delay,
+    required TResult Function(FlutterMissionItem_FindSafeSpot value)
         findSafeSpot,
-    required TResult Function(FlutterMissionNode_Transition value) transition,
-    required TResult Function(FlutterMissionNode_Land value) land,
-    required TResult Function(FlutterMissionNode_PrecLand value) precLand,
-    required TResult Function(FlutterMissionNode_End value) end,
+    required TResult Function(FlutterMissionItem_Transition value) transition,
+    required TResult Function(FlutterMissionItem_Land value) land,
+    required TResult Function(FlutterMissionItem_PrecLand value) precLand,
+    required TResult Function(FlutterMissionItem_End value) end,
   }) {
     return land(this);
   }
@@ -1472,15 +1928,15 @@ class _$FlutterMissionNode_LandImpl extends FlutterMissionNode_Land {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(FlutterMissionNode_Init value)? init,
-    TResult? Function(FlutterMissionNode_Takeoff value)? takeoff,
-    TResult? Function(FlutterMissionNode_Waypoint value)? waypoint,
-    TResult? Function(FlutterMissionNode_Delay value)? delay,
-    TResult? Function(FlutterMissionNode_FindSafeSpot value)? findSafeSpot,
-    TResult? Function(FlutterMissionNode_Transition value)? transition,
-    TResult? Function(FlutterMissionNode_Land value)? land,
-    TResult? Function(FlutterMissionNode_PrecLand value)? precLand,
-    TResult? Function(FlutterMissionNode_End value)? end,
+    TResult? Function(FlutterMissionItem_Init value)? init,
+    TResult? Function(FlutterMissionItem_Takeoff value)? takeoff,
+    TResult? Function(FlutterMissionItem_Waypoint value)? waypoint,
+    TResult? Function(FlutterMissionItem_Delay value)? delay,
+    TResult? Function(FlutterMissionItem_FindSafeSpot value)? findSafeSpot,
+    TResult? Function(FlutterMissionItem_Transition value)? transition,
+    TResult? Function(FlutterMissionItem_Land value)? land,
+    TResult? Function(FlutterMissionItem_PrecLand value)? precLand,
+    TResult? Function(FlutterMissionItem_End value)? end,
   }) {
     return land?.call(this);
   }
@@ -1488,15 +1944,15 @@ class _$FlutterMissionNode_LandImpl extends FlutterMissionNode_Land {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(FlutterMissionNode_Init value)? init,
-    TResult Function(FlutterMissionNode_Takeoff value)? takeoff,
-    TResult Function(FlutterMissionNode_Waypoint value)? waypoint,
-    TResult Function(FlutterMissionNode_Delay value)? delay,
-    TResult Function(FlutterMissionNode_FindSafeSpot value)? findSafeSpot,
-    TResult Function(FlutterMissionNode_Transition value)? transition,
-    TResult Function(FlutterMissionNode_Land value)? land,
-    TResult Function(FlutterMissionNode_PrecLand value)? precLand,
-    TResult Function(FlutterMissionNode_End value)? end,
+    TResult Function(FlutterMissionItem_Init value)? init,
+    TResult Function(FlutterMissionItem_Takeoff value)? takeoff,
+    TResult Function(FlutterMissionItem_Waypoint value)? waypoint,
+    TResult Function(FlutterMissionItem_Delay value)? delay,
+    TResult Function(FlutterMissionItem_FindSafeSpot value)? findSafeSpot,
+    TResult Function(FlutterMissionItem_Transition value)? transition,
+    TResult Function(FlutterMissionItem_Land value)? land,
+    TResult Function(FlutterMissionItem_PrecLand value)? precLand,
+    TResult Function(FlutterMissionItem_End value)? end,
     required TResult orElse(),
   }) {
     if (land != null) {
@@ -1506,45 +1962,45 @@ class _$FlutterMissionNode_LandImpl extends FlutterMissionNode_Land {
   }
 }
 
-abstract class FlutterMissionNode_Land extends FlutterMissionNode {
-  const factory FlutterMissionNode_Land() = _$FlutterMissionNode_LandImpl;
-  const FlutterMissionNode_Land._() : super._();
+abstract class FlutterMissionItem_Land extends FlutterMissionItem {
+  const factory FlutterMissionItem_Land() = _$FlutterMissionItem_LandImpl;
+  const FlutterMissionItem_Land._() : super._();
 }
 
 /// @nodoc
-abstract class _$$FlutterMissionNode_PrecLandImplCopyWith<$Res> {
-  factory _$$FlutterMissionNode_PrecLandImplCopyWith(
-          _$FlutterMissionNode_PrecLandImpl value,
-          $Res Function(_$FlutterMissionNode_PrecLandImpl) then) =
-      __$$FlutterMissionNode_PrecLandImplCopyWithImpl<$Res>;
+abstract class _$$FlutterMissionItem_PrecLandImplCopyWith<$Res> {
+  factory _$$FlutterMissionItem_PrecLandImplCopyWith(
+          _$FlutterMissionItem_PrecLandImpl value,
+          $Res Function(_$FlutterMissionItem_PrecLandImpl) then) =
+      __$$FlutterMissionItem_PrecLandImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$FlutterMissionNode_PrecLandImplCopyWithImpl<$Res>
-    extends _$FlutterMissionNodeCopyWithImpl<$Res,
-        _$FlutterMissionNode_PrecLandImpl>
-    implements _$$FlutterMissionNode_PrecLandImplCopyWith<$Res> {
-  __$$FlutterMissionNode_PrecLandImplCopyWithImpl(
-      _$FlutterMissionNode_PrecLandImpl _value,
-      $Res Function(_$FlutterMissionNode_PrecLandImpl) _then)
+class __$$FlutterMissionItem_PrecLandImplCopyWithImpl<$Res>
+    extends _$FlutterMissionItemCopyWithImpl<$Res,
+        _$FlutterMissionItem_PrecLandImpl>
+    implements _$$FlutterMissionItem_PrecLandImplCopyWith<$Res> {
+  __$$FlutterMissionItem_PrecLandImplCopyWithImpl(
+      _$FlutterMissionItem_PrecLandImpl _value,
+      $Res Function(_$FlutterMissionItem_PrecLandImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$FlutterMissionNode_PrecLandImpl extends FlutterMissionNode_PrecLand {
-  const _$FlutterMissionNode_PrecLandImpl() : super._();
+class _$FlutterMissionItem_PrecLandImpl extends FlutterMissionItem_PrecLand {
+  const _$FlutterMissionItem_PrecLandImpl() : super._();
 
   @override
   String toString() {
-    return 'FlutterMissionNode.precLand()';
+    return 'FlutterMissionItem.precLand()';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$FlutterMissionNode_PrecLandImpl);
+            other is _$FlutterMissionItem_PrecLandImpl);
   }
 
   @override
@@ -1605,16 +2061,16 @@ class _$FlutterMissionNode_PrecLandImpl extends FlutterMissionNode_PrecLand {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(FlutterMissionNode_Init value) init,
-    required TResult Function(FlutterMissionNode_Takeoff value) takeoff,
-    required TResult Function(FlutterMissionNode_Waypoint value) waypoint,
-    required TResult Function(FlutterMissionNode_Delay value) delay,
-    required TResult Function(FlutterMissionNode_FindSafeSpot value)
+    required TResult Function(FlutterMissionItem_Init value) init,
+    required TResult Function(FlutterMissionItem_Takeoff value) takeoff,
+    required TResult Function(FlutterMissionItem_Waypoint value) waypoint,
+    required TResult Function(FlutterMissionItem_Delay value) delay,
+    required TResult Function(FlutterMissionItem_FindSafeSpot value)
         findSafeSpot,
-    required TResult Function(FlutterMissionNode_Transition value) transition,
-    required TResult Function(FlutterMissionNode_Land value) land,
-    required TResult Function(FlutterMissionNode_PrecLand value) precLand,
-    required TResult Function(FlutterMissionNode_End value) end,
+    required TResult Function(FlutterMissionItem_Transition value) transition,
+    required TResult Function(FlutterMissionItem_Land value) land,
+    required TResult Function(FlutterMissionItem_PrecLand value) precLand,
+    required TResult Function(FlutterMissionItem_End value) end,
   }) {
     return precLand(this);
   }
@@ -1622,15 +2078,15 @@ class _$FlutterMissionNode_PrecLandImpl extends FlutterMissionNode_PrecLand {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(FlutterMissionNode_Init value)? init,
-    TResult? Function(FlutterMissionNode_Takeoff value)? takeoff,
-    TResult? Function(FlutterMissionNode_Waypoint value)? waypoint,
-    TResult? Function(FlutterMissionNode_Delay value)? delay,
-    TResult? Function(FlutterMissionNode_FindSafeSpot value)? findSafeSpot,
-    TResult? Function(FlutterMissionNode_Transition value)? transition,
-    TResult? Function(FlutterMissionNode_Land value)? land,
-    TResult? Function(FlutterMissionNode_PrecLand value)? precLand,
-    TResult? Function(FlutterMissionNode_End value)? end,
+    TResult? Function(FlutterMissionItem_Init value)? init,
+    TResult? Function(FlutterMissionItem_Takeoff value)? takeoff,
+    TResult? Function(FlutterMissionItem_Waypoint value)? waypoint,
+    TResult? Function(FlutterMissionItem_Delay value)? delay,
+    TResult? Function(FlutterMissionItem_FindSafeSpot value)? findSafeSpot,
+    TResult? Function(FlutterMissionItem_Transition value)? transition,
+    TResult? Function(FlutterMissionItem_Land value)? land,
+    TResult? Function(FlutterMissionItem_PrecLand value)? precLand,
+    TResult? Function(FlutterMissionItem_End value)? end,
   }) {
     return precLand?.call(this);
   }
@@ -1638,15 +2094,15 @@ class _$FlutterMissionNode_PrecLandImpl extends FlutterMissionNode_PrecLand {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(FlutterMissionNode_Init value)? init,
-    TResult Function(FlutterMissionNode_Takeoff value)? takeoff,
-    TResult Function(FlutterMissionNode_Waypoint value)? waypoint,
-    TResult Function(FlutterMissionNode_Delay value)? delay,
-    TResult Function(FlutterMissionNode_FindSafeSpot value)? findSafeSpot,
-    TResult Function(FlutterMissionNode_Transition value)? transition,
-    TResult Function(FlutterMissionNode_Land value)? land,
-    TResult Function(FlutterMissionNode_PrecLand value)? precLand,
-    TResult Function(FlutterMissionNode_End value)? end,
+    TResult Function(FlutterMissionItem_Init value)? init,
+    TResult Function(FlutterMissionItem_Takeoff value)? takeoff,
+    TResult Function(FlutterMissionItem_Waypoint value)? waypoint,
+    TResult Function(FlutterMissionItem_Delay value)? delay,
+    TResult Function(FlutterMissionItem_FindSafeSpot value)? findSafeSpot,
+    TResult Function(FlutterMissionItem_Transition value)? transition,
+    TResult Function(FlutterMissionItem_Land value)? land,
+    TResult Function(FlutterMissionItem_PrecLand value)? precLand,
+    TResult Function(FlutterMissionItem_End value)? end,
     required TResult orElse(),
   }) {
     if (precLand != null) {
@@ -1656,45 +2112,45 @@ class _$FlutterMissionNode_PrecLandImpl extends FlutterMissionNode_PrecLand {
   }
 }
 
-abstract class FlutterMissionNode_PrecLand extends FlutterMissionNode {
-  const factory FlutterMissionNode_PrecLand() =
-      _$FlutterMissionNode_PrecLandImpl;
-  const FlutterMissionNode_PrecLand._() : super._();
+abstract class FlutterMissionItem_PrecLand extends FlutterMissionItem {
+  const factory FlutterMissionItem_PrecLand() =
+      _$FlutterMissionItem_PrecLandImpl;
+  const FlutterMissionItem_PrecLand._() : super._();
 }
 
 /// @nodoc
-abstract class _$$FlutterMissionNode_EndImplCopyWith<$Res> {
-  factory _$$FlutterMissionNode_EndImplCopyWith(
-          _$FlutterMissionNode_EndImpl value,
-          $Res Function(_$FlutterMissionNode_EndImpl) then) =
-      __$$FlutterMissionNode_EndImplCopyWithImpl<$Res>;
+abstract class _$$FlutterMissionItem_EndImplCopyWith<$Res> {
+  factory _$$FlutterMissionItem_EndImplCopyWith(
+          _$FlutterMissionItem_EndImpl value,
+          $Res Function(_$FlutterMissionItem_EndImpl) then) =
+      __$$FlutterMissionItem_EndImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$FlutterMissionNode_EndImplCopyWithImpl<$Res>
-    extends _$FlutterMissionNodeCopyWithImpl<$Res, _$FlutterMissionNode_EndImpl>
-    implements _$$FlutterMissionNode_EndImplCopyWith<$Res> {
-  __$$FlutterMissionNode_EndImplCopyWithImpl(
-      _$FlutterMissionNode_EndImpl _value,
-      $Res Function(_$FlutterMissionNode_EndImpl) _then)
+class __$$FlutterMissionItem_EndImplCopyWithImpl<$Res>
+    extends _$FlutterMissionItemCopyWithImpl<$Res, _$FlutterMissionItem_EndImpl>
+    implements _$$FlutterMissionItem_EndImplCopyWith<$Res> {
+  __$$FlutterMissionItem_EndImplCopyWithImpl(
+      _$FlutterMissionItem_EndImpl _value,
+      $Res Function(_$FlutterMissionItem_EndImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$FlutterMissionNode_EndImpl extends FlutterMissionNode_End {
-  const _$FlutterMissionNode_EndImpl() : super._();
+class _$FlutterMissionItem_EndImpl extends FlutterMissionItem_End {
+  const _$FlutterMissionItem_EndImpl() : super._();
 
   @override
   String toString() {
-    return 'FlutterMissionNode.end()';
+    return 'FlutterMissionItem.end()';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$FlutterMissionNode_EndImpl);
+            other is _$FlutterMissionItem_EndImpl);
   }
 
   @override
@@ -1755,16 +2211,16 @@ class _$FlutterMissionNode_EndImpl extends FlutterMissionNode_End {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(FlutterMissionNode_Init value) init,
-    required TResult Function(FlutterMissionNode_Takeoff value) takeoff,
-    required TResult Function(FlutterMissionNode_Waypoint value) waypoint,
-    required TResult Function(FlutterMissionNode_Delay value) delay,
-    required TResult Function(FlutterMissionNode_FindSafeSpot value)
+    required TResult Function(FlutterMissionItem_Init value) init,
+    required TResult Function(FlutterMissionItem_Takeoff value) takeoff,
+    required TResult Function(FlutterMissionItem_Waypoint value) waypoint,
+    required TResult Function(FlutterMissionItem_Delay value) delay,
+    required TResult Function(FlutterMissionItem_FindSafeSpot value)
         findSafeSpot,
-    required TResult Function(FlutterMissionNode_Transition value) transition,
-    required TResult Function(FlutterMissionNode_Land value) land,
-    required TResult Function(FlutterMissionNode_PrecLand value) precLand,
-    required TResult Function(FlutterMissionNode_End value) end,
+    required TResult Function(FlutterMissionItem_Transition value) transition,
+    required TResult Function(FlutterMissionItem_Land value) land,
+    required TResult Function(FlutterMissionItem_PrecLand value) precLand,
+    required TResult Function(FlutterMissionItem_End value) end,
   }) {
     return end(this);
   }
@@ -1772,15 +2228,15 @@ class _$FlutterMissionNode_EndImpl extends FlutterMissionNode_End {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(FlutterMissionNode_Init value)? init,
-    TResult? Function(FlutterMissionNode_Takeoff value)? takeoff,
-    TResult? Function(FlutterMissionNode_Waypoint value)? waypoint,
-    TResult? Function(FlutterMissionNode_Delay value)? delay,
-    TResult? Function(FlutterMissionNode_FindSafeSpot value)? findSafeSpot,
-    TResult? Function(FlutterMissionNode_Transition value)? transition,
-    TResult? Function(FlutterMissionNode_Land value)? land,
-    TResult? Function(FlutterMissionNode_PrecLand value)? precLand,
-    TResult? Function(FlutterMissionNode_End value)? end,
+    TResult? Function(FlutterMissionItem_Init value)? init,
+    TResult? Function(FlutterMissionItem_Takeoff value)? takeoff,
+    TResult? Function(FlutterMissionItem_Waypoint value)? waypoint,
+    TResult? Function(FlutterMissionItem_Delay value)? delay,
+    TResult? Function(FlutterMissionItem_FindSafeSpot value)? findSafeSpot,
+    TResult? Function(FlutterMissionItem_Transition value)? transition,
+    TResult? Function(FlutterMissionItem_Land value)? land,
+    TResult? Function(FlutterMissionItem_PrecLand value)? precLand,
+    TResult? Function(FlutterMissionItem_End value)? end,
   }) {
     return end?.call(this);
   }
@@ -1788,15 +2244,15 @@ class _$FlutterMissionNode_EndImpl extends FlutterMissionNode_End {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(FlutterMissionNode_Init value)? init,
-    TResult Function(FlutterMissionNode_Takeoff value)? takeoff,
-    TResult Function(FlutterMissionNode_Waypoint value)? waypoint,
-    TResult Function(FlutterMissionNode_Delay value)? delay,
-    TResult Function(FlutterMissionNode_FindSafeSpot value)? findSafeSpot,
-    TResult Function(FlutterMissionNode_Transition value)? transition,
-    TResult Function(FlutterMissionNode_Land value)? land,
-    TResult Function(FlutterMissionNode_PrecLand value)? precLand,
-    TResult Function(FlutterMissionNode_End value)? end,
+    TResult Function(FlutterMissionItem_Init value)? init,
+    TResult Function(FlutterMissionItem_Takeoff value)? takeoff,
+    TResult Function(FlutterMissionItem_Waypoint value)? waypoint,
+    TResult Function(FlutterMissionItem_Delay value)? delay,
+    TResult Function(FlutterMissionItem_FindSafeSpot value)? findSafeSpot,
+    TResult Function(FlutterMissionItem_Transition value)? transition,
+    TResult Function(FlutterMissionItem_Land value)? land,
+    TResult Function(FlutterMissionItem_PrecLand value)? precLand,
+    TResult Function(FlutterMissionItem_End value)? end,
     required TResult orElse(),
   }) {
     if (end != null) {
@@ -1806,9 +2262,9 @@ class _$FlutterMissionNode_EndImpl extends FlutterMissionNode_End {
   }
 }
 
-abstract class FlutterMissionNode_End extends FlutterMissionNode {
-  const factory FlutterMissionNode_End() = _$FlutterMissionNode_EndImpl;
-  const FlutterMissionNode_End._() : super._();
+abstract class FlutterMissionItem_End extends FlutterMissionItem {
+  const factory FlutterMissionItem_End() = _$FlutterMissionItem_EndImpl;
+  const FlutterMissionItem_End._() : super._();
 }
 
 /// @nodoc

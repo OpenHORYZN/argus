@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
@@ -49,9 +51,9 @@ class AltPoint {
   AltPoint(this.x, this.y);
 }
 
-class PlotController with ChangeNotifier {
+class PlotController extends ChangeNotifier {
   final List<AltPoint> _values = <AltPoint>[];
-  List<AltPoint> get values => _values.toList();
+  UnmodifiableListView<AltPoint> get values => UnmodifiableListView(_values);
 
   void push(AltPoint value) {
     if (_values.length == 1000) {

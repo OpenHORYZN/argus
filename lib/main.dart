@@ -1,15 +1,18 @@
 import 'dart:async';
+import 'dart:collection';
 
-import 'package:argus/gradient_container.dart';
+import 'package:argus/fab.dart';
 import 'package:argus/map.dart';
 import 'package:argus/plot.dart';
+import 'package:argus/title_bar/title_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:argus/src/rust/api/mission.dart';
 import 'package:argus/src/rust/frb_generated.dart';
 import 'package:logger/logger.dart';
+import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 import 'package:window_manager/window_manager.dart';
 
 const machine = "sim";
@@ -44,14 +47,8 @@ class MissionPlannerPage extends StatefulWidget {
 }
 
 class _MissionPlannerPageState extends State<MissionPlannerPage> {
+  final uuid = const Uuid();
   final logger = Logger(printer: SimplePrinter());
-
-  List<FlutterMissionNode> _missionNodes = [
-    const FlutterMissionNode.init(),
-    const FlutterMissionNode.takeoff(altitude: 10.0),
-    const FlutterMissionNode.land(),
-    const FlutterMissionNode.end()
-  ];
 
   CoreConnection? _connection;
   Stream<PositionTriple>? _posStream;
@@ -60,13 +57,13 @@ class _MissionPlannerPageState extends State<MissionPlannerPage> {
   Stream<bool>? _onlineStream;
   Stream<FlutterControlResponse>? _controlStream;
   bool _online = false;
+  bool _paused = false;
   final _mapController = MapController();
   final _plotController = PlotController();
-  dynamic Function(LatLng)? getMapLocation;
 
-  void _connect() {
+  void _connect(MissionPlanList missionNodes) {
     if (_connection == null) {
-      CoreConnection.init(machine: "sim").then((conn) async {
+      CoreConnection.init(machine: machine).then((conn) async {
         _connection = conn;
         _posStream = (await conn.getPos()).asBroadcastStream();
         _onlineStream = (await conn.getOnline()).asBroadcastStream();
@@ -77,9 +74,7 @@ class _MissionPlannerPageState extends State<MissionPlannerPage> {
 
         _posStream!.first.then((p) {
           logger.i("Re-Centering Map");
-          setState(() {
-            _mapController.move(LatLng(p.x, p.y), _mapController.camera.zoom);
-          });
+          _mapController.move(LatLng(p.x, p.y), _mapController.camera.zoom);
         }, onError: (_) => ());
 
         _posStream!.forEach((p) {
@@ -89,7 +84,8 @@ class _MissionPlannerPageState extends State<MissionPlannerPage> {
         _onlineStream!.forEach((o) async {
           if (o && !_online) {
             logger.i("Fetching Mission Plan");
-            conn.sendControl(req: FlutterControlRequest.fetchMissionPlan);
+            conn.sendControl(
+                req: const FlutterControlRequest.fetchMissionPlan());
           }
 
           _online = o;
@@ -97,9 +93,11 @@ class _MissionPlannerPageState extends State<MissionPlannerPage> {
 
         _controlStream!.forEach((p) {
           p.map(sendMissionPlan: (smp) {
+            logger.i("Mission Plan Received");
+            missionNodes.setList(smp.field0.nodes.toList());
+          }, pauseResume: (pause) {
             setState(() {
-              logger.i("Mission Plan Received");
-              _missionNodes = smp.field0.toList();
+              _paused = pause.field0;
             });
           });
         });
@@ -107,272 +105,143 @@ class _MissionPlannerPageState extends State<MissionPlannerPage> {
     }
   }
 
-  void _addNode(FlutterMissionNode node) {
-    setState(() {
-      if (_missionNodes.length > 2 &&
-          _missionNodes[_missionNodes.length - 2] is FlutterMissionNode_Land) {
-        _missionNodes.insert(_missionNodes.length - 2, node);
-      } else {
-        _missionNodes.insert(_missionNodes.length - 1, node);
-      }
-    });
-  }
-
-  void _removeNode(int index) {
-    setState(() {
-      _missionNodes.removeAt(index);
-    });
-  }
-
-  bool _isBedrock(int index) {
-    return _missionNodes[index] is FlutterMissionNode_Init ||
-        _missionNodes[index] is FlutterMissionNode_End;
-  }
-
-  bool isUnlocked(AsyncSnapshot<int> snap) {
-    return snap.data == null || snap.data! == -1;
-  }
-
   @override
   Widget build(BuildContext context) {
-    _connect();
-    return Scaffold(
-        appBar: AppBar(
-          leading: StreamBuilder<bool>(
-              stream: _onlineStream,
-              builder: (context, onlineSnapshot) {
-                return StreamBuilder<int>(
-                    stream: _stepStream,
-                    builder: (context, stepSnapshot) {
-                      VehicleState vehicleState;
-                      if (onlineSnapshot.hasData && onlineSnapshot.data!) {
-                        if (stepSnapshot.hasData && stepSnapshot.data! > 0) {
-                          vehicleState = VehicleState.flying;
-                        } else if (stepSnapshot.hasData &&
-                            stepSnapshot.data! == 0) {
-                          vehicleState = VehicleState.ready;
-                        } else {
-                          vehicleState = VehicleState.online;
-                        }
-                      } else {
-                        vehicleState = VehicleState.offline;
-                      }
-                      return GradientContainer(
-                        state: vehicleState,
-                      );
-                    });
-              }),
-          leadingWidth: 120,
-          actions: const [
-            Padding(
-              padding: EdgeInsets.all(12.0),
-              child: Center(
-                child: Text(
-                  "Node: $machine",
-                  style: TextStyle(color: Colors.white, fontSize: 14),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+            create: (context) => MissionPlanList.withConnect(_connect)),
+        ChangeNotifierProvider(create: (context) => MapMeta())
+      ],
+      child: Scaffold(
+          appBar: TitleBar(
+            onlineStream: _onlineStream,
+            stepStream: _stepStream,
+            machine: machine,
+          ),
+          body: Column(
+            children: [
+              Expanded(
+                flex: 3,
+                child: MainMapWidget(
+                  controller: _mapController,
+                  posStream: _posStream,
+                  yawStream: _yawStream,
                 ),
               ),
-            ),
-          ],
-          centerTitle: true,
-          notificationPredicate: (notification) => false,
-          title: const Text('Argus Flight Management'),
-        ),
-        body: Column(
-          children: [
-            Expanded(
-              flex: 3,
-              child: MainMapWidget(
-                controller: _mapController,
-                posStream: _posStream,
-                yawStream: _yawStream,
-                missionNodes: _missionNodes,
-                getLocation: getMapLocation,
-              ),
-            ),
-            Expanded(
-              flex: 2,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: AltitudePlot(
-                      controller: _plotController,
+              Expanded(
+                flex: 2,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: AltitudePlot(
+                        controller: _plotController,
+                      ),
                     ),
-                  ),
-                  Expanded(
-                    child: StreamBuilder<int>(
-                        stream: _stepStream,
-                        builder: (context, snapshot) {
-                          bool isMe(AsyncSnapshot<int> snap, index) {
-                            return (snap.data?.toInt() == index);
-                          }
-
-                          return ReorderableListView.builder(
-                            itemCount: _missionNodes.length,
-                            buildDefaultDragHandles: false,
-                            onReorder: (oldIndex, newIndex) {
-                              setState(() {
-                                if (_isBedrock(oldIndex)) {
-                                  return;
-                                }
-
-                                if (newIndex > oldIndex) {
-                                  newIndex -= 1;
-                                }
-
-                                if (_isBedrock(newIndex)) {
-                                  return;
-                                }
-
-                                final it = _missionNodes.removeAt(oldIndex);
-                                _missionNodes.insert(newIndex, it);
-                              });
-                            },
-                            itemBuilder: (context, index) {
-                              final node = _missionNodes[index];
-
-                              return ReorderableDragStartListener(
-                                  index: index,
-                                  key: ValueKey(node),
-                                  enabled: !_isBedrock(index) &&
-                                      isUnlocked(snapshot),
-                                  child: ListTile(
-                                    leading: _getIconForNode(node),
-                                    title: Text(_getTextForNode(node)),
-                                    textColor: isMe(snapshot, index)
-                                        ? Colors.orange
-                                        : null,
-                                    titleTextStyle: isMe(snapshot, index)
-                                        ? const TextStyle(
-                                            fontWeight: FontWeight.bold)
-                                        : const TextStyle(),
-                                    trailing: !_isBedrock(index) &&
-                                            isUnlocked(snapshot)
-                                        ? IconButton(
-                                            icon: const Icon(Icons.delete),
-                                            onPressed: () => _removeNode(index),
-                                          )
-                                        : null,
-                                  ));
-                            },
-                          );
-                        }),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: StreamBuilder<bool>(
-                  stream: _onlineStream,
-                  builder: (context, onlineSnapshot) {
-                    return StreamBuilder<int>(
-                        stream: _stepStream,
-                        builder: (context, stepSnapshot) {
-                          return ElevatedButton.icon(
-                            label: const Text('Send Mission'),
-                            icon: const Icon(Icons.check),
-                            onPressed: (onlineSnapshot.hasData &&
-                                    onlineSnapshot.data! &&
-                                    isUnlocked(stepSnapshot))
-                                ? () async {
-                                    if (_connection != null) {
-                                      _connection!.sendControl(
-                                          req: FlutterControlRequest
-                                              .fetchMissionPlan);
-                                      await _connection!
-                                          .sendMissionPlan(plan: _missionNodes);
-                                    }
+                    Expanded(
+                      child: Consumer<MissionPlanList>(
+                        builder: (context, missionNodes, child) =>
+                            StreamBuilder<int>(
+                                stream: _stepStream,
+                                builder: (context, snapshot) {
+                                  bool isMe(AsyncSnapshot<int> snap, index) {
+                                    return (snap.data?.toInt() == index);
                                   }
-                                : null,
-                          );
-                        });
-                  }),
-            ),
-          ],
-        ),
-        floatingActionButton: StreamBuilder<int>(
-            stream: _stepStream,
-            builder: (context, snapshot) {
-              return SpeedDial(
-                visible: isUnlocked(snapshot),
-                icon: Icons.add,
-                childMargin:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 15),
-                children: [
-                  SpeedDialChild(
-                      child: const Icon(Icons.flight_land),
-                      backgroundColor: Colors.green,
-                      label: 'Land',
-                      labelStyle: const TextStyle(fontSize: 18.0),
-                      onTap: () => _addNode(const FlutterMissionNode.land()),
-                      shape: const CircleBorder()),
-                  SpeedDialChild(
-                      child: const Icon(Icons.flight_takeoff),
-                      backgroundColor: Colors.green,
-                      label: 'Takeoff',
-                      labelStyle: const TextStyle(fontSize: 18.0),
-                      onTap: () => _addNode(
-                          const FlutterMissionNode.takeoff(altitude: 5.0)),
-                      shape: const CircleBorder()),
-                  SpeedDialChild(
-                      child: const Icon(Icons.timer),
-                      backgroundColor: Colors.orange,
-                      label: 'Delay',
-                      labelStyle: const TextStyle(fontSize: 18.0),
-                      onTap: () =>
-                          _addNode(const FlutterMissionNode.delay(5.0)),
-                      shape: const CircleBorder()),
-                  SpeedDialChild(
-                      child: const Icon(Icons.gps_fixed),
-                      backgroundColor: Colors.indigo,
-                      label: 'Offset Waypoint',
-                      labelStyle: const TextStyle(fontSize: 18.0),
-                      onTap: () {
-                        showModalBottomSheet<FlutterWaypoint_LocalOffset>(
-                            context: context,
-                            isScrollControlled: true,
-                            builder: (BuildContext context) {
-                              return const SizedBox(
-                                height: 250,
-                                child: Center(
-                                  child: LocalOffsetForm(),
-                                ),
-                              );
-                            }).then((wp) {
-                          if (wp != null) {
-                            _addNode(FlutterMissionNode.waypoint(wp));
-                          }
-                        });
-                      },
-                      shape: const CircleBorder()),
-                  SpeedDialChild(
-                      child: const Icon(Icons.gps_fixed),
-                      backgroundColor: Colors.red,
-                      label: 'GPS Waypoint',
-                      labelStyle: const TextStyle(fontSize: 18.0),
-                      onTap: () {
-                        setState(() {
-                          getMapLocation = (ll) {
-                            _addNode(FlutterMissionNode.waypoint(
-                                FlutterWaypoint.globalRelativeHeight(
-                                    lat: ll.latitude,
-                                    lon: ll.longitude,
-                                    heightDiff: 0.0)));
-                            setState(() {
-                              getMapLocation = null;
-                            });
-                          };
-                        });
-                      },
-                      shape: const CircleBorder()),
-                ],
-              );
-            }));
+
+                                  return ReorderableListView.builder(
+                                    itemCount: missionNodes.length,
+                                    buildDefaultDragHandles: false,
+                                    onReorder: missionNodes.reorder,
+                                    itemBuilder: (context, index) {
+                                      final node =
+                                          missionNodes.missionNodes[index];
+
+                                      return ReorderableDragStartListener(
+                                          index: index,
+                                          key: ValueKey(node.id),
+                                          enabled: !missionNodes
+                                                  .isBedrock(index) &&
+                                              missionNodes.isUnlocked(snapshot),
+                                          child: ListTile(
+                                            leading: _getIconForNode(node),
+                                            title: Text(_getTextForNode(node)),
+                                            textColor: isMe(snapshot, index)
+                                                ? Colors.orange
+                                                : null,
+                                            titleTextStyle: isMe(
+                                                    snapshot, index)
+                                                ? const TextStyle(
+                                                    fontWeight: FontWeight.bold)
+                                                : const TextStyle(),
+                                            trailing: !missionNodes
+                                                        .isBedrock(index) &&
+                                                    missionNodes
+                                                        .isUnlocked(snapshot)
+                                                ? IconButton(
+                                                    icon: const Icon(
+                                                        Icons.delete),
+                                                    onPressed: () =>
+                                                        missionNodes
+                                                            .removeNode(index),
+                                                  )
+                                                : null,
+                                          ));
+                                    },
+                                  );
+                                }),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Consumer<MissionPlanList>(
+                  builder: (context, missionNodes, child) =>
+                      StreamBuilder<bool>(
+                          stream: _onlineStream,
+                          builder: (context, onlineSnapshot) {
+                            return StreamBuilder<int>(
+                                stream: _stepStream,
+                                builder: (context, stepSnapshot) {
+                                  return ElevatedButton.icon(
+                                    label: const Text('Send Mission'),
+                                    icon: const Icon(Icons.check),
+                                    onPressed:
+                                        (onlineSnapshot.hasData &&
+                                                onlineSnapshot.data! &&
+                                                missionNodes
+                                                    .isUnlocked(stepSnapshot))
+                                            ? () async {
+                                                if (_connection != null) {
+                                                  _connection!.sendControl(
+                                                      req: const FlutterControlRequest
+                                                          .fetchMissionPlan());
+                                                  await _connection!.sendMissionPlan(
+                                                      plan: FlutterMissionPlan(
+                                                          id: uuid.v4obj(),
+                                                          nodes: missionNodes
+                                                              .missionNodes));
+                                                }
+                                              }
+                                            : null,
+                                  );
+                                });
+                          }),
+                ),
+              ),
+            ],
+          ),
+          floatingActionButton: MainFAB(
+            paused: _paused,
+            stepStream: _stepStream,
+            connection: _connection,
+          )),
+    );
   }
 
   Icon _getIconForNode(FlutterMissionNode node) {
-    return node.map(
+    return node.item.map(
         init: (_) => const Icon(Icons.flag),
         takeoff: (_) => const Icon(Icons.flight_takeoff),
         waypoint: (_) => const Icon(Icons.place),
@@ -385,7 +254,7 @@ class _MissionPlannerPageState extends State<MissionPlannerPage> {
   }
 
   String _getTextForNode(FlutterMissionNode node) {
-    return node.map(
+    return node.item.map(
         init: (_) => 'Init',
         takeoff: (t) => 'Takeoff at ${t.altitude}m',
         waypoint: (n) => n.field0.map(
@@ -413,113 +282,85 @@ class _MissionPlannerPageState extends State<MissionPlannerPage> {
   }
 }
 
-class LocalOffsetForm extends StatefulWidget {
-  const LocalOffsetForm({super.key});
+class MapMeta extends ChangeNotifier {
+  Function(LatLng)? _gpsResult;
 
-  @override
-  State<LocalOffsetForm> createState() => _LocalOffsetFormState();
+  Function(LatLng)? get gpsResult => _gpsResult;
+
+  void setGPSResult(Function(LatLng)? callback) {
+    _gpsResult = callback;
+    notifyListeners();
+  }
 }
 
-class _LocalOffsetFormState extends State<LocalOffsetForm> {
-  final _formKey = GlobalKey<FormState>();
-  final TextEditingController _xController = TextEditingController();
-  final TextEditingController _yController = TextEditingController();
-  final TextEditingController _zController = TextEditingController();
+class MissionPlanList extends ChangeNotifier {
+  MissionPlanList();
 
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: MediaQuery.of(context).viewInsets,
-      child: Column(
-        children: [
-          AppBar(
-            leading: IconButton(
-              icon: const Icon(Icons.close),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            title: const Text('Enter Local Offset'),
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.check),
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    Navigator.of(context).pop(FlutterWaypoint.localOffset(
-                        double.parse(_xController.text),
-                        double.parse(_yController.text),
-                        double.parse(_zController.text)));
-                  }
-                },
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  TextFormField(
-                    controller: _xController,
-                    decoration: const InputDecoration(
-                      labelText: 'X (in meters)',
-                    ),
-                    keyboardType:
-                        const TextInputType.numberWithOptions(decimal: true),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter a value for X';
-                      }
-                      final doubleValue = double.tryParse(value);
-                      if (doubleValue == null) {
-                        return 'Please enter a valid number';
-                      }
-                      return null;
-                    },
-                  ),
-                  TextFormField(
-                    controller: _yController,
-                    decoration: const InputDecoration(
-                      labelText: 'Y (in meters)',
-                    ),
-                    keyboardType:
-                        const TextInputType.numberWithOptions(decimal: true),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter a value for Y';
-                      }
-                      final doubleValue = double.tryParse(value);
-                      if (doubleValue == null) {
-                        return 'Please enter a valid number';
-                      }
-                      return null;
-                    },
-                  ),
-                  TextFormField(
-                    controller: _zController,
-                    decoration: const InputDecoration(
-                      labelText: 'Z (in meters)',
-                    ),
-                    keyboardType:
-                        const TextInputType.numberWithOptions(decimal: true),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter a value for Z';
-                      }
-                      final doubleValue = double.tryParse(value);
-                      if (doubleValue == null) {
-                        return 'Please enter a valid number';
-                      }
-                      return null;
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+  factory MissionPlanList.withConnect(Function(MissionPlanList) connector) {
+    var self = MissionPlanList();
+    connector(self);
+    return self;
+  }
+
+  final List<FlutterMissionNode> _missionNodes = [
+    FlutterMissionNode.random(item: const FlutterMissionItem.init()),
+    FlutterMissionNode.random(
+        item: const FlutterMissionItem.takeoff(altitude: 10.0)),
+    FlutterMissionNode.random(item: const FlutterMissionItem.land()),
+    FlutterMissionNode.random(item: const FlutterMissionItem.end()),
+  ];
+
+  UnmodifiableListView<FlutterMissionNode> get missionNodes =>
+      UnmodifiableListView(_missionNodes);
+
+  int get length => _missionNodes.length;
+
+  void setList(List<FlutterMissionNode> newList) {
+    _missionNodes.clear();
+    _missionNodes.addAll(newList);
+    notifyListeners();
+  }
+
+  void addNode(FlutterMissionNode node) {
+    if (_missionNodes.length > 2 &&
+        _missionNodes[_missionNodes.length - 2].item
+            is FlutterMissionItem_Land) {
+      _missionNodes.insert(_missionNodes.length - 2, node);
+    } else {
+      _missionNodes.insert(_missionNodes.length - 1, node);
+    }
+    notifyListeners();
+  }
+
+  void removeNode(int index) {
+    _missionNodes.removeAt(index);
+    notifyListeners();
+  }
+
+  void reorder(int oldIndex, int newIndex) {
+    if (isBedrock(oldIndex)) {
+      return;
+    }
+
+    if (newIndex > oldIndex) {
+      newIndex -= 1;
+    }
+
+    if (isBedrock(newIndex)) {
+      return;
+    }
+
+    final it = _missionNodes.removeAt(oldIndex);
+    _missionNodes.insert(newIndex, it);
+    notifyListeners();
+  }
+
+  bool isBedrock(int index) {
+    return _missionNodes[index].item is FlutterMissionItem_Init ||
+        _missionNodes[index].item is FlutterMissionItem_End;
+  }
+
+  bool isUnlocked(AsyncSnapshot<int> snap) {
+    return snap.data == null || snap.data! == -1;
   }
 }

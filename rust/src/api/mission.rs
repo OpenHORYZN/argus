@@ -1,10 +1,10 @@
-use anyhow::anyhow;
 use flutter_rust_bridge::frb;
 use nalgebra::Vector3;
 use rerun::Color;
 use std::{sync::Arc, time::Duration};
 use tokio::{select, sync::watch, time::sleep};
-use tracing_subscriber::filter::LevelFilter;
+use tracing::info;
+use uuid::Uuid;
 use zenoh::prelude::r#async::*;
 
 use argus_common::{
@@ -12,18 +12,19 @@ use argus_common::{
         IControlRequest, IControlResponse, IGlobalPosition, ILocalPosition, IMissionStep,
         IMissionUpdate, IYaw,
     },
-    ControlRequest, ControlResponse, GlobalPosition, LocalPosition, MissionNode, Waypoint,
+    ControlRequest, ControlResponse, GlobalPosition, LocalPosition, MissionItem, MissionNode,
+    MissionPlan, Waypoint,
 };
 
 use crate::{frb_generated::StreamSink, visualize};
 
-use super::util::{publisher, watch_stream, Pub, SubscriptionManager};
+use crate::util::{publisher, watch_stream, MapErr, Pub, SubscriptionManager};
 
 #[frb(init)]
 pub fn init_app() {
     flutter_rust_bridge::setup_default_user_utils();
     tracing_subscriber::fmt()
-        .with_max_level(LevelFilter::DEBUG)
+        .with_env_filter("rust_lib_argus=debug")
         .init();
     visualize::init();
 }
@@ -42,9 +43,22 @@ pub struct CoreConnection {
 
 impl CoreConnection {
     pub async fn init(machine: String) -> anyhow::Result<Self> {
-        let zconfig = zenoh::config::default();
+        let mut zconfig = zenoh::config::default();
 
-        let session = Arc::new(zenoh::open(zconfig).res().await.map_err(|e| anyhow!(e))?);
+        let interface = "tailscale0";
+
+        zconfig.listen.endpoints = vec![
+            EndPoint::new("udp", "0.0.0.0:0", "", format!("iface={interface}")).emap()?,
+            EndPoint::new("tcp", "0.0.0.0:0", "", format!("iface={interface}")).emap()?,
+        ];
+
+        zconfig.transport.unicast.set_max_links(10).emap()?;
+
+        let session = Arc::new(zenoh::open(zconfig).res().await.emap()?);
+
+        let zid = session.zid();
+
+        info!("Singularity Link: Searching on interface {interface}, Identity {zid}");
 
         let (kalive_snd, mut keepalive_rcv) = watch::channel(());
 
@@ -99,9 +113,9 @@ impl CoreConnection {
         })
     }
 
-    pub async fn send_mission_plan(&mut self, plan: Vec<FlutterMissionNode>) -> anyhow::Result<()> {
-        let plan: Vec<MissionNode> = plan.into_iter().map(Into::into).collect();
-        self.mission.send(plan).await
+    pub async fn send_mission_plan(&mut self, plan: FlutterMissionPlan) -> anyhow::Result<()> {
+        let nodes: Vec<MissionNode> = plan.nodes.into_iter().map(Into::into).collect();
+        self.mission.send(MissionPlan { id: plan.id, nodes }).await
     }
 
     pub async fn send_control(&mut self, req: FlutterControlRequest) -> anyhow::Result<()> {
@@ -146,34 +160,44 @@ impl CoreConnection {
 #[derive(Debug, Clone)]
 pub enum FlutterControlRequest {
     FetchMissionPlan,
+    PauseResume(bool),
 }
 
 impl From<FlutterControlRequest> for ControlRequest {
     fn from(value: FlutterControlRequest) -> Self {
         match value {
             FlutterControlRequest::FetchMissionPlan => ControlRequest::FetchMissionPlan,
+            FlutterControlRequest::PauseResume(pause) => ControlRequest::PauseResume(pause),
         }
     }
 }
 
 #[derive(Debug, Clone)]
 pub enum FlutterControlResponse {
-    SendMissionPlan(Vec<FlutterMissionNode>),
+    SendMissionPlan(FlutterMissionPlan),
+    PauseResume(bool),
 }
 
 impl From<ControlResponse> for FlutterControlResponse {
     fn from(value: ControlResponse) -> Self {
         match value {
             ControlResponse::SendMissionPlan(plan) => {
-                FlutterControlResponse::SendMissionPlan(plan.into_iter().map(Into::into).collect())
+                FlutterControlResponse::SendMissionPlan(FlutterMissionPlan {
+                    id: plan.id,
+                    nodes: plan.nodes.into_iter().map(Into::into).collect(),
+                })
             }
+            ControlResponse::PauseResume(pause) => FlutterControlResponse::PauseResume(pause),
         }
     }
 }
 
 impl Default for FlutterControlResponse {
     fn default() -> Self {
-        Self::SendMissionPlan(vec![])
+        Self::SendMissionPlan(FlutterMissionPlan {
+            id: Uuid::default(),
+            nodes: vec![],
+        })
     }
 }
 
@@ -205,7 +229,47 @@ impl From<LocalPosition> for PositionTriple {
 }
 
 #[derive(Debug, Clone)]
-pub enum FlutterMissionNode {
+pub struct FlutterMissionPlan {
+    pub id: Uuid,
+    pub nodes: Vec<FlutterMissionNode>,
+}
+
+#[derive(Debug, Clone)]
+pub struct FlutterMissionNode {
+    pub id: Uuid,
+    pub item: FlutterMissionItem,
+}
+
+impl FlutterMissionNode {
+    #[frb(sync)]
+    pub fn random(item: FlutterMissionItem) -> Self {
+        Self {
+            id: Uuid::new_v4(),
+            item,
+        }
+    }
+}
+
+impl From<MissionNode> for FlutterMissionNode {
+    fn from(value: MissionNode) -> Self {
+        Self {
+            id: value.id,
+            item: value.item.into(),
+        }
+    }
+}
+
+impl From<FlutterMissionNode> for MissionNode {
+    fn from(value: FlutterMissionNode) -> Self {
+        Self {
+            id: value.id,
+            item: value.item.into(),
+        }
+    }
+}
+
+#[derive(Debug, Clone)]
+pub enum FlutterMissionItem {
     Init,
     Takeoff { altitude: f64 },
     Waypoint(FlutterWaypoint),
@@ -217,34 +281,34 @@ pub enum FlutterMissionNode {
     End,
 }
 
-impl From<FlutterMissionNode> for MissionNode {
-    fn from(value: FlutterMissionNode) -> Self {
+impl From<FlutterMissionItem> for MissionItem {
+    fn from(value: FlutterMissionItem) -> Self {
         match value {
-            FlutterMissionNode::Init => MissionNode::Init,
-            FlutterMissionNode::Takeoff { altitude } => MissionNode::Takeoff { altitude },
-            FlutterMissionNode::Waypoint(w) => MissionNode::Waypoint(w.into()),
-            FlutterMissionNode::Delay(s) => MissionNode::Delay(Duration::from_secs_f64(s)),
-            FlutterMissionNode::FindSafeSpot => MissionNode::FindSafeSpot,
-            FlutterMissionNode::Transition => MissionNode::Transition,
-            FlutterMissionNode::Land => MissionNode::Land,
-            FlutterMissionNode::PrecLand => MissionNode::PrecLand,
-            FlutterMissionNode::End => MissionNode::End,
+            FlutterMissionItem::Init => MissionItem::Init,
+            FlutterMissionItem::Takeoff { altitude } => MissionItem::Takeoff { altitude },
+            FlutterMissionItem::Waypoint(w) => MissionItem::Waypoint(w.into()),
+            FlutterMissionItem::Delay(s) => MissionItem::Delay(Duration::from_secs_f64(s)),
+            FlutterMissionItem::FindSafeSpot => MissionItem::FindSafeSpot,
+            FlutterMissionItem::Transition => MissionItem::Transition,
+            FlutterMissionItem::Land => MissionItem::Land,
+            FlutterMissionItem::PrecLand => MissionItem::PrecLand,
+            FlutterMissionItem::End => MissionItem::End,
         }
     }
 }
 
-impl From<MissionNode> for FlutterMissionNode {
-    fn from(value: MissionNode) -> Self {
+impl From<MissionItem> for FlutterMissionItem {
+    fn from(value: MissionItem) -> Self {
         match value {
-            MissionNode::Init => FlutterMissionNode::Init,
-            MissionNode::Takeoff { altitude } => FlutterMissionNode::Takeoff { altitude },
-            MissionNode::Waypoint(wp) => FlutterMissionNode::Waypoint(wp.into()),
-            MissionNode::Delay(d) => FlutterMissionNode::Delay(d.as_secs_f64()),
-            MissionNode::FindSafeSpot => FlutterMissionNode::FindSafeSpot,
-            MissionNode::Transition => FlutterMissionNode::Transition,
-            MissionNode::Land => FlutterMissionNode::Land,
-            MissionNode::PrecLand => FlutterMissionNode::PrecLand,
-            MissionNode::End => FlutterMissionNode::End,
+            MissionItem::Init => FlutterMissionItem::Init,
+            MissionItem::Takeoff { altitude } => FlutterMissionItem::Takeoff { altitude },
+            MissionItem::Waypoint(wp) => FlutterMissionItem::Waypoint(wp.into()),
+            MissionItem::Delay(d) => FlutterMissionItem::Delay(d.as_secs_f64()),
+            MissionItem::FindSafeSpot => FlutterMissionItem::FindSafeSpot,
+            MissionItem::Transition => FlutterMissionItem::Transition,
+            MissionItem::Land => FlutterMissionItem::Land,
+            MissionItem::PrecLand => FlutterMissionItem::PrecLand,
+            MissionItem::End => FlutterMissionItem::End,
         }
     }
 }

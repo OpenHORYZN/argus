@@ -1,9 +1,10 @@
-import 'package:argus/main.dart';
+import 'package:argus/mission_plan.dart';
 import 'package:argus/src/rust/api/mission.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
+import 'package:collection/collection.dart';
 
 class MainMapWidget extends StatefulWidget {
   final MapController controller;
@@ -64,75 +65,106 @@ class _MainMapWidgetState extends State<MainMapWidget> {
             urlTemplate: "https://mt.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",
           ),
           Consumer<MissionPlanList>(
-            builder: (context, missionNodes, child) =>
-                StreamBuilder<PositionTriple>(
-                    stream: widget.posStream,
-                    builder: (posContext, posSnapshot) {
-                      return StreamBuilder<double>(
-                          stream: widget.yawStream,
-                          builder: (yawContext, yawSnapshot) {
-                            return MarkerLayer(
-                              markers: missionNodes.missionNodes
-                                      .map((node) => node.item)
-                                      .whereType<FlutterMissionItem_Waypoint>()
-                                      .map((node) {
-                                        final waypoint = node.field0;
-                                        LatLng? latLng;
-                                        waypoint.when(
-                                          localOffset: (x, y, z) {
-                                            // Assuming you have a way to translate local offset to LatLng
-                                          },
-                                          globalFixedHeight: (lat, lon, alt) {
-                                            latLng = LatLng(lat, lon);
-                                          },
-                                          globalRelativeHeight:
-                                              (lat, lon, heightDiff) {
-                                            latLng = LatLng(lat, lon);
-                                          },
-                                        );
-                                        if (latLng != null) {
-                                          return Marker(
-                                            width: 80.0,
-                                            height: 80.0,
-                                            point: latLng!,
-                                            child: const Icon(
+            builder: (context, missionNodes, child) => StreamBuilder<
+                    PositionTriple>(
+                stream: widget.posStream,
+                builder: (posContext, posSnapshot) {
+                  return StreamBuilder<double>(
+                      stream: widget.yawStream,
+                      builder: (yawContext, yawSnapshot) {
+                        return MarkerLayer(
+                          markers: missionNodes.missionNodes
+                                  .map((node) => node.item)
+                                  .whereType<FlutterMissionItem_Waypoint>()
+                                  .mapIndexed((index, node) {
+                                    final waypoint = node.field0;
+                                    LatLng? latLng;
+                                    waypoint.when(
+                                      localOffset: (x, y, z) {
+                                        // Assuming you have a way to translate local offset to LatLng
+                                      },
+                                      globalFixedHeight: (lat, lon, alt) {
+                                        latLng = LatLng(lat, lon);
+                                      },
+                                      globalRelativeHeight:
+                                          (lat, lon, heightDiff) {
+                                        latLng = LatLng(lat, lon);
+                                      },
+                                    );
+                                    if (latLng != null) {
+                                      return Marker(
+                                        width: 80.0,
+                                        height: 80.0,
+                                        point: latLng!,
+                                        child: Stack(
+                                          alignment: Alignment.center,
+                                          children: [
+                                            const Icon(
                                               Icons.location_pin,
                                               color: Color.fromARGB(
                                                   255, 255, 0, 0),
                                               size: 50.0,
                                             ),
-                                          );
-                                        }
-                                        return null;
-                                      })
-                                      .whereType<Marker>()
-                                      .toList() +
-                                  [
-                                    if (posSnapshot.hasData)
-                                      Marker(
-                                          height: 60.0,
-                                          width: 60.0,
-                                          point: LatLng(posSnapshot.data!.x,
-                                              posSnapshot.data!.y),
-                                          child: Transform.rotate(
-                                            angle: yawSnapshot.hasData
-                                                ? yawSnapshot.data!
-                                                : 0.0,
-                                            child: Container(
-                                              decoration: const BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  color: Colors.white60),
-                                              child: const Icon(
-                                                Icons.local_airport,
-                                                size: 40.0,
-                                                color: Colors.black87,
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  bottom: 10.0),
+                                              child: Container(
+                                                padding: const EdgeInsets.all(
+                                                    3.0), // Space between the text and the border
+                                                decoration: BoxDecoration(
+                                                  color: Colors
+                                                      .white, // Circle color
+                                                  shape: BoxShape
+                                                      .circle, // Circular shape
+                                                  border: Border.all(
+                                                    color: Colors
+                                                        .black, // Border color
+                                                    width: 1.0, // Border width
+                                                  ),
+                                                ),
+                                                child: Text(
+                                                  '${index + 1}',
+                                                  style: const TextStyle(
+                                                    fontSize: 12.0,
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
                                               ),
                                             ),
-                                          ))
-                                  ],
-                            );
-                          });
-                    }),
+                                          ],
+                                        ),
+                                      );
+                                    }
+                                    return null;
+                                  })
+                                  .whereType<Marker>()
+                                  .toList() +
+                              [
+                                if (posSnapshot.hasData)
+                                  Marker(
+                                      height: 60.0,
+                                      width: 60.0,
+                                      point: LatLng(posSnapshot.data!.x,
+                                          posSnapshot.data!.y),
+                                      child: Transform.rotate(
+                                        angle: yawSnapshot.hasData
+                                            ? yawSnapshot.data!
+                                            : 0.0,
+                                        child: Container(
+                                          decoration: const BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: Colors.white60),
+                                          child: const Icon(
+                                            Icons.local_airport,
+                                            size: 40.0,
+                                            color: Colors.black87,
+                                          ),
+                                        ),
+                                      ))
+                              ],
+                        );
+                      });
+                }),
           ),
           Positioned(
             right: 10.0,
@@ -194,5 +226,16 @@ class ZoomButtons extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+class MapMeta extends ChangeNotifier {
+  Function(LatLng)? _gpsResult;
+
+  Function(LatLng)? get gpsResult => _gpsResult;
+
+  void setGPSResult(Function(LatLng)? callback) {
+    _gpsResult = callback;
+    notifyListeners();
   }
 }

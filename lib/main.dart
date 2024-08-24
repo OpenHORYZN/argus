@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'dart:collection';
 
 import 'package:argus/fab.dart';
 import 'package:argus/map.dart';
+import 'package:argus/mission_plan.dart';
 import 'package:argus/plot.dart';
 import 'package:argus/title_bar/title_bar.dart';
 import 'package:flutter/material.dart';
@@ -139,56 +139,8 @@ class _MissionPlannerPageState extends State<MissionPlannerPage> {
                       ),
                     ),
                     Expanded(
-                      child: Consumer<MissionPlanList>(
-                        builder: (context, missionNodes, child) =>
-                            StreamBuilder<int>(
-                                stream: _stepStream,
-                                builder: (context, snapshot) {
-                                  bool isMe(AsyncSnapshot<int> snap, index) {
-                                    return (snap.data?.toInt() == index);
-                                  }
-
-                                  return ReorderableListView.builder(
-                                    itemCount: missionNodes.length,
-                                    buildDefaultDragHandles: false,
-                                    onReorder: missionNodes.reorder,
-                                    itemBuilder: (context, index) {
-                                      final node =
-                                          missionNodes.missionNodes[index];
-
-                                      return ReorderableDragStartListener(
-                                          index: index,
-                                          key: ValueKey(node.id),
-                                          enabled: !missionNodes
-                                                  .isBedrock(index) &&
-                                              missionNodes.isUnlocked(snapshot),
-                                          child: ListTile(
-                                            leading: _getIconForNode(node),
-                                            title: Text(_getTextForNode(node)),
-                                            textColor: isMe(snapshot, index)
-                                                ? Colors.orange
-                                                : null,
-                                            titleTextStyle: isMe(
-                                                    snapshot, index)
-                                                ? const TextStyle(
-                                                    fontWeight: FontWeight.bold)
-                                                : const TextStyle(),
-                                            trailing: !missionNodes
-                                                        .isBedrock(index) &&
-                                                    missionNodes
-                                                        .isUnlocked(snapshot)
-                                                ? IconButton(
-                                                    icon: const Icon(
-                                                        Icons.delete),
-                                                    onPressed: () =>
-                                                        missionNodes
-                                                            .removeNode(index),
-                                                  )
-                                                : null,
-                                          ));
-                                    },
-                                  );
-                                }),
+                      child: MissionPlanView(
+                        stepStream: _stepStream,
                       ),
                     ),
                   ],
@@ -238,129 +190,5 @@ class _MissionPlannerPageState extends State<MissionPlannerPage> {
             connection: _connection,
           )),
     );
-  }
-
-  Icon _getIconForNode(FlutterMissionNode node) {
-    return node.item.map(
-        init: (_) => const Icon(Icons.flag),
-        takeoff: (_) => const Icon(Icons.flight_takeoff),
-        waypoint: (_) => const Icon(Icons.place),
-        delay: (_) => const Icon(Icons.timer),
-        land: (_) => const Icon(Icons.flight_land),
-        end: (_) => const Icon(Icons.stop),
-        findSafeSpot: (_) => const Icon(Icons.safety_check),
-        transition: (_) => const Icon(Icons.change_history),
-        precLand: (_) => const Icon(Icons.location_history));
-  }
-
-  String _getTextForNode(FlutterMissionNode node) {
-    return node.item.map(
-        init: (_) => 'Init',
-        takeoff: (t) => 'Takeoff at ${t.altitude}m',
-        waypoint: (n) => n.field0.map(
-            localOffset: (l) =>
-                'Relative Offset [${l.field0}, ${l.field1}, ${l.field2}]',
-            globalFixedHeight: (g) =>
-                'GPS Waypoint ${g.lat.toStringAsFixed(5)} lat, ${g.lon.toStringAsFixed(5)} lon, ${g.alt}m AMSL',
-            globalRelativeHeight: (g) {
-              final general =
-                  'GPS Waypoint ${g.lat.toStringAsFixed(5)} | ${g.lon.toStringAsFixed(5)}';
-              if (g.heightDiff > 0) {
-                return '$general| ↑ ${g.heightDiff}m';
-              } else if (g.heightDiff < 0) {
-                return '$general| ↓ ${g.heightDiff}m';
-              } else {
-                return general;
-              }
-            }),
-        delay: (n) => 'Delay (${n.field0} seconds)',
-        land: (_) => 'Land',
-        end: (_) => 'End',
-        findSafeSpot: (_) => 'Find Safe Spot',
-        transition: (_) => 'Transition',
-        precLand: (_) => 'Precision Land');
-  }
-}
-
-class MapMeta extends ChangeNotifier {
-  Function(LatLng)? _gpsResult;
-
-  Function(LatLng)? get gpsResult => _gpsResult;
-
-  void setGPSResult(Function(LatLng)? callback) {
-    _gpsResult = callback;
-    notifyListeners();
-  }
-}
-
-class MissionPlanList extends ChangeNotifier {
-  MissionPlanList();
-
-  factory MissionPlanList.withConnect(Function(MissionPlanList) connector) {
-    var self = MissionPlanList();
-    connector(self);
-    return self;
-  }
-
-  final List<FlutterMissionNode> _missionNodes = [
-    FlutterMissionNode.random(item: const FlutterMissionItem.init()),
-    FlutterMissionNode.random(
-        item: const FlutterMissionItem.takeoff(altitude: 10.0)),
-    FlutterMissionNode.random(item: const FlutterMissionItem.land()),
-    FlutterMissionNode.random(item: const FlutterMissionItem.end()),
-  ];
-
-  UnmodifiableListView<FlutterMissionNode> get missionNodes =>
-      UnmodifiableListView(_missionNodes);
-
-  int get length => _missionNodes.length;
-
-  void setList(List<FlutterMissionNode> newList) {
-    _missionNodes.clear();
-    _missionNodes.addAll(newList);
-    notifyListeners();
-  }
-
-  void addNode(FlutterMissionNode node) {
-    if (_missionNodes.length > 2 &&
-        _missionNodes[_missionNodes.length - 2].item
-            is FlutterMissionItem_Land) {
-      _missionNodes.insert(_missionNodes.length - 2, node);
-    } else {
-      _missionNodes.insert(_missionNodes.length - 1, node);
-    }
-    notifyListeners();
-  }
-
-  void removeNode(int index) {
-    _missionNodes.removeAt(index);
-    notifyListeners();
-  }
-
-  void reorder(int oldIndex, int newIndex) {
-    if (isBedrock(oldIndex)) {
-      return;
-    }
-
-    if (newIndex > oldIndex) {
-      newIndex -= 1;
-    }
-
-    if (isBedrock(newIndex)) {
-      return;
-    }
-
-    final it = _missionNodes.removeAt(oldIndex);
-    _missionNodes.insert(newIndex, it);
-    notifyListeners();
-  }
-
-  bool isBedrock(int index) {
-    return _missionNodes[index].item is FlutterMissionItem_Init ||
-        _missionNodes[index].item is FlutterMissionItem_End;
-  }
-
-  bool isUnlocked(AsyncSnapshot<int> snap) {
-    return snap.data == null || snap.data! == -1;
   }
 }

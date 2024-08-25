@@ -14,6 +14,24 @@ class _LocalOffsetFormState extends State<LocalOffsetForm> {
   final TextEditingController _yController = TextEditingController();
   final TextEditingController _zController = TextEditingController();
 
+  void submit() {
+    if (_formKey.currentState!.validate()) {
+      if (_xController.text.isEmpty) {
+        _xController.text = "0";
+      }
+      if (_yController.text.isEmpty) {
+        _yController.text = "0";
+      }
+      if (_zController.text.isEmpty) {
+        _zController.text = "0";
+      }
+      Navigator.of(context).pop(FlutterWaypoint.localOffset(
+          double.parse(_xController.text),
+          double.parse(_yController.text),
+          double.parse(_zController.text)));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -31,14 +49,7 @@ class _LocalOffsetFormState extends State<LocalOffsetForm> {
             actions: [
               IconButton(
                 icon: const Icon(Icons.check),
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    Navigator.of(context).pop(FlutterWaypoint.localOffset(
-                        double.parse(_xController.text),
-                        double.parse(_yController.text),
-                        double.parse(_zController.text)));
-                  }
-                },
+                onPressed: submit,
               ),
             ],
           ),
@@ -50,16 +61,18 @@ class _LocalOffsetFormState extends State<LocalOffsetForm> {
                 children: [
                   TextFormField(
                     controller: _xController,
+                    autofocus: true,
                     decoration: const InputDecoration(
                       labelText: 'X (in meters)',
                     ),
+                    textInputAction: TextInputAction.next,
                     keyboardType:
                         const TextInputType.numberWithOptions(decimal: true),
                     validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter a value for X';
+                      if (value != null && value.isEmpty) {
+                        return null;
                       }
-                      final doubleValue = double.tryParse(value);
+                      final doubleValue = double.tryParse(value ?? "0");
                       if (doubleValue == null) {
                         return 'Please enter a valid number';
                       }
@@ -71,13 +84,14 @@ class _LocalOffsetFormState extends State<LocalOffsetForm> {
                     decoration: const InputDecoration(
                       labelText: 'Y (in meters)',
                     ),
+                    textInputAction: TextInputAction.next,
                     keyboardType:
                         const TextInputType.numberWithOptions(decimal: true),
                     validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter a value for Y';
+                      if (value != null && value.isEmpty) {
+                        return null;
                       }
-                      final doubleValue = double.tryParse(value);
+                      final doubleValue = double.tryParse(value ?? "0");
                       if (doubleValue == null) {
                         return 'Please enter a valid number';
                       }
@@ -89,13 +103,16 @@ class _LocalOffsetFormState extends State<LocalOffsetForm> {
                     decoration: const InputDecoration(
                       labelText: 'Z (in meters)',
                     ),
+                    onFieldSubmitted: (value) {
+                      submit();
+                    },
                     keyboardType:
                         const TextInputType.numberWithOptions(decimal: true),
                     validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter a value for Z';
+                      if (value != null && value.isEmpty) {
+                        return null;
                       }
-                      final doubleValue = double.tryParse(value);
+                      final doubleValue = double.tryParse(value ?? "0");
                       if (doubleValue == null) {
                         return 'Please enter a valid number';
                       }

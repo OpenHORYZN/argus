@@ -32,6 +32,7 @@ class _TakeoffEditState extends State<TakeoffEdit> {
             children: [
               TextFormField(
                 controller: _altController,
+                autofocus: true,
                 decoration: const InputDecoration(
                   labelText: 'Takeoff Height (in meters)',
                 ),

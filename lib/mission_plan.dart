@@ -18,6 +18,7 @@ class MissionPlanView extends StatefulWidget {
 
 class _MissionPlanViewState extends State<MissionPlanView> {
   bool lastLock = false;
+  HashMap<UuidValue, bool> expansionState = HashMap();
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +35,13 @@ class _MissionPlanViewState extends State<MissionPlanView> {
                   missionNodes.isUnlocked(snapshot);
             }
 
+            bool isExpandable(index) {
+              var item = missionNodes.missionNodes[index].item;
+              return isActive(index) &&
+                  item is! FlutterMissionItem_Land &&
+                  item is! FlutterMissionItem_Waypoint;
+            }
+
             var result = ReorderableListView.builder(
               itemCount: missionNodes.length,
               buildDefaultDragHandles: false,
@@ -44,11 +52,12 @@ class _MissionPlanViewState extends State<MissionPlanView> {
                 return ReorderableDragStartListener(
                     index: index,
                     key: ValueKey(node.id),
-                    enabled: isActive(index),
+                    enabled:
+                        isActive(index) && !(expansionState[node.id] ?? false),
                     child: Theme(
                       data: _ignoreDisabled(context),
                       child: ExpansionTile(
-                        enabled: isActive(index),
+                        enabled: isExpandable(index),
                         leading: _getIconForNode(node),
                         title: Text(
                           _getTextForNode(node),
@@ -66,6 +75,11 @@ class _MissionPlanViewState extends State<MissionPlanView> {
                                 onPressed: () => missionNodes.removeNode(index),
                               )
                             : const SizedBox.shrink(),
+                        onExpansionChanged: (value) {
+                          setState(() {
+                            expansionState[node.id] = value;
+                          });
+                        },
                         children: ([
                           Builder(builder: (context) {
                             var controller =

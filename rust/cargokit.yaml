@@ -3,3 +3,5 @@ cargo:
     toolchain: beta # default
   release: # Configuration of cargo execution for release builds
     toolchain: beta # rustup will be invoked with nightly toolchain
+  profile: # Configuration of cargo execution for release builds
+    toolchain: beta # rustup will be invoked with nightly toolchain

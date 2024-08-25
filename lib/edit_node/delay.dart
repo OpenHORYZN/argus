@@ -32,6 +32,7 @@ class _DelayEditState extends State<DelayEdit> {
             children: [
               TextFormField(
                 controller: _delayController,
+                autofocus: true,
                 decoration: const InputDecoration(
                   labelText: 'Time Delay (in seconds)',
                 ),

@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:argus/create_node/local_offset.dart';
+import 'package:argus/mission_plan/create_node/local_offset.dart';
 import 'package:argus/map.dart';
-import 'package:argus/mission_plan.dart';
+import 'package:argus/mission_plan/plan.dart';
 import 'package:argus/src/rust/api/mission.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -24,7 +24,7 @@ class MainFAB extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<MissionPlanList>(
+    return Consumer<MissionPlanState>(
       builder: (context, missionNodes, child) => StreamBuilder<int>(
           stream: _stepStream,
           builder: (context, snapshot) {

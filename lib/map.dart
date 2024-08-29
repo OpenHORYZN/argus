@@ -1,4 +1,4 @@
-import 'package:argus/mission_plan.dart';
+import 'package:argus/mission_plan/plan.dart';
 import 'package:argus/src/rust/api/mission.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -64,7 +64,7 @@ class _MainMapWidgetState extends State<MainMapWidget> {
           TileLayer(
             urlTemplate: "https://mt.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",
           ),
-          Consumer<MissionPlanList>(
+          Consumer<MissionPlanState>(
             builder: (context, missionNodes, child) => StreamBuilder<
                     PositionTriple>(
                 stream: widget.posStream,
@@ -80,9 +80,7 @@ class _MainMapWidgetState extends State<MainMapWidget> {
                                     final waypoint = node.field0;
                                     LatLng? latLng;
                                     waypoint.when(
-                                      localOffset: (x, y, z) {
-                                        // Assuming you have a way to translate local offset to LatLng
-                                      },
+                                      localOffset: (x, y, z) {},
                                       globalFixedHeight: (lat, lon, alt) {
                                         latLng = LatLng(lat, lon);
                                       },

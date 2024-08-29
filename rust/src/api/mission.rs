@@ -13,7 +13,7 @@ use argus_common::{
         IMissionUpdate, IYaw,
     },
     ControlRequest, ControlResponse, GlobalPosition, LocalPosition, MissionItem, MissionNode,
-    MissionPlan, Waypoint,
+    MissionParams, MissionPlan, Waypoint,
 };
 
 use crate::{frb_generated::StreamSink, visualize};
@@ -115,7 +115,13 @@ impl CoreConnection {
 
     pub async fn send_mission_plan(&mut self, plan: FlutterMissionPlan) -> anyhow::Result<()> {
         let nodes: Vec<MissionNode> = plan.nodes.into_iter().map(Into::into).collect();
-        self.mission.send(MissionPlan { id: plan.id, nodes }).await
+        self.mission
+            .send(MissionPlan {
+                id: plan.id,
+                nodes,
+                params: plan.params.into(),
+            })
+            .await
     }
 
     pub async fn send_control(&mut self, req: FlutterControlRequest) -> anyhow::Result<()> {
@@ -185,6 +191,7 @@ impl From<ControlResponse> for FlutterControlResponse {
                 FlutterControlResponse::SendMissionPlan(FlutterMissionPlan {
                     id: plan.id,
                     nodes: plan.nodes.into_iter().map(Into::into).collect(),
+                    params: plan.params.into(),
                 })
             }
             ControlResponse::PauseResume(pause) => FlutterControlResponse::PauseResume(pause),
@@ -197,6 +204,12 @@ impl Default for FlutterControlResponse {
         Self::SendMissionPlan(FlutterMissionPlan {
             id: Uuid::default(),
             nodes: vec![],
+            params: FlutterMissionParams {
+                target_velocity: Vector3::zeros().into(),
+                target_acceleration: Vector3::zeros().into(),
+                target_jerk: Vector3::zeros().into(),
+                disable_yaw: false,
+            },
         })
     }
 }
@@ -229,9 +242,70 @@ impl From<LocalPosition> for PositionTriple {
 }
 
 #[derive(Debug, Clone)]
+pub struct FlutterVector3 {
+    pub x: f64,
+    pub y: f64,
+    pub z: f64,
+}
+
+impl From<nalgebra::Vector3<f64>> for FlutterVector3 {
+    fn from(value: nalgebra::Vector3<f64>) -> Self {
+        Self {
+            x: value.x,
+            y: value.y,
+            z: value.z,
+        }
+    }
+}
+
+impl From<FlutterVector3> for nalgebra::Vector3<f64> {
+    fn from(value: FlutterVector3) -> Self {
+        Self::new(value.x, value.y, value.z)
+    }
+}
+
+#[derive(Debug, Clone)]
 pub struct FlutterMissionPlan {
     pub id: Uuid,
     pub nodes: Vec<FlutterMissionNode>,
+    pub params: FlutterMissionParams,
+}
+
+#[derive(Debug, Clone)]
+pub struct FlutterMissionParams {
+    pub target_velocity: FlutterVector3,
+    pub target_acceleration: FlutterVector3,
+    pub target_jerk: FlutterVector3,
+    pub disable_yaw: bool,
+}
+
+impl FlutterMissionParams {
+    #[frb(sync)]
+    pub fn copy(&self) -> Self {
+        self.clone()
+    }
+}
+
+impl From<MissionParams> for FlutterMissionParams {
+    fn from(value: MissionParams) -> Self {
+        Self {
+            target_velocity: value.target_velocity.into(),
+            target_acceleration: value.target_acceleration.into(),
+            target_jerk: value.target_jerk.into(),
+            disable_yaw: value.disable_yaw,
+        }
+    }
+}
+
+impl From<FlutterMissionParams> for MissionParams {
+    fn from(value: FlutterMissionParams) -> Self {
+        Self {
+            target_velocity: value.target_velocity.into(),
+            target_acceleration: value.target_acceleration.into(),
+            target_jerk: value.target_jerk.into(),
+            disable_yaw: value.disable_yaw,
+        }
+    }
 }
 
 #[derive(Debug, Clone)]

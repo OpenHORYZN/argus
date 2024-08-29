@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:argus/fab.dart';
 import 'package:argus/map.dart';
-import 'package:argus/mission_plan.dart';
+import 'package:argus/mission_plan/plan.dart';
 import 'package:argus/plot.dart';
 import 'package:argus/title_bar/title_bar.dart';
 import 'package:flutter/material.dart';
@@ -61,7 +61,7 @@ class _MissionPlannerPageState extends State<MissionPlannerPage> {
   final _mapController = MapController();
   final _plotController = PlotController();
 
-  void _connect(MissionPlanList missionNodes) {
+  void _connect(MissionPlanState missionPlan) {
     if (_connection == null) {
       CoreConnection.init(machine: machine).then((conn) async {
         _connection = conn;
@@ -94,7 +94,8 @@ class _MissionPlannerPageState extends State<MissionPlannerPage> {
         _controlStream!.forEach((p) {
           p.map(sendMissionPlan: (smp) {
             logger.i("Mission Plan Received");
-            missionNodes.setList(smp.field0.nodes.toList());
+            missionPlan.setList(smp.field0.nodes.toList());
+            missionPlan.setParams(smp.field0.params);
           }, pauseResume: (pause) {
             setState(() {
               _paused = pause.field0;
@@ -110,7 +111,7 @@ class _MissionPlannerPageState extends State<MissionPlannerPage> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-            create: (context) => MissionPlanList.withConnect(_connect)),
+            create: (context) => MissionPlanState.withConnect(_connect)),
         ChangeNotifierProvider(create: (context) => MapMeta())
       ],
       child: Scaffold(
@@ -148,38 +149,36 @@ class _MissionPlannerPageState extends State<MissionPlannerPage> {
               ),
               Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: Consumer<MissionPlanList>(
-                  builder: (context, missionNodes, child) =>
-                      StreamBuilder<bool>(
-                          stream: _onlineStream,
-                          builder: (context, onlineSnapshot) {
-                            return StreamBuilder<int>(
-                                stream: _stepStream,
-                                builder: (context, stepSnapshot) {
-                                  return ElevatedButton.icon(
-                                    label: const Text('Send Mission'),
-                                    icon: const Icon(Icons.check),
-                                    onPressed:
-                                        (onlineSnapshot.hasData &&
-                                                onlineSnapshot.data! &&
-                                                missionNodes
-                                                    .isUnlocked(stepSnapshot))
-                                            ? () async {
-                                                if (_connection != null) {
-                                                  _connection!.sendControl(
-                                                      req: const FlutterControlRequest
-                                                          .fetchMissionPlan());
-                                                  await _connection!.sendMissionPlan(
-                                                      plan: FlutterMissionPlan(
-                                                          id: uuid.v4obj(),
-                                                          nodes: missionNodes
-                                                              .missionNodes));
-                                                }
-                                              }
-                                            : null,
-                                  );
-                                });
-                          }),
+                child: Consumer<MissionPlanState>(
+                  builder: (context, missionPlan, child) => StreamBuilder<bool>(
+                      stream: _onlineStream,
+                      builder: (context, onlineSnapshot) {
+                        return StreamBuilder<int>(
+                            stream: _stepStream,
+                            builder: (context, stepSnapshot) {
+                              return ElevatedButton.icon(
+                                label: const Text('Send Mission'),
+                                icon: const Icon(Icons.check),
+                                onPressed: (onlineSnapshot.hasData &&
+                                        onlineSnapshot.data! &&
+                                        missionPlan.isUnlocked(stepSnapshot))
+                                    ? () async {
+                                        if (_connection != null) {
+                                          _connection!.sendControl(
+                                              req: const FlutterControlRequest
+                                                  .fetchMissionPlan());
+                                          await _connection!.sendMissionPlan(
+                                              plan: FlutterMissionPlan(
+                                                  id: uuid.v4obj(),
+                                                  nodes:
+                                                      missionPlan.missionNodes,
+                                                  params: missionPlan.params));
+                                        }
+                                      }
+                                    : null,
+                              );
+                            });
+                      }),
                 ),
               ),
             ],

@@ -173,10 +173,10 @@ packages:
     dependency: transitive
     description:
       name: crypto
-      sha256: ff625774173754681d66daaf4a448684fb04b78f902da9cb3d308c19cc5e8bab
+      sha256: ec30d999af904f33454ba22ed9a86162b35e52b44ac4807d1d93c288041d7d27
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.3"
+    version: "3.0.5"
   cupertino_icons:
     dependency: "direct main"
     description:
@@ -271,10 +271,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_rust_bridge
-      sha256: "7beb9cb4690916a6c4fd151d91dba53555ea258dbc029dd5f1bfba2e7bd32b86"
+      sha256: b0271cc147d5afccf9774809e4eef52b7357babe1a1a31db649df6f02dd27580
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.0"
+    version: "2.3.0"
   flutter_speed_dial:
     dependency: "direct main"
     description:
@@ -502,10 +502,10 @@ packages:
     dependency: transitive
     description:
       name: mime
-      sha256: "2e123074287cc9fd6c09de8336dae606d1ddb88d9ac47358826db698c176a1f2"
+      sha256: "801fd0b26f14a4a58ccb09d5892c3fbdeff209594300a542492cf13fba9d247a"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.5"
+    version: "1.0.6"
   nested:
     dependency: transitive
     description:
@@ -706,18 +706,18 @@ packages:
     dependency: "direct main"
     description:
       name: syncfusion_flutter_charts
-      sha256: be6595a5ae2e7bab88c848e48ac29b0be40ce15448acdea200bef1d86587dc96
+      sha256: b5b48d8eb6a1482ebbf4d6bfc69345462377e161e076b4ec4e69496e2d234dc2
       url: "https://pub.dev"
     source: hosted
-    version: "26.2.5+1"
+    version: "26.2.10"
   syncfusion_flutter_core:
     dependency: transitive
     description:
       name: syncfusion_flutter_core
-      sha256: "5de7df5e372ad476c144327f06503190b940b84d5bcfa407ee49b24f1c42e14d"
+      sha256: ca34210d70dd7ecb77489c21c8131a7f5546dea47780cd5f510326348091cb42
       url: "https://pub.dev"
     source: hosted
-    version: "26.2.5"
+    version: "26.2.10"
   term_glyph:
     dependency: transitive
     description:

@@ -1,7 +1,8 @@
 import 'dart:collection';
 
-import 'package:argus/edit_node/delay.dart';
-import 'package:argus/edit_node/takeoff.dart';
+import 'package:argus/mission_plan/edit_node/delay.dart';
+import 'package:argus/mission_plan/edit_node/takeoff.dart';
+import 'package:argus/mission_plan/edit_params.dart';
 import 'package:argus/src/rust/api/mission.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -22,8 +23,8 @@ class _MissionPlanViewState extends State<MissionPlanView> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<MissionPlanList>(
-      builder: (context, missionNodes, child) => StreamBuilder<int>(
+    return Consumer<MissionPlanState>(
+      builder: (context, missionPlan, child) => StreamBuilder<int>(
           stream: widget.stepStream,
           builder: (context, snapshot) {
             bool isSelected(index) {
@@ -31,23 +32,59 @@ class _MissionPlanViewState extends State<MissionPlanView> {
             }
 
             bool isActive(index) {
-              return !missionNodes.isBedrock(index) &&
-                  missionNodes.isUnlocked(snapshot);
+              return !missionPlan.isBedrock(index) &&
+                  missionPlan.isUnlocked(snapshot);
             }
 
             bool isExpandable(index) {
-              var item = missionNodes.missionNodes[index].item;
+              var item = missionPlan.missionNodes[index].item;
               return isActive(index) &&
                   item is! FlutterMissionItem_Land &&
                   item is! FlutterMissionItem_Waypoint;
             }
 
+            Widget getTrailing(index) {
+              if (missionPlan.missionNodes[index].item
+                  is FlutterMissionItem_Init) {
+                return IconButton(
+                  icon: const Icon(Icons.assignment),
+                  onPressed: () {
+                    showModalBottomSheet<FlutterMissionParams>(
+                      context: context,
+                      isScrollControlled: true,
+                      builder: (context) {
+                        return SizedBox(
+                          height: 350,
+                          child: Center(
+                              child: ParamsEdit(
+                                  initialParams: missionPlan.params,
+                                  enabled: missionPlan.isUnlocked(snapshot))),
+                        );
+                      },
+                    ).then((value) {
+                      if (value != null) {
+                        missionPlan.setParams(value);
+                      }
+                    });
+                  },
+                );
+              }
+              if (isActive(index)) {
+                return IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () => missionPlan.removeNode(index),
+                );
+              } else {
+                return const SizedBox.shrink();
+              }
+            }
+
             var result = ReorderableListView.builder(
-              itemCount: missionNodes.length,
+              itemCount: missionPlan.length,
               buildDefaultDragHandles: false,
-              onReorder: missionNodes.reorder,
+              onReorder: missionPlan.reorder,
               itemBuilder: (context, index) {
-                final node = missionNodes.missionNodes[index];
+                final node = missionPlan.missionNodes[index];
 
                 return ReorderableDragStartListener(
                     index: index,
@@ -69,12 +106,7 @@ class _MissionPlanViewState extends State<MissionPlanView> {
                                       : Colors.white)
                               : const TextStyle(),
                         ),
-                        trailing: isActive(index)
-                            ? IconButton(
-                                icon: const Icon(Icons.delete),
-                                onPressed: () => missionNodes.removeNode(index),
-                              )
-                            : const SizedBox.shrink(),
+                        trailing: getTrailing(index),
                         onExpansionChanged: (value) {
                           setState(() {
                             expansionState[node.id] = value;
@@ -85,7 +117,7 @@ class _MissionPlanViewState extends State<MissionPlanView> {
                             var controller =
                                 ExpansionTileController.of(context);
                             if (controller.isExpanded &&
-                                !missionNodes.isUnlocked(snapshot)) {
+                                !missionPlan.isUnlocked(snapshot)) {
                               WidgetsBinding.instance.addPostFrameCallback((_) {
                                 controller.collapse();
                               });
@@ -93,11 +125,11 @@ class _MissionPlanViewState extends State<MissionPlanView> {
                             return const SizedBox.shrink();
                           }),
                           node.item.map(
-                              init: (_) => null,
+                              init: (i) => null,
                               takeoff: (t) => Builder(builder: (context) {
                                     return TakeoffEdit(
                                         onSubmit: (alt) {
-                                          missionNodes.replaceNode(
+                                          missionPlan.replaceNode(
                                               index,
                                               FlutterMissionNode(
                                                   id: node.id,
@@ -112,7 +144,7 @@ class _MissionPlanViewState extends State<MissionPlanView> {
                               delay: (d) => Builder(builder: (context) {
                                     return DelayEdit(
                                       onSubmit: (d) {
-                                        missionNodes.replaceNode(
+                                        missionPlan.replaceNode(
                                             index,
                                             FlutterMissionNode(
                                                 id: node.id,
@@ -135,7 +167,7 @@ class _MissionPlanViewState extends State<MissionPlanView> {
               },
             );
 
-            lastLock = !missionNodes.isUnlocked(snapshot);
+            lastLock = !missionPlan.isUnlocked(snapshot);
             return result;
           }),
     );
@@ -189,11 +221,11 @@ class _MissionPlanViewState extends State<MissionPlanView> {
   }
 }
 
-class MissionPlanList extends ChangeNotifier {
-  MissionPlanList();
+class MissionPlanState extends ChangeNotifier {
+  MissionPlanState();
 
-  factory MissionPlanList.withConnect(Function(MissionPlanList) connector) {
-    var self = MissionPlanList();
+  factory MissionPlanState.withConnect(Function(MissionPlanState) connector) {
+    var self = MissionPlanState();
     connector(self);
     return self;
   }
@@ -206,19 +238,19 @@ class MissionPlanList extends ChangeNotifier {
     FlutterMissionNode.random(item: const FlutterMissionItem.end()),
   ];
 
-  final HashMap<UuidValue, ExpansionTileController> _expansionControllers =
-      HashMap();
+  FlutterMissionParams _params = const FlutterMissionParams(
+    disableYaw: false,
+    targetJerk: FlutterVector3(x: 0.4, y: 0.4, z: 0.4),
+    targetAcceleration: FlutterVector3(x: 0.4, y: 0.4, z: 0.4),
+    targetVelocity: FlutterVector3(x: 4.0, y: 4.0, z: 4.0),
+  );
 
-  ExpansionTileController getOrPut(UuidValue id) {
-    return _expansionControllers.putIfAbsent(
-        id, () => ExpansionTileController());
+  void setParams(FlutterMissionParams params) {
+    _params = params;
+    notifyListeners();
   }
 
-  void collapseAll() {
-    _expansionControllers.forEach((_, v) {
-      v.collapse();
-    });
-  }
+  FlutterMissionParams get params => _params.copy();
 
   UnmodifiableListView<FlutterMissionNode> get missionNodes =>
       UnmodifiableListView(_missionNodes);
@@ -243,7 +275,6 @@ class MissionPlanList extends ChangeNotifier {
   }
 
   void removeNode(int index) {
-    _expansionControllers.remove(_missionNodes[index].id);
     _missionNodes.removeAt(index);
     notifyListeners();
   }

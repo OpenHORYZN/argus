@@ -1,13 +1,12 @@
 use anyhow::anyhow;
 use argus_common::interface::Interface;
-use futures_util::SinkExt;
 use postcard::to_allocvec;
 use std::marker::PhantomData;
 use std::{fmt::Debug, sync::Arc};
 use tokio::sync::watch;
-use zenoh::subscriber::Subscriber;
+use zenoh::pubsub::{Publisher, Subscriber};
 
-use zenoh::{prelude::r#async::*, publication::Publisher, Session};
+use zenoh::{prelude::*, Session};
 
 use crate::frb_generated::{SseEncode, StreamSink};
 
@@ -41,10 +40,10 @@ impl SubscriptionManager {
             .declare_subscriber(format!("{}/{}", self.machine, I::topic()))
             .best_effort()
             .callback(move |sample| {
-                if let Some(ts) = sample.timestamp {
+                if let Some(ts) = sample.timestamp() {
                     visualize::set_time(ts.get_time().as_secs_f64());
                 }
-                let buf = sample.value.payload.contiguous().to_vec();
+                let buf: Vec<u8> = sample.payload().into();
                 let Ok(msg) = postcard::from_bytes::<I::Message>(&buf) else {
                     println!("failed to decode");
                     return;
@@ -58,7 +57,6 @@ impl SubscriptionManager {
                     return;
                 };
             })
-            .res()
             .await
             .map_err(|e| anyhow!(e))?;
         self.subs.push(sub);
@@ -75,7 +73,7 @@ impl<I: Interface> Pub<I> {
     pub async fn send(&mut self, msg: I::Message) -> anyhow::Result<()> {
         let data = to_allocvec(&msg)?;
 
-        self.publisher.send(&*data).await.map_err(|e| anyhow!(e))?;
+        self.publisher.put(&*data).await.map_err(|e| anyhow!(e))?;
         Ok(())
     }
 }
@@ -87,7 +85,6 @@ pub async fn publisher<I: Interface>(
     let topic = format!("{machine}/{}", I::topic());
     let res = session
         .declare_publisher(topic)
-        .res()
         .await
         .map_err(|e| anyhow!(e))?;
     Ok(Pub {

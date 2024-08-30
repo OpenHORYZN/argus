@@ -5,7 +5,7 @@ use std::{sync::Arc, time::Duration};
 use tokio::{select, sync::watch, time::sleep};
 use tracing::info;
 use uuid::Uuid;
-use zenoh::prelude::r#async::*;
+use zenoh::config::EndPoint;
 
 use argus_common::{
     interface::{
@@ -47,14 +47,18 @@ impl CoreConnection {
 
         let interface = "tailscale0";
 
-        zconfig.listen.endpoints = vec![
-            EndPoint::new("udp", "0.0.0.0:0", "", format!("iface={interface}")).emap()?,
-            EndPoint::new("tcp", "0.0.0.0:0", "", format!("iface={interface}")).emap()?,
-        ];
+        zconfig
+            .listen
+            .endpoints
+            .set(vec![
+                EndPoint::new("udp", "0.0.0.0:0", "", format!("iface={interface}")).emap()?,
+                EndPoint::new("tcp", "0.0.0.0:0", "", format!("iface={interface}")).emap()?,
+            ])
+            .emap()?;
 
         zconfig.transport.unicast.set_max_links(10).emap()?;
 
-        let session = Arc::new(zenoh::open(zconfig).res().await.emap()?);
+        let session = Arc::new(zenoh::open(zconfig).await.emap()?);
 
         let zid = session.zid();
 

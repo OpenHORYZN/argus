@@ -55,22 +55,24 @@ class _ParamsEditState extends State<ParamsEdit> {
     }
 
     if (_formKey.currentState!.validate()) {
-      final xyValue = double.parse(_accelerationXYController.text);
+      final xyValueAcc = double.parse(_accelerationXYController.text);
+      final xyValueVel = double.parse(_velocityXYController.text);
+      final xyValueJerk = double.parse(_jerkXYController.text);
       Navigator.of(context).pop(
         FlutterMissionParams(
           targetAcceleration: FlutterVector3(
-            x: xyValue,
-            y: xyValue,
+            x: xyValueAcc,
+            y: xyValueAcc,
             z: double.parse(_accelerationZController.text),
           ),
           targetVelocity: FlutterVector3(
-            x: xyValue,
-            y: xyValue,
+            x: xyValueVel,
+            y: xyValueVel,
             z: double.parse(_velocityZController.text),
           ),
           targetJerk: FlutterVector3(
-            x: xyValue,
-            y: xyValue,
+            x: xyValueJerk,
+            y: xyValueJerk,
             z: double.parse(_jerkZController.text),
           ),
           disableYaw: false,

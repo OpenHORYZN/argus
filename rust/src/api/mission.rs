@@ -10,7 +10,7 @@ use zenoh::config::EndPoint;
 use argus_common::{
     interface::{
         IControlRequest, IControlResponse, IGlobalPosition, ILocalPosition, IMissionStep,
-        IMissionUpdate, IYaw,
+        IMissionUpdate, IVelocity, IYaw,
     },
     ControlRequest, ControlResponse, GlobalPosition, LocalPosition, MissionItem, MissionNode,
     MissionParams, MissionPlan, Waypoint,
@@ -71,6 +71,7 @@ impl CoreConnection {
         let global_pos_rcv = sm.subscriber::<IGlobalPosition, PositionTriple>().await?;
         let local_pos_rcv = sm.subscriber::<ILocalPosition, PositionTriple>().await?;
         let yaw_rcv = sm.subscriber::<IYaw, f64>().await?;
+        let velocity_rcv = sm.subscriber::<IVelocity, Vector3<f64>>().await?;
         let step_rcv = sm.subscriber::<IMissionStep, i32>().await?;
         let control_rcv = sm
             .subscriber::<IControlResponse, FlutterControlResponse>()
@@ -81,7 +82,8 @@ impl CoreConnection {
 
         let (online_snd, online_rcv) = watch::channel(false);
 
-        let mut lpr: watch::Receiver<PositionTriple> = local_pos_rcv.clone();
+        let mut lpr = local_pos_rcv.clone();
+        let mut vlr = velocity_rcv.clone();
         tokio::spawn(async move {
             loop {
                 visualize::send_grid();
@@ -92,6 +94,13 @@ impl CoreConnection {
                             "/position",
                             Vector3::new(p.x, p.y, p.z),
                             Color::from_rgb(100, 100, 0),
+                        );
+                    }
+                    Ok(_) = vlr.changed() => {
+                        let v = vlr.borrow().to_owned();
+                        visualize::log_xyz(
+                            "/velocity",
+                            Vector3::new(v.x, v.y, v.z),
                         );
                     }
                     Ok(_) = keepalive_rcv.changed() => {

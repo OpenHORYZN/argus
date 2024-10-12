@@ -5,7 +5,7 @@
     rust-overlay.url = "github:oxalica/rust-overlay";
   };
 
-  outputs = { self, nixpkgs, flake-utils, rust-overlay}:
+  outputs = { self, nixpkgs, flake-utils, rust-overlay }:
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs {
@@ -37,7 +37,7 @@
           libsoup
           sass
           librsvg
-          (rust-bin.beta.latest.default.override {
+          (rust-bin.stable.latest.default.override {
             extensions = [ "rust-src" "rust-analyzer" "rustc" ];
           })
         ];
@@ -48,7 +48,7 @@
           shellHook = ''
             export PATH="$PATH":"$HOME/.cargo/bin"
 
-            export LD_LIBRARY_PATH="$(pwd)/build/linux/x64/debug/bundle/lib:$(pwd)/build/linux/x64/release/bundle/lib:$(pwd)/build/linux/x64/profile/bundle/lib:$LD_LIBRARY_PATH"
+            export LD_LIBRARY_PATH="${pkgs.lib.makeLibraryPath packages}:$(pwd)/build/linux/x64/debug/bundle/lib:$(pwd)/build/linux/x64/release/bundle/lib:$(pwd)/build/linux/x64/profile/bundle/lib:$LD_LIBRARY_PATH"
 
           '';
         };

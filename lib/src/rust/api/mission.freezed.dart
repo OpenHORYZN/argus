@@ -77,6 +77,9 @@ class _$FlutterControlRequestCopyWithImpl<$Res,
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+
+  /// Create a copy of FlutterControlRequest
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -96,6 +99,9 @@ class __$$FlutterControlRequest_FetchMissionPlanImplCopyWithImpl<$Res>
       _$FlutterControlRequest_FetchMissionPlanImpl _value,
       $Res Function(_$FlutterControlRequest_FetchMissionPlanImpl) _then)
       : super(_value, _then);
+
+  /// Create a copy of FlutterControlRequest
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -213,6 +219,8 @@ class __$$FlutterControlRequest_PauseResumeImplCopyWithImpl<$Res>
       $Res Function(_$FlutterControlRequest_PauseResumeImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of FlutterControlRequest
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -252,7 +260,9 @@ class _$FlutterControlRequest_PauseResumeImpl
   @override
   int get hashCode => Object.hash(runtimeType, field0);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of FlutterControlRequest
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$FlutterControlRequest_PauseResumeImplCopyWith<
@@ -333,7 +343,10 @@ abstract class FlutterControlRequest_PauseResume extends FlutterControlRequest {
   const FlutterControlRequest_PauseResume._() : super._();
 
   bool get field0;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of FlutterControlRequest
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$FlutterControlRequest_PauseResumeImplCopyWith<
           _$FlutterControlRequest_PauseResumeImpl>
       get copyWith => throw _privateConstructorUsedError;
@@ -403,6 +416,9 @@ class _$FlutterControlResponseCopyWithImpl<$Res,
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+
+  /// Create a copy of FlutterControlResponse
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -425,6 +441,8 @@ class __$$FlutterControlResponse_SendMissionPlanImplCopyWithImpl<$Res>
       $Res Function(_$FlutterControlResponse_SendMissionPlanImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of FlutterControlResponse
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -464,7 +482,9 @@ class _$FlutterControlResponse_SendMissionPlanImpl
   @override
   int get hashCode => Object.hash(runtimeType, field0);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of FlutterControlResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$FlutterControlResponse_SendMissionPlanImplCopyWith<
@@ -549,7 +569,10 @@ abstract class FlutterControlResponse_SendMissionPlan
 
   @override
   FlutterMissionPlan get field0;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of FlutterControlResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$FlutterControlResponse_SendMissionPlanImplCopyWith<
           _$FlutterControlResponse_SendMissionPlanImpl>
       get copyWith => throw _privateConstructorUsedError;
@@ -575,6 +598,8 @@ class __$$FlutterControlResponse_PauseResumeImplCopyWithImpl<$Res>
       $Res Function(_$FlutterControlResponse_PauseResumeImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of FlutterControlResponse
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -614,7 +639,9 @@ class _$FlutterControlResponse_PauseResumeImpl
   @override
   int get hashCode => Object.hash(runtimeType, field0);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of FlutterControlResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$FlutterControlResponse_PauseResumeImplCopyWith<
@@ -697,7 +724,10 @@ abstract class FlutterControlResponse_PauseResume
 
   @override
   bool get field0;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of FlutterControlResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$FlutterControlResponse_PauseResumeImplCopyWith<
           _$FlutterControlResponse_PauseResumeImpl>
       get copyWith => throw _privateConstructorUsedError;
@@ -804,6 +834,9 @@ class _$FlutterMissionItemCopyWithImpl<$Res, $Val extends FlutterMissionItem>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+
+  /// Create a copy of FlutterMissionItem
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -823,6 +856,9 @@ class __$$FlutterMissionItem_InitImplCopyWithImpl<$Res>
       _$FlutterMissionItem_InitImpl _value,
       $Res Function(_$FlutterMissionItem_InitImpl) _then)
       : super(_value, _then);
+
+  /// Create a copy of FlutterMissionItem
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -976,6 +1012,8 @@ class __$$FlutterMissionItem_TakeoffImplCopyWithImpl<$Res>
       $Res Function(_$FlutterMissionItem_TakeoffImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of FlutterMissionItem
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1015,7 +1053,9 @@ class _$FlutterMissionItem_TakeoffImpl extends FlutterMissionItem_Takeoff {
   @override
   int get hashCode => Object.hash(runtimeType, altitude);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of FlutterMissionItem
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$FlutterMissionItem_TakeoffImplCopyWith<_$FlutterMissionItem_TakeoffImpl>
@@ -1134,7 +1174,10 @@ abstract class FlutterMissionItem_Takeoff extends FlutterMissionItem {
   const FlutterMissionItem_Takeoff._() : super._();
 
   double get altitude;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of FlutterMissionItem
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$FlutterMissionItem_TakeoffImplCopyWith<_$FlutterMissionItem_TakeoffImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -1161,6 +1204,8 @@ class __$$FlutterMissionItem_WaypointImplCopyWithImpl<$Res>
       $Res Function(_$FlutterMissionItem_WaypointImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of FlutterMissionItem
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1174,6 +1219,8 @@ class __$$FlutterMissionItem_WaypointImplCopyWithImpl<$Res>
     ));
   }
 
+  /// Create a copy of FlutterMissionItem
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $FlutterWaypointCopyWith<$Res> get field0 {
@@ -1207,7 +1254,9 @@ class _$FlutterMissionItem_WaypointImpl extends FlutterMissionItem_Waypoint {
   @override
   int get hashCode => Object.hash(runtimeType, field0);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of FlutterMissionItem
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$FlutterMissionItem_WaypointImplCopyWith<_$FlutterMissionItem_WaypointImpl>
@@ -1326,7 +1375,10 @@ abstract class FlutterMissionItem_Waypoint extends FlutterMissionItem {
   const FlutterMissionItem_Waypoint._() : super._();
 
   FlutterWaypoint get field0;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of FlutterMissionItem
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$FlutterMissionItem_WaypointImplCopyWith<_$FlutterMissionItem_WaypointImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -1351,6 +1403,8 @@ class __$$FlutterMissionItem_DelayImplCopyWithImpl<$Res>
       $Res Function(_$FlutterMissionItem_DelayImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of FlutterMissionItem
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1389,7 +1443,9 @@ class _$FlutterMissionItem_DelayImpl extends FlutterMissionItem_Delay {
   @override
   int get hashCode => Object.hash(runtimeType, field0);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of FlutterMissionItem
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$FlutterMissionItem_DelayImplCopyWith<_$FlutterMissionItem_DelayImpl>
@@ -1508,7 +1564,10 @@ abstract class FlutterMissionItem_Delay extends FlutterMissionItem {
   const FlutterMissionItem_Delay._() : super._();
 
   double get field0;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of FlutterMissionItem
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$FlutterMissionItem_DelayImplCopyWith<_$FlutterMissionItem_DelayImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -1530,6 +1589,9 @@ class __$$FlutterMissionItem_FindSafeSpotImplCopyWithImpl<$Res>
       _$FlutterMissionItem_FindSafeSpotImpl _value,
       $Res Function(_$FlutterMissionItem_FindSafeSpotImpl) _then)
       : super(_value, _then);
+
+  /// Create a copy of FlutterMissionItem
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -1682,6 +1744,9 @@ class __$$FlutterMissionItem_TransitionImplCopyWithImpl<$Res>
       _$FlutterMissionItem_TransitionImpl _value,
       $Res Function(_$FlutterMissionItem_TransitionImpl) _then)
       : super(_value, _then);
+
+  /// Create a copy of FlutterMissionItem
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -1834,6 +1899,9 @@ class __$$FlutterMissionItem_LandImplCopyWithImpl<$Res>
       _$FlutterMissionItem_LandImpl _value,
       $Res Function(_$FlutterMissionItem_LandImpl) _then)
       : super(_value, _then);
+
+  /// Create a copy of FlutterMissionItem
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -1984,6 +2052,9 @@ class __$$FlutterMissionItem_PrecLandImplCopyWithImpl<$Res>
       _$FlutterMissionItem_PrecLandImpl _value,
       $Res Function(_$FlutterMissionItem_PrecLandImpl) _then)
       : super(_value, _then);
+
+  /// Create a copy of FlutterMissionItem
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -2134,6 +2205,9 @@ class __$$FlutterMissionItem_EndImplCopyWithImpl<$Res>
       _$FlutterMissionItem_EndImpl _value,
       $Res Function(_$FlutterMissionItem_EndImpl) _then)
       : super(_value, _then);
+
+  /// Create a copy of FlutterMissionItem
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -2342,6 +2416,9 @@ class _$FlutterWaypointCopyWithImpl<$Res, $Val extends FlutterWaypoint>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+
+  /// Create a copy of FlutterWaypoint
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -2364,6 +2441,8 @@ class __$$FlutterWaypoint_LocalOffsetImplCopyWithImpl<$Res>
       $Res Function(_$FlutterWaypoint_LocalOffsetImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of FlutterWaypoint
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -2419,7 +2498,9 @@ class _$FlutterWaypoint_LocalOffsetImpl extends FlutterWaypoint_LocalOffset {
   @override
   int get hashCode => Object.hash(runtimeType, field0, field1, field2);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of FlutterWaypoint
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$FlutterWaypoint_LocalOffsetImplCopyWith<_$FlutterWaypoint_LocalOffsetImpl>
@@ -2515,7 +2596,10 @@ abstract class FlutterWaypoint_LocalOffset extends FlutterWaypoint {
   double get field0;
   double get field1;
   double get field2;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of FlutterWaypoint
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$FlutterWaypoint_LocalOffsetImplCopyWith<_$FlutterWaypoint_LocalOffsetImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -2540,6 +2624,8 @@ class __$$FlutterWaypoint_GlobalFixedHeightImplCopyWithImpl<$Res>
       $Res Function(_$FlutterWaypoint_GlobalFixedHeightImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of FlutterWaypoint
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -2597,7 +2683,9 @@ class _$FlutterWaypoint_GlobalFixedHeightImpl
   @override
   int get hashCode => Object.hash(runtimeType, lat, lon, alt);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of FlutterWaypoint
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$FlutterWaypoint_GlobalFixedHeightImplCopyWith<
@@ -2695,7 +2783,10 @@ abstract class FlutterWaypoint_GlobalFixedHeight extends FlutterWaypoint {
   double get lat;
   double get lon;
   double get alt;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of FlutterWaypoint
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$FlutterWaypoint_GlobalFixedHeightImplCopyWith<
           _$FlutterWaypoint_GlobalFixedHeightImpl>
       get copyWith => throw _privateConstructorUsedError;
@@ -2721,6 +2812,8 @@ class __$$FlutterWaypoint_GlobalRelativeHeightImplCopyWithImpl<$Res>
       $Res Function(_$FlutterWaypoint_GlobalRelativeHeightImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of FlutterWaypoint
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -2779,7 +2872,9 @@ class _$FlutterWaypoint_GlobalRelativeHeightImpl
   @override
   int get hashCode => Object.hash(runtimeType, lat, lon, heightDiff);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of FlutterWaypoint
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$FlutterWaypoint_GlobalRelativeHeightImplCopyWith<
@@ -2878,7 +2973,10 @@ abstract class FlutterWaypoint_GlobalRelativeHeight extends FlutterWaypoint {
   double get lat;
   double get lon;
   double get heightDiff;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of FlutterWaypoint
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$FlutterWaypoint_GlobalRelativeHeightImplCopyWith<
           _$FlutterWaypoint_GlobalRelativeHeightImpl>
       get copyWith => throw _privateConstructorUsedError;

@@ -37,7 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.6
   rust_lib_argus:
     path: rust_builder
-  flutter_rust_bridge: 2.3.0
+  flutter_rust_bridge: 2.5.0
   freezed_annotation: ^2.4.4
   window_manager: ^0.3.9
   latlong2: ^0.9.1

@@ -6,7 +6,7 @@ use std::{fmt::Debug, sync::Arc};
 use tokio::sync::watch;
 use zenoh::pubsub::{Publisher, Subscriber};
 
-use zenoh::{prelude::*, Session};
+use zenoh::Session;
 
 use crate::frb_generated::{SseEncode, StreamSink};
 
@@ -16,7 +16,7 @@ pub struct SubscriptionManager {
     session: Arc<Session>,
     machine: String,
     keepalive: watch::Sender<()>,
-    subs: Vec<Subscriber<'static, ()>>,
+    subs: Vec<Subscriber<()>>,
 }
 
 impl SubscriptionManager {
@@ -38,12 +38,11 @@ impl SubscriptionManager {
         let sub = self
             .session
             .declare_subscriber(format!("{}/{}", self.machine, I::topic()))
-            .best_effort()
             .callback(move |sample| {
                 if let Some(ts) = sample.timestamp() {
                     visualize::set_time(ts.get_time().as_secs_f64());
                 }
-                let buf: Vec<u8> = sample.payload().into();
+                let buf: Vec<u8> = sample.payload().to_bytes().into();
                 let Ok(msg) = postcard::from_bytes::<I::Message>(&buf) else {
                     println!("failed to decode");
                     return;

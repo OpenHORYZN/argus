@@ -43,20 +43,21 @@ pub struct CoreConnection {
 
 impl CoreConnection {
     pub async fn init(machine: String) -> anyhow::Result<Self> {
-        let mut zconfig = zenoh::config::default();
+        let mut zconfig = zenoh::config::Config::default();
 
         let interface = "tailscale0";
 
         zconfig
             .listen
             .endpoints
-            .set(vec![
-                EndPoint::new("udp", "0.0.0.0:0", "", format!("iface={interface}")).emap()?,
-                EndPoint::new("tcp", "0.0.0.0:0", "", format!("iface={interface}")).emap()?,
-            ])
+            .set(vec![EndPoint::new(
+                "udp",
+                "0.0.0.0:0",
+                "",
+                format!("iface={interface}"),
+            )
+            .emap()?])
             .emap()?;
-
-        zconfig.transport.unicast.set_max_links(10).emap()?;
 
         let session = Arc::new(zenoh::open(zconfig).await.emap()?);
 

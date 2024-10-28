@@ -50,13 +50,7 @@ impl CoreConnection {
         zconfig
             .listen
             .endpoints
-            .set(vec![EndPoint::new(
-                "udp",
-                "0.0.0.0:0",
-                "",
-                format!("iface={interface}"),
-            )
-            .emap()?])
+            .set(vec![EndPoint::new("tcp", "0.0.0.0:0", "", "").emap()?])
             .emap()?;
 
         let session = Arc::new(zenoh::open(zconfig).await.emap()?);

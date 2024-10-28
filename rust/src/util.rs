@@ -1,22 +1,20 @@
 use anyhow::anyhow;
-use argus_common::interface::Interface;
 use postcard::to_allocvec;
-use std::marker::PhantomData;
-use std::{fmt::Debug, sync::Arc};
+use std::{fmt::Debug, marker::PhantomData, sync::Arc};
 use tokio::sync::watch;
-use zenoh::pubsub::{Publisher, Subscriber};
+use zenoh::{pubsub::Publisher, Session};
 
-use zenoh::Session;
+use argus_common::interface::Interface;
 
-use crate::frb_generated::{SseEncode, StreamSink};
-
-use crate::visualize;
+use crate::{
+    frb_generated::{SseEncode, StreamSink},
+    visualize,
+};
 
 pub struct SubscriptionManager {
     session: Arc<Session>,
     machine: String,
     keepalive: watch::Sender<()>,
-    subs: Vec<Subscriber<()>>,
 }
 
 impl SubscriptionManager {
@@ -25,7 +23,6 @@ impl SubscriptionManager {
             session,
             keepalive: keepalive.clone(),
             machine,
-            subs: vec![],
         }
     }
     pub async fn subscriber<I, U>(&mut self) -> anyhow::Result<watch::Receiver<U>>
@@ -35,8 +32,7 @@ impl SubscriptionManager {
     {
         let (target_snd, target_rcv) = watch::channel(U::default());
         let keepalive = self.keepalive.clone();
-        let sub = self
-            .session
+        self.session
             .declare_subscriber(format!("{}/{}", self.machine, I::topic()))
             .callback(move |sample| {
                 if let Some(ts) = sample.timestamp() {
@@ -56,9 +52,9 @@ impl SubscriptionManager {
                     return;
                 };
             })
+            .background()
             .await
             .map_err(|e| anyhow!(e))?;
-        self.subs.push(sub);
         Ok(target_rcv)
     }
 }

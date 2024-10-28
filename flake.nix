@@ -25,8 +25,9 @@
           wayland
           pkg-config
           dbus
-          openssl_3
+          openssl
           fuse3
+          ninja
           glib
           gtk3
           clang

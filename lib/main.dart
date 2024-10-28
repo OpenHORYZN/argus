@@ -33,7 +33,7 @@ class Argus extends StatelessWidget {
     return MaterialApp(
       home: const MissionPlannerPage(),
       darkTheme: ThemeData.localize(ThemeData.dark(useMaterial3: true),
-          Theme.of(context).textTheme.apply(fontSizeFactor: 0.8)),
+          Theme.of(context).textTheme.apply(fontSizeFactor: 0.5)),
       themeMode: ThemeMode.dark,
     );
   }
